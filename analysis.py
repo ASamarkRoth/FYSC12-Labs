@@ -28,6 +28,11 @@ def gauss(x, *p):
     A, mu, sigma = p
     return A*np.exp(-(x-mu)**2/(2.*sigma**2))
 
+def line(x, *p):
+    """ straight line function to be used for fits to the data"""
+    a, b = p
+    return a*x+b
+
         
 def read_mca_data_file(filename):
     """Reads in a data file (csv format) stored by the Maestro MCA software and returns a 'Spectrum' object. Tested with Maestro Version 6.05 """
@@ -155,7 +160,7 @@ if __name__ == '__main__':
     # \___|___/     |_|____//_/
     #    
     # plot into a new figure
-    plt.figure(2)
+    plt.figure()
     plt.grid(True)
     plt.xlabel('channel number')
     plt.ylabel('counts')
@@ -189,9 +194,57 @@ if __name__ == '__main__':
     # peak 1: internal conversion peak, 0.630 MeV
     ecalib_data_cs137 = np.array([[fits[0][1], fits[1][1] ], #x
                                   [0. , 0.630 ]] ) # y
+    ecalib_sigma_cs137 = np.array([fits[0][2], fits[1][2]])                                  
     # generate the legend (with the "label" information from the plots)
     plt.legend()
 
+    # ____  _      ____   ___ _____
+    #| __ )(_)    |___ \ / _ \___  |
+    #|  _ \| |_____ __) | | | | / /
+    #| |_) | |_____/ __/| |_| |/ /
+    #|____/|_|    |_____|\___//_/
+    #    
+    # plot into a new figure
+    plt.figure()
+    plt.grid(True)
+    plt.xlabel('channel number')
+    plt.ylabel('counts')
+    plt.title("Bi-207")
+
+    # read in the data file measured without Al plate
+    bi207 = read_mca_data_file('data samples/Beta NY 2015/Bi207 20 min utan Al.Spe')
+    # plot the data
+    plt.plot(bi207.x, bi207.y, 'o',label="Bi-207")
+
+    # read in the gamma background measurement
+    bi207_gamma = read_mca_data_file('data samples/Beta NY 2015/Bi207 20 min med Al.Spe')
+    # weight the spectrum according to the ratio of measurement durations
+    bi207_gamma.scale_data(bi207.duration/bi207_gamma.duration)
+    # plot the e-suppressed data into same figure
+    plt.plot(bi207_gamma.x, bi207_gamma.y, 'o', label="Bi-207 gamma bkgrd")
+
+    # now subtract the background from the measurement
+    #bi207.subtract_from_data(bi207_gamma)
+    # plot the result
+    plt.plot(bi207.x, bi207.y, 'o', label="Bi-207 w/o gamma bkgrd")
+
+    # fit all gaussians in our measurement
+    fits = fit_gaussians_to_measurement(bi207)
+    # loop over fit results
+    for g in fits:
+        # plot the gaussian fit
+        plt.plot(bi207.x, gauss(bi207.x,*g), label="Gauss fit, $\sigma$="+str(g[2]))
+    # now we have some data for our energy calibration:
+    # peak 0: pedestal, energy 0
+    # peak 1: internal conversion peak, 0.504 MeV
+    # peak 2: internal conversion peak, 0.996 MeV
+    ecalib_data_bi207 = np.array([[fits[0][1], fits[1][1], fits[2][1] ], #x
+                                  [0. , 0.504 , 0.996 ]] ) # y
+    ecalib_sigma_bi207 = np.array([fits[0][2], fits[1][2], fits[2][2]])
+    # generate the legend (with the "label" information from the plots)
+    plt.legend()
+
+    
     #                                               _ _ _               _   _                 
     #  ___ _ __   ___ _ __ __ _ _   _      ___ __ _| (_) |__  _ __ __ _| |_(_) ___  _ __      
     # / _ \ '_ \ / _ \ '__/ _` | | | |    / __/ _` | | | '_ \| '__/ _` | __| |/ _ \| '_ \     
@@ -199,29 +252,48 @@ if __name__ == '__main__':
     # \___|_| |_|\___|_|  \__, |\__, |    \___\__,_|_|_|_.__/|_|  \__,_|\__|_|\___/|_| |_|    
     #                     |___/ |___/
     # plot into a new figure
-    plt.figure(3)
+    plt.figure()
     plt.grid(True)
     plt.xlabel('channel number')
     plt.ylabel('energy [MeV]')
     plt.title("Energy Calibration")
 
     # plot the data from Cs-137
-    plt.plot(ecalib_data_cs137[0], ecalib_data_cs137[1], 'o',label="Cs-137")
+    plt.errorbar(ecalib_data_cs137[0], ecalib_data_cs137[1], xerr=ecalib_sigma_cs137, fmt='o',label="Cs-137")
+    # plot the data from Bi-207
+    plt.errorbar(ecalib_data_bi207[0], ecalib_data_bi207[1], xerr=ecalib_sigma_bi207, fmt='o',label="Bi-207")
 
     # linear regression of the data
     # see http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.stats.linregress.html
-    slope, intercept, r_value, p_value, std_err = stats.linregress(ecalib_data_cs137[0], ecalib_data_cs137[1])
+    slope, intercept, r_value, p_value, std_err = stats.linregress(np.concatenate((ecalib_data_cs137[0],ecalib_data_bi207[0])),
+                                                                   np.concatenate((ecalib_data_cs137[1],ecalib_data_bi207[1]))) # concatenate: join calib data together
+
+# ALTERNATIVE METHODS TO FIT:
+#    slope, intercept, r_value, p_value, std_err = stats.linregress(ecalib_data_bi207[0],ecalib_data_bi207[1])
+#    slope, intercept, r_value, p_value, std_err = stats.linregress(ecalib_data_cs137[0],ecalib_data_cs137[1])
+#    points_x = np.concatenate((ecalib_data_cs137[0],ecalib_data_bi207[0]))
+#    points_y = np.concatenate((ecalib_data_cs137[1],ecalib_data_bi207[1]))
+#    sigma    = np.concatenate((ecalib_sigma_cs137,ecalib_sigma_bi207))
+#    points_x = np.delete(points_x,[0,2])
+#    points_y = np.delete(points_y,[0,2])
+#    sigma    = np.delete(sigma   ,[0,2])
+#    # p0 is the initial guess for the fitting coefficients (a, b)
+#    p0 = [1., 1.]
+#    coeff, var_matrix = curve_fit(line, points_x, points_y, sigma=sigma, p0=p0)
+#    slope = coeff[0]
+#    intercept = coeff[1]
 
     log.info("Determined calibration constants from linear regression: E [MeV] = "+str(slope)+"*N_ch + " + str(intercept))
     x = np.arange(1,512)
-    plt.plot(x,slope*x+intercept,label="Cs-137")
-
+    plt.plot(x,slope*x+intercept,label="linear regression")
+    plt.legend()
+    
     # apply energy calibration
     log.info("Applying calibration constants")
     p32.energy_calibrate(slope,intercept)
     
     # plot into a new figure
-    plt.figure(4)
+    plt.figure()
     plt.grid(True)
     plt.xlabel('energy [MeV]')
     plt.ylabel('counts')
@@ -242,7 +314,7 @@ if __name__ == '__main__':
     QminTe = np.sqrt((p32.y*pc)/(Ee*f))
 
     # plot into a new figure
-    plt.figure(5)
+    plt.figure()
     plt.grid(True)
     plt.xlabel('Te [MeV]')
     plt.ylabel('Q-Te')
