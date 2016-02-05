@@ -4,6 +4,7 @@ import numpy as np                       # for handling of data
 import matplotlib.pyplot as plt          # for plotting
 from scipy.optimize import curve_fit     # to fit functions to the data
 from scipy import signal                 # to find maxima in the data
+from scipy import stats                  # for linear regressions
 
 class Spectrum:
     """A class to hold our spectrum measurement data and meta data (such as duration)"""
@@ -19,6 +20,8 @@ class Spectrum:
         self.y[self.y < 0] = 0;
     def scale_data(self, scale):
         self.y *= scale
+    def energy_calibrate(self, slope, intercept):
+        self.x = self.x*slope + intercept
 
 def gauss(x, *p):
     """ gauss function to be used for fits to the data"""
@@ -81,13 +84,15 @@ def fit_gaussians_to_measurement(m):
             warnings.simplefilter("error", OptimizeWarning)
             # perform the gaussian fit to the data:
             try:
-                #coeff, var_matrix = curve_fit(gauss, m.x, m.y, p0=p0) # fit using the full data range
+                # use the scipy curve_fit routine (uses non-linear least squares to perform the fit)
+                # see http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.optimize.curve_fit.html
+                #coeff, var_matrix = curve_fit(gauss, m.x, m.y, p0=p0) # fit using the full data range, might not work with multiple peaks
                 coeff, var_matrix = curve_fit(gauss, m.x[p-10:p+10], m.y[p-10:p+10], p0=p0) # fit using "slices" of the arrays with +/- 10 around peak
             except (RuntimeError, OptimizeWarning):
                 # the minimization did not work out... log it and continue to next peak
                 log.info("  - gaussian fit failed!")
                 continue
-        # filter the results
+        # filter the results -- or we get a lot of "spurious" peaks
         xdynrange = m.x.shape[0] # dynamic range in x
         if coeff[2] > 0.1*xdynrange: # check width of gaussian in percent of the dynamic range
             log.info("  - sigma out of bounds: " + str(coeff[2]))
@@ -111,19 +116,19 @@ if __name__ == '__main__':
     log.setLevel("DEBUG")
 
     # read in the first file
-    m = read_mca_data_file('data samples/Beta NY 2015/P32 60 min.Spe')
+    p32 = read_mca_data_file('data samples/Beta NY 2015/P32 60 min.Spe')
 
     # make the plot pretty
     plt.xlabel('channel number')
     plt.ylabel('counts')
-    plt.title(m.name)
+    plt.title(p32.name)
     # plt.text(60, .025, r'$\mu=100,\ \sigma=15$') # to add text to the plot
     # plt.axis([40, 160, 0, 0.03]) # to set the axis range
     # plt.yscale('log') # set y axis to log scale
     plt.grid(True)
 
     # plot the first file
-    plt.plot(m.x, m.y, 'o')       # plot with markers
+    plt.plot(p32.x, p32.y, 'o')       # plot with markers
 
     # read in the Cs137 file measured without Al plate
     cs137 = read_mca_data_file('data samples/Beta NY 2015/cs137 15 min utan Al.Spe')
@@ -158,7 +163,7 @@ if __name__ == '__main__':
     # loop over fit results
     for g in fits:
         # plot the gaussian fit
-        plt.plot(m.x, gauss(cs137.x,*g), label="Gauss fit, $\sigma$="+str(g[2]))
+        plt.plot(cs137.x, gauss(cs137.x,*g), label="Gauss fit, $\sigma$="+str(g[2]))
 
     
     # generate the legend (with the "label" information from the plots)
@@ -166,10 +171,16 @@ if __name__ == '__main__':
 
     # now we have some data for our energy calibration:
     # peak 0: pedestal, energy 0
-    # peak 1: internal convertion peak, 0.630 MeV
-    ecalib_data_cs137 = np.array([fits[0][1], 0 ],
-                                 fits[1][1] , 0.630 )
+    # peak 1: internal conversion peak, 0.630 MeV
+    ecalib_data_cs137 = np.array([[fits[0][1], fits[1][1] ], #x
+                                  [0. , 0.630 ]] ) # y
 
+    # linear regression of the data
+    # see http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.stats.linregress.html
+    slope, intercept, r_value, p_value, std_err = stats.linregress(ecalib_data_cs137[0], ecalib_data_cs137[1])
+
+    log.info("Determined calibration constants from linear regression: E [MeV] = "+str(slope)+"*N_ch + " + str(intercept))
+    
     # plot into a new figure
     plt.figure(3)
     plt.grid(True)
@@ -177,8 +188,55 @@ if __name__ == '__main__':
     plt.ylabel('energy [MeV]')
     plt.title("Energy Calibration")
 
-    plt.plot(ecalib_data_cs137, 'o',label="Cs-137")
+    plt.plot(ecalib_data_cs137[0], ecalib_data_cs137[1], 'o',label="Cs-137")
+    x = np.arange(1,512)
+    plt.plot(x,slope*x+intercept,label="Cs-137")
 
+    # apply energy calibration
+    log.info("Applying calibration constants")
+    p32.energy_calibrate(slope,intercept)
+    
+    # plot into a new figure
+    plt.figure(4)
+    plt.grid(True)
+    plt.xlabel('energy [MeV]')
+    plt.ylabel('counts')
+    plt.title("P-32 energy spectrum")
+
+    plt.plot(p32.x, p32.y, 'o')
+
+    # fermi-kurie calculations:
+    mec2 = 0.510998910 # MeV
+    pc = np.sqrt((p32.x + mec2)**2 - mec2**2)
+    A = pc/mec2
+    f = 1.3604*A*A + 0.1973*A + 0.0439
+    Ee = (p32.x + mec2)
+    QminTe = np.sqrt((p32.y*pc)/(Ee*f))
+
+    # plot into a new figure
+    plt.figure(5)
+    plt.grid(True)
+    plt.xlabel('Te [MeV]')
+    plt.ylabel('Q-Te')
+    plt.title("P-32 Fermi-Kurie")
+    plt.plot(p32.x, QminTe, 'o', label="data")
+
+    # linear regression of the FM plot
+    # see http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.stats.linregress.html
+    # the fit does not really work on the edges of the FM plot, so we take the region 0.2<E [MeV]<1.5
+    lower_limit = np.where(p32.x>0.2)[0][0] # first elements indicate first bins matching our criteria
+    upper_limit = np.where(p32.x>1.5)[0][0]
+
+    slope, intercept, r_value, p_value, std_err = stats.linregress(p32.x[lower_limit:upper_limit], QminTe[lower_limit:upper_limit])
+
+    plt.plot(p32.x, QminTe, 'o', label="data")
+    x = np.arange(0,2,0.05) # generate x axis for fit result
+    plt.plot(x,slope*x+intercept,label="linear regression")
+        
+    log.info("Determined linear regression to Fermi-Kurie plot: Q-Te = "+str(slope)+"*Te + " + str(intercept))
+    log.info("===> Q value for P32: Q = "+str(-intercept/slope)+" MeV ")
+
+    plt.legend()
     
     # final step:
     plt.show()           # <-- shows the plot (not needed with interactive plots)
