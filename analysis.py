@@ -115,21 +115,35 @@ if __name__ == '__main__':
     log = logging.getLogger('betalab_analysis') # set up logging
     log.setLevel("DEBUG")
 
-    # read in the first file
+    # read in the p32 measurement file
     p32 = read_mca_data_file('data samples/Beta NY 2015/P32 60 min.Spe')
 
     # make the plot pretty
     plt.xlabel('channel number')
     plt.ylabel('counts')
-    plt.title(p32.name)
+    plt.title("P-32 MCA spectrum")
     # plt.text(60, .025, r'$\mu=100,\ \sigma=15$') # to add text to the plot
     # plt.axis([40, 160, 0, 0.03]) # to set the axis range
     # plt.yscale('log') # set y axis to log scale
     plt.grid(True)
 
-    # plot the first file
-    plt.plot(p32.x, p32.y, 'o')       # plot with markers
+    # plot the p32 raw measurement
+    plt.plot(p32.x, p32.y, 'o', label="P-32 raw data")  # 'o' parameter: plot with markers
 
+    # read in the background measurement file
+    bkgrd = read_mca_data_file('data samples/Beta NY 2015/background 60 min.Spe')
+    # normalize the background to the measurement time ratio between P32 and bkgrd
+    bkgrd.scale_data(p32.duration/bkgrd.duration)
+    # show background also in plot
+    plt.plot(bkgrd.x, bkgrd.y, 'o', label="background")
+
+    # now subtract the background from the p32 measurement
+    p32.subtract_from_data(bkgrd)
+    # plot the background-subracted p32 measurement
+    plt.plot(p32.x, p32.y, 'o', label="P-32 - bkgrd")  # 'o' parameter: plot with markers
+    plt.legend()     # generate the legend (with the "label" information from the plots)
+
+    
     # read in the Cs137 file measured without Al plate
     cs137 = read_mca_data_file('data samples/Beta NY 2015/cs137 15 min utan Al.Spe')
 
@@ -140,7 +154,8 @@ if __name__ == '__main__':
     plt.ylabel('counts')
     plt.title("Cs-137")
 
-    plt.plot(cs137.x, cs137.y, 'o',label="Cs-137")       # plot with markers
+    # plot the 
+    plt.plot(cs137.x, cs137.y, 'o',label="Cs-137")
 
     # read in the gamma background measurement of Cs137
     cs137_gamma = read_mca_data_file('data samples/Beta NY 2015/cs137 15 min med Al.Spe')
@@ -165,7 +180,6 @@ if __name__ == '__main__':
         # plot the gaussian fit
         plt.plot(cs137.x, gauss(cs137.x,*g), label="Gauss fit, $\sigma$="+str(g[2]))
 
-    
     # generate the legend (with the "label" information from the plots)
     plt.legend()
 
@@ -224,13 +238,13 @@ if __name__ == '__main__':
     # linear regression of the FM plot
     # see http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.stats.linregress.html
     # the fit does not really work on the edges of the FM plot, so we take the region 0.2<E [MeV]<1.5
-    lower_limit = np.where(p32.x>0.2)[0][0] # first elements indicate first bins matching our criteria
+    lower_limit = np.where(p32.x>0.2)[0][0] # first elements indicate first bin matching our criteria
     upper_limit = np.where(p32.x>1.5)[0][0]
 
     slope, intercept, r_value, p_value, std_err = stats.linregress(p32.x[lower_limit:upper_limit], QminTe[lower_limit:upper_limit])
 
     plt.plot(p32.x, QminTe, 'o', label="data")
-    x = np.arange(0,2,0.05) # generate x axis for fit result
+    x = np.arange(0,2,0.05) # generate x axis for fit result (start, stop, stepsize)
     plt.plot(x,slope*x+intercept,label="linear regression")
         
     log.info("Determined linear regression to Fermi-Kurie plot: Q-Te = "+str(slope)+"*Te + " + str(intercept))
