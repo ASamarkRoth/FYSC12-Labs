@@ -115,10 +115,13 @@ if __name__ == '__main__':
     log = logging.getLogger('betalab_analysis') # set up logging
     log.setLevel("DEBUG")
 
-    # read in the p32 measurement file
-    p32 = read_mca_data_file('data samples/Beta NY 2015/P32 60 min.Spe')
-
-    # make the plot pretty
+    #            _________
+    # _ __      |___ /___ \
+    #| '_ \ _____ |_ \ __) |
+    #| |_) |_____|__) / __/
+    #| .__/     |____/_____|
+    #|_|    
+    # setup the plot
     plt.xlabel('channel number')
     plt.ylabel('counts')
     plt.title("P-32 MCA spectrum")
@@ -127,6 +130,8 @@ if __name__ == '__main__':
     # plt.yscale('log') # set y axis to log scale
     plt.grid(True)
 
+    # read in the p32 measurement file
+    p32 = read_mca_data_file('data samples/Beta NY 2015/P32 60 min.Spe')
     # plot the p32 raw measurement
     plt.plot(p32.x, p32.y, 'o', label="P-32 raw data")  # 'o' parameter: plot with markers
 
@@ -143,10 +148,12 @@ if __name__ == '__main__':
     plt.plot(p32.x, p32.y, 'o', label="P-32 - bkgrd")  # 'o' parameter: plot with markers
     plt.legend()     # generate the legend (with the "label" information from the plots)
 
-    
-    # read in the Cs137 file measured without Al plate
-    cs137 = read_mca_data_file('data samples/Beta NY 2015/cs137 15 min utan Al.Spe')
-
+    #                _ __________
+    #  ___ ___      / |___ /___  |
+    # / __/ __|_____| | |_ \  / /
+    #| (__\__ \_____| |___) |/ /
+    # \___|___/     |_|____//_/
+    #    
     # plot into a new figure
     plt.figure(2)
     plt.grid(True)
@@ -154,47 +161,43 @@ if __name__ == '__main__':
     plt.ylabel('counts')
     plt.title("Cs-137")
 
-    # plot the 
+    # read in the Cs137 file measured without Al plate
+    cs137 = read_mca_data_file('data samples/Beta NY 2015/cs137 15 min utan Al.Spe')
+    # plot the cs-137 data
     plt.plot(cs137.x, cs137.y, 'o',label="Cs-137")
 
     # read in the gamma background measurement of Cs137
     cs137_gamma = read_mca_data_file('data samples/Beta NY 2015/cs137 15 min med Al.Spe')
-
     # weight the spectrum according to the ratio of measurement durations
     cs137_gamma.scale_data(cs137.duration/cs137_gamma.duration)
-    
-    # plot into same figure
+    # plot the cs-137 e-suppressed data into same figure
     plt.plot(cs137_gamma.x, cs137_gamma.y, 'o', label="Cs-137 gamma bkgrd")
 
     # now subtract the background from the measurement
     cs137.subtract_from_data(cs137_gamma)
-
-    # plot the resut
+    # plot the result
     plt.plot(cs137.x, cs137.y, 'o', label="Cs-137 w/o gamma bkgrd")
 
     # fit all gaussians in our measurement
     fits = fit_gaussians_to_measurement(cs137)
-
     # loop over fit results
     for g in fits:
         # plot the gaussian fit
         plt.plot(cs137.x, gauss(cs137.x,*g), label="Gauss fit, $\sigma$="+str(g[2]))
-
-    # generate the legend (with the "label" information from the plots)
-    plt.legend()
-
     # now we have some data for our energy calibration:
     # peak 0: pedestal, energy 0
     # peak 1: internal conversion peak, 0.630 MeV
     ecalib_data_cs137 = np.array([[fits[0][1], fits[1][1] ], #x
                                   [0. , 0.630 ]] ) # y
+    # generate the legend (with the "label" information from the plots)
+    plt.legend()
 
-    # linear regression of the data
-    # see http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.stats.linregress.html
-    slope, intercept, r_value, p_value, std_err = stats.linregress(ecalib_data_cs137[0], ecalib_data_cs137[1])
-
-    log.info("Determined calibration constants from linear regression: E [MeV] = "+str(slope)+"*N_ch + " + str(intercept))
-    
+    #                                               _ _ _               _   _                 
+    #  ___ _ __   ___ _ __ __ _ _   _      ___ __ _| (_) |__  _ __ __ _| |_(_) ___  _ __      
+    # / _ \ '_ \ / _ \ '__/ _` | | | |    / __/ _` | | | '_ \| '__/ _` | __| |/ _ \| '_ \     
+    #|  __/ | | |  __/ | | (_| | |_| |   | (_| (_| | | | |_) | | | (_| | |_| | (_) | | | |    
+    # \___|_| |_|\___|_|  \__, |\__, |    \___\__,_|_|_|_.__/|_|  \__,_|\__|_|\___/|_| |_|    
+    #                     |___/ |___/
     # plot into a new figure
     plt.figure(3)
     plt.grid(True)
@@ -202,7 +205,14 @@ if __name__ == '__main__':
     plt.ylabel('energy [MeV]')
     plt.title("Energy Calibration")
 
+    # plot the data from Cs-137
     plt.plot(ecalib_data_cs137[0], ecalib_data_cs137[1], 'o',label="Cs-137")
+
+    # linear regression of the data
+    # see http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.stats.linregress.html
+    slope, intercept, r_value, p_value, std_err = stats.linregress(ecalib_data_cs137[0], ecalib_data_cs137[1])
+
+    log.info("Determined calibration constants from linear regression: E [MeV] = "+str(slope)+"*N_ch + " + str(intercept))
     x = np.arange(1,512)
     plt.plot(x,slope*x+intercept,label="Cs-137")
 
@@ -216,9 +226,13 @@ if __name__ == '__main__':
     plt.xlabel('energy [MeV]')
     plt.ylabel('counts')
     plt.title("P-32 energy spectrum")
-
     plt.plot(p32.x, p32.y, 'o')
 
+    # _____                   _       _  __          _        ____  _       _
+    #|  ___|__ _ __ _ __ ___ (_)     | |/ /   _ _ __(_) ___  |  _ \| | ___ | |_
+    #| |_ / _ \ '__| '_ ` _ \| |_____| ' / | | | '__| |/ _ \ | |_) | |/ _ \| __|
+    #|  _|  __/ |  | | | | | | |_____| . \ |_| | |  | |  __/ |  __/| | (_) | |_
+    #|_|  \___|_|  |_| |_| |_|_|     |_|\_\__,_|_|  |_|\___| |_|   |_|\___/ \__|    
     # fermi-kurie calculations:
     mec2 = 0.510998910 # MeV
     pc = np.sqrt((p32.x + mec2)**2 - mec2**2)
@@ -240,17 +254,18 @@ if __name__ == '__main__':
     # the fit does not really work on the edges of the FM plot, so we take the region 0.2<E [MeV]<1.5
     lower_limit = np.where(p32.x>0.2)[0][0] # first elements indicate first bin matching our criteria
     upper_limit = np.where(p32.x>1.5)[0][0]
-
     slope, intercept, r_value, p_value, std_err = stats.linregress(p32.x[lower_limit:upper_limit], QminTe[lower_limit:upper_limit])
-
-    plt.plot(p32.x, QminTe, 'o', label="data")
     x = np.arange(0,2,0.05) # generate x axis for fit result (start, stop, stepsize)
     plt.plot(x,slope*x+intercept,label="linear regression")
-        
-    log.info("Determined linear regression to Fermi-Kurie plot: Q-Te = "+str(slope)+"*Te + " + str(intercept))
-    log.info("===> Q value for P32: Q = "+str(-intercept/slope)+" MeV ")
-
     plt.legend()
+
+    # now the Q value is determined by where the linear regression intersects with the x axis (Q-Te = 0)
+    Q = -intercept/slope
+
+    # print results
+    log.info("Determined linear regression to Fermi-Kurie plot: Q-Te = "+str(slope)+"*Te + " + str(intercept))
+    log.info("===> Q value for P32: Q = "+str(Q)+" MeV ")
+    plt.text(1.6, 25, 'Q = '+"{:.3f}".format(Q)+' MeV') # to add text to the plot
     
     # final step:
     plt.show()           # <-- shows the plot (not needed with interactive plots)
