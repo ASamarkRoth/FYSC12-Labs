@@ -1,7 +1,9 @@
-import csv
-import logging
-import numpy as np
-import matplotlib.pyplot as plt  # the tidy way
+import csv                               # for reading in our data files
+import logging                           # for orderly print output
+import numpy as np                       # for handling of data
+import matplotlib.pyplot as plt          # for plotting
+from scipy.optimize import curve_fit     # to fit functions to the data
+from scipy import signal                 # to find maxima in the data
 
 class Measurement:
     """A class to hold our measurement data and meta data (such as duration)"""
@@ -12,6 +14,12 @@ class Measurement:
         self.name = filename   # a more descriptive name, can be used e.g. in legends
         self.duration = 0
 
+def gauss(x, *p):
+    """ gauss function to be used for fits to the data"""
+    A, mu, sigma = p
+    return A*np.exp(-(x-mu)**2/(2.*sigma**2))
+
+        
 def readMcaDataFile(filename):
     """Reads in a data file (csv format) stored by the Maestro MCA software and returns a 'Measurement' object. Tested with Maestro Version 6.05 """
     log = logging.getLogger('betalab_analysis') # set up logging
@@ -50,15 +58,13 @@ def readMcaDataFile(filename):
         
 if __name__ == '__main__':
     # set up some print-out routines (logging)
+    FORMAT = '%(asctime)s %(name)s %(levelname)-8s %(message)s'
+    logging.basicConfig(format=FORMAT)
     log = logging.getLogger('betalab_analysis') # set up logging
-    formatter = logging.Formatter('%(asctime)s %(name)s(%(levelname)s): %(message)s',"%H:%M:%S")
     log.setLevel("DEBUG")
 
     # read in the first file
     m = readMcaDataFile('data samples/Beta NY 2015/P32 60 min.Spe')
-    
-    # plot the first file
-    plt.plot(m.x, m.y, 'o')       # plot with markers
 
     # make the plot pretty
     plt.xlabel('channel number')
@@ -66,8 +72,39 @@ if __name__ == '__main__':
     plt.title(m.name)
     # plt.text(60, .025, r'$\mu=100,\ \sigma=15$') # to add text to the plot
     # plt.axis([40, 160, 0, 0.03]) # to set the axis range
-    plt.yscale('log')
+    # plt.yscale('log') # set y axis to log scale
     plt.grid(True)
 
+    # plot the first file
+    plt.plot(m.x, m.y, 'o')       # plot with markers
+
+    # find peaks in m.y with widths given by an array
+    peakind = signal.find_peaks_cwt(m.y, np.arange(10,80,5)) 
+
+    for p in peakind:
+        log.info("Found peak in the data at position x = " + str(m.x[p]) + "; fitting it with a gaussian")
+        # p0 is the initial guess for the fitting coefficients (A, mu and sigma above)
+        p0 = [1., m.x[p], 1.] # mu is given by one of the found peaks positions
+        # perform the gaussian fit to the data:
+        try:
+            #coeff, var_matrix = curve_fit(gauss, m.x, m.y, p0=p0) # fit using the full data range
+            coeff, var_matrix = curve_fit(gauss, m.x[p-10:p+10], m.y[p-10:p+10], p0=p0) # fit using "slices" of the arrays with +/- 10 around peak
+        except RuntimeError:
+            # the minimization did not work out... log it and continue to next peak
+            log.info("  - gaussian fit failed!")
+            continue
+        # filter the results
+        xdynrange = m.x.shape[0] # dynamic range in x
+        if coeff[2] > 0.1*xdynrange: # check width of gaussian in percent of the dynamic range
+            log.info("  - sigma out of bounds: " + str(coeff[2]))
+            continue
+        if coeff[1] > xdynrange-0.1*xdynrange or coeff[1] < 10: # check center position: should not be at the limits of measurement range
+            log.info("  - mu out of bounds: " + str(coeff[1]))
+            continue
+        log.info("  - fit result: A = " + str(coeff[0]) + ", mu = " + str(coeff[1]) + ", sigma = " + str(coeff[2]) + ". ")
+        # plot the gaussian fit
+        plt.plot(m.x, gauss(m.x,*coeff))       # plot with markers
+
+    
     # final step:
     plt.show()           # <-- shows the plot (not needed with interactive plots)
