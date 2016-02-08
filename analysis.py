@@ -263,20 +263,18 @@ if __name__ == '__main__':
     # plot the data from Bi-207
     plt.errorbar(ecalib_data_bi207[0], ecalib_data_bi207[1], xerr=ecalib_sigma_bi207, fmt='o',label="Bi-207")
 
-    # linear regression of the data
-    # see http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.stats.linregress.html
-    slope, intercept, r_value, p_value, std_err = stats.linregress(np.concatenate((ecalib_data_cs137[0],ecalib_data_bi207[0])),
-                                                                   np.concatenate((ecalib_data_cs137[1],ecalib_data_bi207[1]))) # concatenate: join calib data together
-
-# ALTERNATIVE METHODS TO FIT:
-#    slope, intercept, r_value, p_value, std_err = stats.linregress(ecalib_data_bi207[0],ecalib_data_bi207[1])
-#    slope, intercept, r_value, p_value, std_err = stats.linregress(ecalib_data_cs137[0],ecalib_data_cs137[1])
-#    points_x = np.concatenate((ecalib_data_cs137[0],ecalib_data_bi207[0]))
-#    points_y = np.concatenate((ecalib_data_cs137[1],ecalib_data_bi207[1]))
-#    sigma    = np.concatenate((ecalib_sigma_cs137,ecalib_sigma_bi207))
-#    points_x = np.delete(points_x,[0,2])
+    points_x = np.concatenate((ecalib_data_cs137[0],ecalib_data_bi207[0])) # concatenate: join array data together
+    points_y = np.concatenate((ecalib_data_cs137[1],ecalib_data_bi207[1]))
+    sigma    = np.concatenate((ecalib_sigma_cs137,ecalib_sigma_bi207))
+#    points_x = np.delete(points_x,[0,2]) # to remove a set of points (index 0 and 2)
 #    points_y = np.delete(points_y,[0,2])
 #    sigma    = np.delete(sigma   ,[0,2])
+
+    # linear regression of the data
+    # see http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.stats.linregress.html
+    slope, intercept, r_value, p_value, std_err = stats.linregress(points_x, points_y)
+
+# ALTERNATIVE METHODS TO FIT:
 #    # p0 is the initial guess for the fitting coefficients (a, b)
 #    p0 = [1., 1.]
 #    coeff, var_matrix = curve_fit(line, points_x, points_y, sigma=sigma, p0=p0)
