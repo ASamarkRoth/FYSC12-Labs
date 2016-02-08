@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import csv                               # for reading in our data files
 import logging                           # for orderly print output
 import numpy as np                       # for handling of data
@@ -118,7 +119,7 @@ if __name__ == '__main__':
     FORMAT = '%(asctime)s %(name)s %(levelname)-8s %(message)s'
     logging.basicConfig(format=FORMAT)
     log = logging.getLogger('betalab_analysis') # set up logging
-    log.setLevel("DEBUG")
+    log.setLevel("INFO")
 
     #            _________
     # _ __      |___ /___ \
@@ -132,7 +133,7 @@ if __name__ == '__main__':
     plt.title("P-32 MCA spectrum")
     # plt.text(60, .025, r'$\mu=100,\ \sigma=15$') # to add text to the plot
     # plt.axis([40, 160, 0, 0.03]) # to set the axis range
-    # plt.yscale('log') # set y axis to log scale
+    plt.yscale('log') # set y axis to log scale
     plt.grid(True)
 
     # read in the p32 measurement file
@@ -143,6 +144,7 @@ if __name__ == '__main__':
     # read in the background measurement file
     bkgrd = read_mca_data_file('data samples/Beta NY 2015/background 60 min.Spe')
     # normalize the background to the measurement time ratio between P32 and bkgrd
+    log.info("Adjusting P-32 background normalization by: " + str(p32.duration/bkgrd.duration))
     bkgrd.scale_data(p32.duration/bkgrd.duration)
     # show background also in plot
     plt.plot(bkgrd.x, bkgrd.y, 'o', label="background")
@@ -224,8 +226,7 @@ if __name__ == '__main__':
     plt.plot(bi207_gamma.x, bi207_gamma.y, 'o', label="Bi-207 gamma bkgrd")
 
     # now subtract the background from the measurement
-    #bi207.subtract_from_data(bi207_gamma)
-    # plot the result
+    bi207.subtract_from_data(bi207_gamma)
     plt.plot(bi207.x, bi207.y, 'o', label="Bi-207 w/o gamma bkgrd")
 
     # fit all gaussians in our measurement
