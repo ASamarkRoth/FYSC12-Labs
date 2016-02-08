@@ -196,6 +196,7 @@ if __name__ == '__main__':
     # peak 1: internal conversion peak, 0.630 MeV
     ecalib_data_cs137 = np.array([[fits[0][1], fits[1][1] ], #x
                                   [0. , 0.630 ]] ) # y
+    # copy the sigma (the width of the gaussian) from the fit results
     ecalib_sigma_cs137 = np.array([fits[0][2], fits[1][2]])                                  
     # generate the legend (with the "label" information from the plots)
     plt.legend()
@@ -241,6 +242,7 @@ if __name__ == '__main__':
     # peak 2: internal conversion peak, 0.996 MeV
     ecalib_data_bi207 = np.array([[fits[0][1], fits[1][1], fits[2][1] ], #x
                                   [0. , 0.504 , 0.996 ]] ) # y
+    # copy the sigma (the width of the gaussian) from the fit results
     ecalib_sigma_bi207 = np.array([fits[0][2], fits[1][2], fits[2][2]])
     # generate the legend (with the "label" information from the plots)
     plt.legend()
