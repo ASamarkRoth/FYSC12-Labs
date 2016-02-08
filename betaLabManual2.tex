@@ -27,7 +27,7 @@
 \\KF7: $\beta$-spectrum and Fermi-Kurie plot
 \\.
 \\\textcolor{red}{PLEASE READ THIS DOCUMENT BEFORE COMING TO THE LAB!}}}
-\author{Supervisor: Julius Scherzinger}
+%\author{}
 \date{\today}
 \maketitle
 
@@ -50,23 +50,6 @@ The purpose of this laboratory exercise is to determine the energy released in t
 \tableofcontents 
 \pagebreak
 \section{Learning outcome}
-
-Laborationens mål är, i enlighet med kursplanen för FYSC12: Kärnfysik och Reaktorer, 7.5 hp, att studenten efter genomgången laboration skall:
-
-\begin{itemize}
-\item känna till grundläggande egenskaper hos beta-sönderfall;
-\item kunna beskriva huvuddragen i omskrivningen av Fermis
-  Gyllende regel, inklusive de approximationer som gjorts;
-\item förstå hur -- och varför -- ett Fermi-Kurie-histogram
-  görs för att bestämma Q-värdet för ett beta-sönderfall;
-\item känna till huvudprinciperna för hur en plastscintillator-detektor fungerar;
- \item kunna diskutera lämplig uppställning och tillvägagångssätt för
-   experimentet;
-\item kunna -- med hjälp av handledaren -- hantera ett radioaktivt preparat
-  och använda en plastscintillator (inklusive kalibrering) för mätning av sönderfallspartiklars energi;
-\item värdera experimentella resultat.
-
-\end{itemize}
 
 In accordance with the syllabus of FYSC12: Nuclear Physics and Reactors, 7.5
 credits, the goal of the laboration exercise is that the student -- after
@@ -92,10 +75,11 @@ completed the lab -- shall:
 \subsection{General}
 
 \begin{itemize}
-\item Supervisor: Julius Scherzinger, office: B213
-\item Email: julius.scherzinger@nuclear.lu.se, please contact me for any questions regarding the lab. 
+\item Supervisor: Hanno Perrey, office: B202
+\item Email: hanno.perrey@nuclear.lu.se, please contact me for any questions regarding the lab. 
 \item We start the lab 8:00 in hall L311. 
-\item Bring: This lab manual, Krane, calculator, solutions (or an attempt to a solution) for the preparatory questions. 
+\item Bring: your laptop computer (preferably with working
+  analysis setup, see below). 
 \item NO FOOD or DRINKS in L311
 \end{itemize}
 
@@ -106,37 +90,72 @@ completed the lab -- shall:
 \begin{itemize}
 \item Read Krane chap. 7.3, 7.6 (3 pages), 9.1 and 9.2. 
 \item Read the lab manual
-\item Do the preparatory questions in the lab manual
+\item Setup your computer to run the analysis code (see section !!!!!)
+  and test it by following the first step
 \end{itemize}
 
 
 
-\subsection{Report}
+\subsection{Schedule}
 
-Reports should be sent to julius.scherzinger.lu@analys.urkund.se (checks for plagiarism), as an attachment (NOTE: IN .PDF FORMAT! No .doc, .docx, .dvi or .m-files!)
-Send the report within 10 working days from the lab exercise. 
-
-The following should be included in the report. It does not necessarily have to follow the order listed here. You can write the reports in groups of two, or alone. The report can be written in Swedish or English, and must be computer written; min. 5 pages, max. 10 pages (including figures and spectra). Remember to state references if you use any. 
+\textbf{Morning (whole group):} 
 \begin{itemize}
-\item Introduction: purpose/goal of the laboratory exercise.
-\item Theory: Q-value, $\beta$-decay, Fermi's Theory and the rewriting of Fermi Golden Rule. Describe the detector principles.
-\item Experimental setup. 
-\item Procedure: measurements (figures of all measured spectra; discuss the shape of the spectra), calibration of the detector and the construction of the Fermi-Kurie plot. 
-\item Results: figure of Fermi-Kurie plot and calculation of the Q-value.
-\item Conclusions: discuss the result, compare result to the theoretical value, discuss sources of error and approximations made.
-\item All preparatory questions should be answered in the report, preferably included in the text, and not as a list.
-
+\item Warm-up discussion about beta decay and introduction to the
+  experimental setup.
+\item Collecting and analysing data to determine the $Q$ value of the
+  $\beta$ decay of $^{32}$P.
 \end{itemize}
 
+\textbf{Lunch break} 
+
+\textbf{Early afternoon (partner exercises/small groups):} 
+\begin{itemize}
+\item Open experiment session. Lots of unanswered questions from the
+  morning: how reliable are the results, how can they be improved and
+  what actually happens under the hood of our data acquisition system?
+  Pick a topic to focus on and document your findings.
+\end{itemize}
+
+\textbf{Later in the afternoon (whole group):} 
+\begin{itemize}
+\item Concluding discussion. Present your findings and ask any
+  remaining questions you might have!
+\end{itemize}
+
+
+\textbf{Important: }For this laboratory exercise, you \emph{do not} have to hand in any
+written report. 
+
+Therefore, your \emph{active} participation in the laboratory experiment is
+the only prerequisite for a passing grade: by generally asking questions,
+raising ideas for investigations, and by discussing the experiment and
+its result within the group. And of course, by following your own
+initiative in the afternoon when investigating a subject of your
+choice (together with a partner).
 
 \pagebreak
 \section{Introduction to laboratory exercise}
 
-The purpose of this laboratory exercise is to determine the energy released in the process (the \textit{Q-value}) for a $\beta$-transition by studying the weak decay of the isotope $^{32}P\rightarrow ^{32}S + e^- + \bar{\nu}$ (QUESTION \ref{q:P}). This is done by measuring the energy of the electrons from the decay. Since the end point energy of the spectrum cannot be determined due to background and noise, the spectrum needs to be transformed to a Fermi-Kurie plot by rewriting the Fermi Golden Rule. 
+The purpose of this laboratory exercise is to measure the energy
+released in the process (the \textit{Q-value}) for a
+$\beta$-transition by studying the weak decay of the isotope
+phosphorus-32 to sulfur ($^{32}P\rightarrow ^{32}S + e^- + \bar{\nu}$) and to compare the
+resulting value to the theoretical expectation. 
 
-The measurements are done by a plastic scintillation detector in combination with a Multi Channel Analyzer (MCA). The detector is calibrated before the phosphorus measurement. The data is then collected and analyzed to be able to construct the Fermi-Kurie plot, from which the Q-value easily can be determined. The experimental Q-value is compared to the theoretically calculated value -- if the measured value is in agreement with theory, Fermi's Theory of weak decay can hence be verified.  
+For measuring the energy of the electrons from the decay, we use a
+plastic scintillation detector in combination with a Multi Channel
+Analyzer (MCA). Two additional radioactive sources are available for
+the energy calibration of the detector.
 
-\section{Theory}
+Since the end point energy of the spectrum is experimentally difficult
+to determine from the spectrum alone, the data will be analyzed by
+constructing the Fermi-Kurie plot. From this, the Q-value can be
+easily extracted.
+
+Finally, we will discuss whether or not the result constitutes a
+successful test of Fermi's Theory of weak decay.
+
+\section{Brief reminder of the underlying theory}
 \subsection{$\beta$-decay}
 
 There are three different kinds of $\beta$ decay:
@@ -146,19 +165,6 @@ There are three different kinds of $\beta$ decay:
 \item[E.C.] (Electron Capture) if the energy of the excited nucleus is not high enough for a $\beta^{\pm}$ decay, an electron near the nucleus can be captured by a proton, leaving the atom in an excited state, where the hole is filled by an outer electron, giving characteristic X-rays (the energy of the X-ray is the binding energy of the captured electron).
 \end{itemize}
 
-%\vspace{-40pt}
-\begin{figure}[htp]
-  \vspace{40pt}
-  \begin{center}
-    \includegraphics[width=10.0cm]{figures/BetaDecay.png}
-    \caption{A Feynman diagram showing $\beta$ decay on quark level.}
-    \label{fig:quark}
-  \end{center}
-\end{figure}
-$\beta$ decay is a \textit{weak} decay, and occur via an intermediate process: a quark changes flavor by emitting a W-boson that decay fast (lifetime of W $\sim 10^{-24}s$) to a lepton pair, see Fig. \ref{fig:quark}. As can be seen in the figure, this is not a point like decay. To be able to use Fermi's Theory and the Golden Rule, one of the requirement is that the decay can be treated as a perturbation, i.e. it must be point like. How is this solved (QUESTION \ref{q:point})? 
-
-
-\pagebreak
 \subsubsection{Q-value}
 
 The released energy in a nuclear reaction is called the Q-value. It can be expressed as the difference in the nuclear binding energy before and after the decay: \begin{equation}
@@ -246,7 +252,7 @@ To be able to translate the detected signal to the electron energy, the detector
 
 
 
-\section{Procedure}
+\section{The morning: measure $Q$ value of $^{32}$P}
 Remember to save all the spectra!
 \begin{enumerate}
 \item Theory session 
@@ -263,6 +269,15 @@ Remember to save all the spectra!
 \item Plot all spectra (using the data text file)
 
 \end{enumerate}
+
+\subsection{Data Analysis}
+\label{sec:data-analysis}
+
+\subsubsection{Prerequisites}
+\label{sec:prerequisites}
+\url{http://www.scipy.org/install.html}
+
+
 
 \begin{table}[]
 \caption{Electron energies}
