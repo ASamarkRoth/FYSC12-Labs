@@ -1,3 +1,6 @@
+% IMPORTANT: compile with:
+% pdflatex -shell-escape betaLabManual2.tex
+
 \documentclass[a4,11pt, notitlepage]{article}
 
 \usepackage{fixltx2e}
@@ -14,15 +17,15 @@
 \usepackage{listings}
 \usepackage{SIunits}
 \usepackage{rotating}
+\usepackage{url}
 \usepackage[hmargin=3cm,vmargin=3.5cm]{geometry}  
+\usepackage{listings}
 
-
- \newcommand{\tevc}[1]{\ensuremath{#1 \text{ TeV/$c$}}\xspace}
- \newcommand{\gevc}[1]{\ensuremath{#1 \text{ GeV/$c$}}\xspace}
-
-
+\usepackage{minted}
 
 \begin{document} 
+ 
+
 \title{\huge{Lab manual
 \\KF7: $\beta$-spectrum and Fermi-Kurie plot
 \\.
@@ -57,10 +60,6 @@ completed the lab -- shall:
 
 \begin{itemize}
 \item be familiar with the basic properties of beta-decay;
-\item be able to describe the main features of the rewriting of the
-  Fermi Golden Rule, including approximations made;
-\item understand how -- and why -- a Fermi-Kurie plot is done in the purpose
-  of determine the Q value for a beta-decay;
 \item know the main principles of how a plastic scintillator detector works;
 \item be able to discuss the proper setup and procedures of the experiment;
 \item with the help of the supervisor handle radioactive samples and use a
@@ -98,7 +97,7 @@ completed the lab -- shall:
 
 \subsection{Schedule}
 
-\textbf{Morning (whole group):} 
+\noindent\textbf{Morning (whole group):} 
 \begin{itemize}
 \item Warm-up discussion about beta decay and introduction to the
   experimental setup.
@@ -106,9 +105,9 @@ completed the lab -- shall:
   $\beta$ decay of $^{32}$P.
 \end{itemize}
 
-\textbf{Lunch break} 
+\noindent\textbf{Lunch break} 
 
-\textbf{Early afternoon (partner exercises/small groups):} 
+\noindent\textbf{Early afternoon (partner exercises/small groups):} 
 \begin{itemize}
 \item Open experiment session. Lots of unanswered questions from the
   morning: how reliable are the results, how can they be improved and
@@ -116,7 +115,7 @@ completed the lab -- shall:
   Pick a topic to focus on and document your findings.
 \end{itemize}
 
-\textbf{Later in the afternoon (whole group):} 
+\noindent\textbf{Later in the afternoon (whole group):} 
 \begin{itemize}
 \item Concluding discussion. Present your findings and ask any
   remaining questions you might have!
@@ -163,8 +162,8 @@ successful test of Fermi's Theory of weak decay.
 
 There are three different kinds of $\beta$ decay:
 \begin{itemize}
-\item[$\beta^-$] in this process, a neutron is converted to a proton with the emission of an electron and anti-neutrino, $n\rightarrow p + e^- + \bar \nu$ (QUESTION \ref{q:cont}). This decay occurs mainly for neutron rich nuclei; it can also happen for free neutrons.
-\item[$\beta^+$] in this process, a proton is converted to a neutron with the emission of a positron and a neutrino, $p\rightarrow n + e^+ + \bar \nu$. This decay occurs mainly for proton rich nuclei, and the proton must be bound to a nucleus (QUESTION \ref{q:+}).
+\item[$\beta^-$] in this process, a neutron is converted to a proton with the emission of an electron and anti-neutrino, $n\rightarrow p + e^- + \bar \nu$. This decay occurs mainly for neutron rich nuclei; it can also happen for free neutrons.
+\item[$\beta^+$] in this process, a proton is converted to a neutron with the emission of a positron and a neutrino, $p\rightarrow n + e^+ + \bar \nu$. This decay occurs mainly for proton rich nuclei, and the proton must be bound to a nucleus.
 \item[E.C.] (Electron Capture) if the energy of the excited nucleus is not high enough for a $\beta^{\pm}$ decay, an electron near the nucleus can be captured by a proton, leaving the atom in an excited state, where the hole is filled by an outer electron, giving characteristic X-rays (the energy of the X-ray is the binding energy of the captured electron).
 \end{itemize}
 
@@ -173,7 +172,7 @@ There are three different kinds of $\beta$ decay:
 The released energy in a nuclear reaction is called the Q-value. It can be expressed as the difference in the nuclear binding energy before and after the decay: \begin{equation}
   Q_{\beta_-}=[m_{N}(X)-m_{N}(X')-m_e-m_{\nu}]\cdot c^2
 \end{equation}
-where $X$ is the mother nucleus, $X'$ is the daughter, and $m_N$ denote the \textit{nuclear} masses. Calculate the Q-value for the process we are looking at in this laboratory exercise, $^{32}P\rightarrow ^{32}S + e^- + \bar{\nu}$ (QUESTION \ref{q:q}). 
+where $X$ is the mother nucleus, $X'$ is the daughter, and $m_N$ denote the \textit{nuclear} masses. Calculate the Q-value for the process we are looking at in this laboratory exercise, $^{32}P\rightarrow ^{32}S + e^- + \bar{\nu}$. 
 
 
 %
@@ -222,9 +221,15 @@ The Q-value can now easily be obtained by plotting $Q-T_e$ against $T_e$, which 
 
 \section{The detector and the experimental equipment}
 
-A plastic scintillator is used for detecting the radiation. The incident radiation interacts with the plastic molecules and excites them. A molecule can be excited in two ways: firstly, electrons in the atoms can be excited to higher states ($\sim 1 eV$); and secondly, the atoms in the molecule can vibrate to higher excitations ($\sim 0.1 eV$). The molecule deexcite with the emission of visible light, which is not energetic enough to excite further atoms; the material is transparent to its own radiation, see Fig. \ref{fig:mol}. 
+A plastic scintillator is used for detecting the radiation. The
+incident radiation interacts with the plastic molecules and excites
+them. A molecule can be excited in two ways: firstly, electrons in the
+atoms can be excited to higher states ($\sim 1 eV$); and secondly, the
+atoms in the molecule can vibrate to higher excitations
+($\sim 0.1 eV$). The molecule deexcite with the emission of visible
+light, which is not energetic enough to excite further atoms; the
+material is transparent to its own radiation, see Fig. \ref{fig:mol}.
 
-\vspace{-40pt}
 \begin{figure}[htp]
   \vspace{40pt}
   \begin{center}
@@ -235,11 +240,29 @@ A plastic scintillator is used for detecting the radiation. The incident radiati
 \end{figure}
 
 
-The light from the molecular deexcitation strikes a photocathode and release one or more photoelectrons per photon, called \textit{secondary electrons}, via Compton scattering. See Fig. \ref{fig:setup} for the experimental setup. The secondary electron are accelerated and multiplied in a photomultiplier tube (PMT) containing dynodes at different potential. The PMT hence produce an output voltage pulse, where the amplitude of the pulse is proportional to the number of scintillation events, which in turn is proportional to the energy deposited by the primary ionization. To keep this proportionality, the transparency mentioned earlier is necessary.  
+The light from the molecular deexcitation strikes a photocathode and
+release one or more photoelectrons per photon, called
+\textit{secondary electrons}, via Compton scattering. See
+Fig. \ref{fig:setup} for the experimental setup. The secondary
+electron are accelerated and multiplied in a photomultiplier tube
+(PMT) containing dynodes at different potential. The PMT hence produce
+an output voltage pulse, where the amplitude of the pulse is
+proportional to the number of scintillation events, which in turn is
+proportional to the energy deposited by the primary ionization. To
+keep this proportionality, the transparency mentioned earlier is
+necessary.
 
-The PMT only delivers a few electrons per event. The signal therefore needs to be amplified. Firstly, the signal is converted from a current to a voltage pulse in the preamplifier, with a typical size of $\sim mV$. Secondly, the pulse is amplified in the main amplifier, where the signal go from $\sim mV$ to $\sim V$. The pulse is then analyzed in he MCA, where it is digitized and stored in channels which can be displayed on a computer screen. 
+The PMT only delivers a few electrons per event. The signal therefore
+needs to be amplified. Firstly, the signal is converted from a current
+to a voltage pulse in the preamplifier, with a typical size of
+$\sim mV$. Secondly, the pulse is amplified in the main amplifier,
+where the signal go from $\sim mV$ to $\sim V$. The pulse is then
+analyzed in he MCA, where it is digitized and stored in channels which
+can be displayed on a computer screen.
 
-To be able to translate the detected signal to the electron energy, the detector must be calibrated with the help of detecting radiation with known, discrete, energies from $^{207}Bi$ and $^{137}Cs$.  
+To be able to translate the detected signal to the electron energy,
+the detector must be calibrated with the help of detecting radiation
+with known, discrete, energies from $^{207}Bi$ and $^{137}Cs$.
 
 \begin{figure}[htp]
   \vspace{40pt}
@@ -313,8 +336,9 @@ early to learn git$\ldots$): \url{https://git-scm.com/}
 Download the code from
 \url{https://bitbucket.org/hperrey/betalab_analysis} into a directory
 of your liking or clone the whole repository with \texttt{git} by running
-
-\texttt{git clone https://bitbucket.org/hperrey/betalab_analysis}
+\begin{minted}[mathescape]{bash}
+git clone https://bitbucket.org/hperrey/betalab_analysis
+\end{minted}
 
 Use a text editor of your choice (or ask the supervisor for
 recommendations) and open the file \texttt{analysis.py}. Find the part
@@ -323,9 +347,9 @@ data if needed.
 
 Now enter the directory and actually run the central analysis by executing \texttt{analysis.py} e.g. by
 entering
-
-\texttt{python3 analysis.py}
-
+\begin{minted}[mathescape]{bash}
+python3 analysis.py
+\end{minted}
 in a terminal.
 
 \subsubsection{Energy calibration}
