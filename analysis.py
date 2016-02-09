@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt          ## for plotting
 from scipy.optimize import curve_fit     ## to fit functions to the data
 from scipy import signal                 ## to find maxima in the data
 from scipy import stats                  ## for linear regressions
+import sys                               ## useful system calls (used to exit cleanly)
 
 class Spectrum:
     """A class to hold our spectrum measurement data and meta data (such as duration)"""
@@ -40,35 +41,39 @@ def read_mca_data_file(filename):
     log = logging.getLogger('betalab_analysis') ## set up logging
     m = Spectrum(filename) ## create a new Spectrum measurement object; this is what we return in the end
     log.info("Reading data from file '" + filename + "'")
-    with open(filename, newline='') as f:
-        reader = csv.reader(f) ## use the python csv module to parse the file
-        interval = []          ## start/stop channel numbers used to assign correct x values to the data points
-        ## first parse the "header" of the data file (until the '$DATA:' line) containing all the meta data
-        for row in reader:
-            if row[0] == '$MEAS_TIM:':
-                ## this item gives the duration of the measurement
-                log.debug("Parsing MEAS_TIM header info")
-                row = next(reader)
-                duration = [int(s) for s in row[0].split(' ')]
-                m.duration = duration[1] ## two parts: CPU/realtime; take the second
-            if row[0] == '$DATA:':
-                ## this is the last part of the header and contains the start/stop channel numbers
-                log.debug("Parsing DATA header info")
-                row = next(reader)
-                interval = [int(s) for s in row[0].split(' ')]
-                ## "DATA" is the last item: stop with the header processing
-                break
-        ## TODO!!! make sure that the file does not end before we have parsed the header!
-        log.debug("Done with header parsing")
-        nbins = int(interval[1]-interval[0])+1
-        m.y = np.array(np.zeros(nbins))
-        ## continue, now reading data
-        for idx, row in enumerate(reader):
-            if idx >= nbins:
-                break
-            m.y[idx] = int(row[0])
-        m.x = np.arange(interval[0], interval[1]+1,1)
-        log.debug("Loaded all data from file")
+    try:
+        with open(filename, newline='') as f:
+            reader = csv.reader(f) ## use the python csv module to parse the file
+            interval = []          ## start/stop channel numbers used to assign correct x values to the data points
+            ## first parse the "header" of the data file (until the '$DATA:' line) containing all the meta data
+            for row in reader:
+                if row[0] == '$MEAS_TIM:':
+                    ## this item gives the duration of the measurement
+                    log.debug("Parsing MEAS_TIM header info")
+                    row = next(reader)
+                    duration = [int(s) for s in row[0].split(' ')]
+                    m.duration = duration[1] ## two parts: CPU/realtime; take the second
+                if row[0] == '$DATA:':
+                    ## this is the last part of the header and contains the start/stop channel numbers
+                    log.debug("Parsing DATA header info")
+                    row = next(reader)
+                    interval = [int(s) for s in row[0].split(' ')]
+                    ## "DATA" is the last item: stop with the header processing
+                    break
+            ## TODO!!! make sure that the file does not end before we have parsed the header!
+            log.debug("Done with header parsing")
+            nbins = int(interval[1]-interval[0])+1
+            m.y = np.array(np.zeros(nbins))
+            ## continue, now reading data
+            for idx, row in enumerate(reader):
+                if idx >= nbins:
+                    break
+                m.y[idx] = int(row[0])
+            m.x = np.arange(interval[0], interval[1]+1,1)
+            log.debug("Loaded all data from file")
+    except IOError:
+        log.error("Could not find the file '"+str(filename)+"'")
+        sys.exit(-1)
     return m
 
 def fit_gaussians_to_measurement(m):
@@ -92,7 +97,7 @@ def fit_gaussians_to_measurement(m):
             try:
                 ## use the scipy curve_fit routine (uses non-linear least squares to perform the fit)
                 ## see http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.optimize.curve_fit.html
-                #coeff, var_matrix = curve_fit(gauss, m.x, m.y, p0=p0) ## fit using the full data range, might not work with multiple peaks
+                ## coeff, var_matrix = curve_fit(gauss, m.x, m.y, p0=p0) ## fit using the full data range, might not work with multiple peaks
                 coeff, var_matrix = curve_fit(gauss, m.x[p-10:p+10], m.y[p-10:p+10], p0=p0) ## fit using "slices" of the arrays with +/- 10 around peak
             except (RuntimeError, OptimizeWarning):
                 ## the minimization did not work out... log it and continue to next peak
@@ -123,10 +128,10 @@ if __name__ == '__main__':
 
     ##            _________
     ## _ __      |___ /___ \
-    #| '_ \ _____ |_ \ __) |
-    #| |_) |_____|__) / __/
-    #| .__/     |____/_____|
-    #|_|    
+    ##| '_ \ _____ |_ \ __) |
+    ##| |_) |_____|__) / __/
+    ##| .__/     |____/_____|
+    ##|_|    
     ## setup the plot
     plt.xlabel('channel number')
     plt.ylabel('counts')
@@ -137,12 +142,17 @@ if __name__ == '__main__':
     plt.grid(True)
 
     ## read in the p32 measurement file
-    p32 = read_mca_data_file('data samples/Beta NY 2015/P32 60 min.Spe')
+    p32 = read_mca_data_file('data/p32.Spe')
     ## plot the p32 raw measurement
     plt.plot(p32.x, p32.y, 'o', label="P-32 raw data")  ## 'o' parameter: plot with markers
 
+
+    plt.show()           ## <-- shows the plot (not needed with interactive plots)
+    sys.exit() ## quit for now...
+
+    
     ## read in the background measurement file
-    bkgrd = read_mca_data_file('data samples/Beta NY 2015/background 60 min.Spe')
+    bkgrd = read_mca_data_file('data/p32-background.Spe')
     ## normalize the background to the measurement time ratio between P32 and bkgrd
     log.info("Adjusting P-32 background normalization by: " + str(p32.duration/bkgrd.duration))
     bkgrd.scale_data(p32.duration/bkgrd.duration)
@@ -154,11 +164,12 @@ if __name__ == '__main__':
     ## plot the background-subracted p32 measurement
     plt.plot(p32.x, p32.y, 'o', label="P-32 - bkgrd")  ## 'o' parameter: plot with markers
     plt.legend()     ## generate the legend (with the "label" information from the plots)
-
+    
+    
     ##                _ __________
     ##  ___ ___      / |___ /___  |
     ## / __/ __|_____| | |_ \  / /
-    #| (__\__ \_____| |___) |/ /
+    ##| (__\__ \_____| |___) |/ /
     ## \___|___/     |_|____//_/
     ##    
     ## plot into a new figure
@@ -169,12 +180,12 @@ if __name__ == '__main__':
     plt.title("Cs-137")
 
     ## read in the Cs137 file measured without Al plate
-    cs137 = read_mca_data_file('data samples/Beta NY 2015/cs137 15 min utan Al.Spe')
+    cs137 = read_mca_data_file('data/cs137.Spe')
     ## plot the cs-137 data
     plt.plot(cs137.x, cs137.y, 'o',label="Cs-137")
 
     ## read in the gamma background measurement of Cs137
-    cs137_gamma = read_mca_data_file('data samples/Beta NY 2015/cs137 15 min med Al.Spe')
+    cs137_gamma = read_mca_data_file('data/cs137-background.Spe')
     ## weight the spectrum according to the ratio of measurement durations
     cs137_gamma.scale_data(cs137.duration/cs137_gamma.duration)
     ## plot the cs-137 e-suppressed data into same figure
@@ -201,57 +212,11 @@ if __name__ == '__main__':
     ## generate the legend (with the "label" information from the plots)
     plt.legend()
 
-    ## ____  _      ____   ___ _____
-    #| __ )(_)    |___ \ / _ \___  |
-    #|  _ \| |_____ __) | | | | / /
-    #| |_) | |_____/ __/| |_| |/ /
-    #|____/|_|    |_____|\___//_/
-    ##    
-    ## plot into a new figure
-    plt.figure()
-    plt.grid(True)
-    plt.xlabel('channel number')
-    plt.ylabel('counts')
-    plt.title("Bi-207")
-
-    ## read in the data file measured without Al plate
-    bi207 = read_mca_data_file('data samples/Beta NY 2015/Bi207 20 min utan Al.Spe')
-    ## plot the data
-    plt.plot(bi207.x, bi207.y, 'o',label="Bi-207")
-
-    ## read in the gamma background measurement
-    bi207_gamma = read_mca_data_file('data samples/Beta NY 2015/Bi207 20 min med Al.Spe')
-    ## weight the spectrum according to the ratio of measurement durations
-    bi207_gamma.scale_data(bi207.duration/bi207_gamma.duration)
-    ## plot the e-suppressed data into same figure
-    plt.plot(bi207_gamma.x, bi207_gamma.y, 'o', label="Bi-207 gamma bkgrd")
-
-    ## now subtract the background from the measurement
-    bi207.subtract_from_data(bi207_gamma)
-    plt.plot(bi207.x, bi207.y, 'o', label="Bi-207 w/o gamma bkgrd")
-
-    ## fit all gaussians in our measurement
-    fits = fit_gaussians_to_measurement(bi207)
-    ## loop over fit results
-    for g in fits:
-        ## plot the gaussian fit
-        plt.plot(bi207.x, gauss(bi207.x,*g), label="Gauss fit, $\sigma$="+str(g[2]))
-    ## now we have some data for our energy calibration:
-    ## peak 0: pedestal, energy 0
-    ## peak 1: internal conversion peak, 0.504 MeV
-    ## peak 2: internal conversion peak, 0.996 MeV
-    ecalib_data_bi207 = np.array([[fits[0][1], fits[1][1], fits[2][1] ], #x
-                                  [0. , 0.504 , 0.996 ]] ) ## y
-    ## copy the sigma (the width of the gaussian) from the fit results
-    ecalib_sigma_bi207 = np.array([fits[0][2], fits[1][2], fits[2][2]])
-    ## generate the legend (with the "label" information from the plots)
-    plt.legend()
-
     
     ##                                               _ _ _               _   _                 
     ##  ___ _ __   ___ _ __ __ _ _   _      ___ __ _| (_) |__  _ __ __ _| |_(_) ___  _ __      
     ## / _ \ '_ \ / _ \ '__/ _` | | | |    / __/ _` | | | '_ \| '__/ _` | __| |/ _ \| '_ \     
-    #|  __/ | | |  __/ | | (_| | |_| |   | (_| (_| | | | |_) | | | (_| | |_| | (_) | | | |    
+    ##|  __/ | | |  __/ | | (_| | |_| |   | (_| (_| | | | |_) | | | (_| | |_| | (_) | | | |    
     ## \___|_| |_|\___|_|  \__, |\__, |    \___\__,_|_|_|_.__/|_|  \__,_|\__|_|\___/|_| |_|    
     ##                     |___/ |___/
     ## plot into a new figure
@@ -262,24 +227,19 @@ if __name__ == '__main__':
     plt.title("Energy Calibration")
 
     ## plot the data from Cs-137
-    plt.errorbar(ecalib_data_cs137[0], ecalib_data_cs137[1], xerr=ecalib_sigma_cs137, fmt='o',label="Cs-137")
-    ## plot the data from Bi-207
-    plt.errorbar(ecalib_data_bi207[0], ecalib_data_bi207[1], xerr=ecalib_sigma_bi207, fmt='o',label="Bi-207")
+    ## could use "plt.errorbar" to include uncertainties!
+    plt.plot(ecalib_data_cs137[0], ecalib_data_cs137[1], 'o',label="Cs-137")
 
-    points_x = np.concatenate((ecalib_data_cs137[0],ecalib_data_bi207[0])) ## concatenate: join array data together
-    points_y = np.concatenate((ecalib_data_cs137[1],ecalib_data_bi207[1]))
-    sigma    = np.concatenate((ecalib_sigma_cs137,ecalib_sigma_bi207))
-    ## points_x = np.delete(points_x,[0,2]) ## to remove a set of points (index 0 and 2)
-    ## points_y = np.delete(points_y,[0,2])
-    ## sigma    = np.delete(sigma   ,[0,2])
+    points_x = np.concatenate((ecalib_data_cs137[0])) ## concatenate: join array data together; useful when we have more data to actually join...
+    points_y = np.concatenate((ecalib_data_cs137[1]))
+    sigma    = np.concatenate((ecalib_sigma_cs137))
 
     ## linear regression of the data
     ## see http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.stats.linregress.html
     slope, intercept, r_value, p_value, std_err = stats.linregress(points_x, points_y)
 
     ## ALTERNATIVE METHODS TO FIT:
-    ## p0 is the initial guess for the fitting coefficients (a, b)
-    ## p0 = [1., 1.]
+    ## p0 = [1., 1.] ## initial guess for the fitting (coefficients a, b)
     ## coeff, var_matrix = curve_fit(line, points_x, points_y, sigma=sigma, p0=p0)
     ## slope = coeff[0]
     ## intercept = coeff[1]
