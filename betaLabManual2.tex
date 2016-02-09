@@ -88,7 +88,7 @@ completed the lab -- shall:
 \subsection{Prepare BEFORE the lab}
 
 \begin{itemize}
-\item Read Krane chap. 7.3, 7.6 (3 pages), 9.1 and 9.2. 
+\item Read Krane chap. 7.3, 7.6 (3 pages), 9.1, 9.2 and 9.3. 
 \item Read the lab manual
 \item Setup your computer to run the analysis code (see section !!!!!)
   and test it by following the first step
@@ -124,14 +124,17 @@ completed the lab -- shall:
 
 
 \textbf{Important: }For this laboratory exercise, you \emph{do not} have to hand in any
-written report. 
-
-Therefore, your \emph{active} participation in the laboratory experiment is
-the only prerequisite for a passing grade: by generally asking questions,
+written report. Therefore, your \emph{active} participation in the laboratory experiment is
+the only and key prerequisite for a passing grade: by generally asking questions,
 raising ideas for investigations, and by discussing the experiment and
 its result within the group. And of course, by following your own
 initiative in the afternoon when investigating a subject of your
-choice (together with a partner).
+choice (see section \ref{sec:afternoon}) and by presenting your
+findings to the group during the final discussion (see section
+\ref{sec:final-presentation}).
+
+Please, do not forget to leave your feedback with the supervisor -- it
+is greatly appreciate in the continued development of this exercise!
 
 \pagebreak
 \section{Introduction to laboratory exercise}
@@ -180,56 +183,53 @@ where $X$ is the mother nucleus, $X'$ is the daughter, and $m_N$ denote the \tex
 %
 
 
-\subsection{Fermi's Theory of beta decay and the rewriting of the Fermi Golden Rule}
+\subsection{Fermi's Theory of beta decay}
 
-In this exercise we want to determine the Q-value of phosphorus-32 decaying into sulfur. The electrons and neutrinos from this spontaneous decay will share the Q-value as kinetic energy. The neutrinos cannot be detected, but we can measure the kinetic energy of the electrons and receive an energy spectrum. We can in principle determine the Q-value from the spectrum; the highest recorded energy. But the count rate near the end point energy is small due to noise and background, so the value cannot be determined from the spectrum with high enough accuracy. To calculate a better approximation of the Q-value from the electron count rate, the Fermi Theory is used to construct a Fermi-Kurie plot, giving us a linear function, which can be extrapolated. The intersection with the x-axis is the Q-value; in this way the value can be determined more precisely. In order to understand the Fermi-Kurie plot, we have to rewrite Fermi's Golden Rule.
+In this exercise we want to determine the Q-value of phosphorus-32
+decaying into sulfur. The electrons and neutrinos from this
+spontaneous decay will share the Q-value as kinetic energy. The
+neutrinos cannot be detected, but we can measure the kinetic energy of
+the electrons and receive an energy spectrum. We can in principle
+determine the Q-value from the spectrum; the highest recorded
+energy. But the count rate near the end point energy is small due to
+noise and background and the limited resolution of the detector, so
+the value cannot be determined from the spectrum with high enough
+accuracy. To calculate a better approximation of the Q-value from the
+electron count rate, the Fermi Theory is used to construct a
+Fermi-Kurie plot, giving us a linear function, which can be
+extrapolated. The intersection with the x-axis is the Q-value; in this
+way the value can be determined more precisely. In order to understand
+the Fermi-Kurie plot, we have to rewrite Fermi's Golden Rule.
 
-Fermi's Theory of $\beta$ decay is based on the treatment of the decay as a perturbation. Quantum mechanical calculations yield the Fermi Golden Rule, which allow us to calculate the decay probability, $\lambda$ (number of decays per unit time), for a point like interaction influenced by a weak perturbation. 
+With
 \begin{equation}
-\lambda = \frac{2\pi}{\hbar}|V_{fi}|^2 \rho(E_{f})
-\end{equation}
-where the first term, $V_{fi}$, is the expectation value, i.e the matrix element of the transition operator $V$. This term gives the relative probability for a specific transition (QUESTION \ref{q:V}).
-
-The second term, $\rho$, is the density of final states. A transition is more likely to occur if there is a large number of accessible final states. To calculate this, we need to determine the number of accessible final states for the electron, $dn_e$ and neutrino, $dn_{\nu}$. The direction of the electron and neutrino momenta is not important, only the absolute values, $p=|\bar p| = \sqrt{p_x^2+p_y^2+p_z^2}$ for the electron, and $p=|\bar q| = \sqrt{q_x^2+q_y^2+q_z^2}$. The number of final states containing \textit{both} an electron and neutrino, $dn = dn_e\cdot dn_{\nu}$, with momenta in the intervals $(p, p+dp)$ and $(q, q+dq)$, is described by a spherical shell with radius $p$ (and $q$), and thickness $dp$ ($dq$), where the volume is $4\pi p^2 dpV/\hbar$. Hence (QUESTION \ref{q:const}): 
-\begin{equation}
-dn\propto q^2 dq p^2 dp 
-\end{equation} 
-We can express the number of final states as 
-\begin{equation}
-\rho(E_f)=\frac{dn}{dE_f}=N(T_e)dT_e
-\end{equation}
-where $N(T_e)$ is the number of electrons as a function of the electron kinetic energy, $T_e$, which hence can be written as 
-\begin{equation}
-N(T_e)\propto p^2q^2\frac{dp}{dT_e} 
-\end{equation}
-By using (QUESTION \ref{q:recoil}) and rewriting 
-\begin{equation}
-Q=T_e + T_{\nu} = T_e + qc
+Q=T_e + T_{\nu}
 \end{equation} 
 and
 \begin{equation}
 E_e^2 = p^2c^2+m_e^2c^4=(T_e+m_ec^2)^2
 \end{equation} 
-we can find expressions for $q$ and $p$ (this will be shown in more detail during the lab) -- the ingredients in $N(T_e)$ -- and finally describe 
+we can write
 \begin{equation}
 Q-T_e \propto \sqrt{\frac{N(T_e)}{pE_e}} = \sqrt{\frac{N(T_e)p}{E_ef}}
 \label{eq:f}
 \end{equation}
-where $F\propto f/p^2$, $f=1.3604A^2+0.1973A+0.0439$, and $A=pc/m_ec^2$ is introduced in the function to correct for the Coulomb interaction between the electron from the decay and the daughter nucleus. 
+where $N(T_e)$ denotes the number of electrons as function of the
+electron kinetic energy, $T_e$, $f=1.3604A^2+0.1973A+0.0439$, and $A=pc/m_ec^2$ is introduced in the function to correct for the Coulomb interaction between the electron from the decay and the daughter nucleus. 
 The Q-value can now easily be obtained by plotting $Q-T_e$ against $T_e$, which is the Fermi-Kurie plot.
 
 
 
 \section{The detector and the experimental equipment}
 
-A plastic (QUESTION \ref{q:plastic}) scintillator is used for detecting the radiation. The incident radiation interacts with the plastic molecules and excites them. A molecule can be excited in two ways: firstly, electrons in the atoms can be excited to higher states ($\sim 1 eV$); and secondly, the atoms in the molecule can vibrate to higher excitations ($\sim 0.1 eV$). The molecule deexcite with the emission of visible light, which is not energetic enough to excite further atoms; the material is transparent to its own radiation, see Fig. \ref{fig:mol}. 
+A plastic scintillator is used for detecting the radiation. The incident radiation interacts with the plastic molecules and excites them. A molecule can be excited in two ways: firstly, electrons in the atoms can be excited to higher states ($\sim 1 eV$); and secondly, the atoms in the molecule can vibrate to higher excitations ($\sim 0.1 eV$). The molecule deexcite with the emission of visible light, which is not energetic enough to excite further atoms; the material is transparent to its own radiation, see Fig. \ref{fig:mol}. 
 
 \vspace{-40pt}
 \begin{figure}[htp]
   \vspace{40pt}
   \begin{center}
     \includegraphics[width=15.0cm]{figures/Energy.png}
-    \caption{Energy levels in plastic molecules.}
+    \caption{Energy levels in plastic molecules.} %!!!!! REFERENCE
 \label{fig:mol}
   \end{center}
 \end{figure}
@@ -252,32 +252,88 @@ To be able to translate the detected signal to the electron energy, the detector
 
 
 
-\section{The morning: measure $Q$ value of $^{32}$P}
-Remember to save all the spectra!
+\section{The morning: measure $Q$ value of the $\beta$ decay of $^{32}$P}
+This part of the laboratory exercise is going to be ``guided'' yet
+interactive. Please see section \ref{sec:prerequisites} for what you
+need to run the analysis on your own computer as we go through the measurement steps.
+
+This is the rough outline:
 \begin{enumerate}
-\item Theory session 
-\item Measure $^{207}Bi$ in 20 min for calibration of the detector -- measure two times: the second time with an Al-plate between the sample and the detector to stop the electrons 
-\item Subtract the second spectrum from the total (left with only internal conversion, I.C., electrons with known energies)
-\item Measure $^{137}Cs$ for 20 min
-\item Calculate the weighted mean of the electron energies from I.C. by $<T>=\Sigma{(E\cdot I})/\Sigma{I}$, where $T$ is the electron energy, and $I$ the intensity, see Table \ref{tab:calib}
-\item Calculate the calibration curve according to a straight line: $T_e=k\cdot ChNr+m$ 
-\item  Measure $^{32}P$ for 1h 
-\item Measure background for 1h and subtract background from $^{32}P$ electron spectrum
-\item Construct the Fermi-Kurie plot by calculating the ingredients in $Q-T_e$ by -- preferable in Excel -- completing table \ref{tab:fkp}
-
-\item Calculate the Q-value and compare to theory
-\item Plot all spectra (using the data text file)
-
+\item Measure $^{32}P$
+  \begin{itemize}
+  \item Discuss: How long should the measurement run? Does the spectra
+    look as expected? Is this all we need to determine $Q$?
+  \end{itemize}
+\item Measure some more?
+  \begin{itemize}
+  \item $^{137}$Cs?
+  \item $^{207}$Bi?
+  \item add shielding to the above?
+  \item leave the source out completely?
+  \end{itemize}
+\item Analyse the results!
+  \begin{itemize}
+  \item Plot the measured data
+  \item Calibrate the detector
+  \item Correct data for background
+  \end{itemize}
+\item Construct the Fermi-Kurie plot and determine $Q$
+\item Discuss the result and compare to expectation -- and where to go
+  from here?
 \end{enumerate}
 
 \subsection{Data Analysis}
 \label{sec:data-analysis}
 
+The ``online'' visualization that the Maestro MCA software allows is
+very helpful but limited and tedious to use for multiple data samples
+-- no way around writing our own code!
+
+Lucky for you, pretty much the whole analysis is already coded and
+uploaded to
+\url{https://bitbucket.org/hperrey/betalab_analysis}. The next
+sections explain what is needed in order to run the analysis and how
+to do so.
+
 \subsubsection{Prerequisites}
 \label{sec:prerequisites}
-\url{http://www.scipy.org/install.html}
 
+The analysis is written in Python with the SciPy tools for scientific
+computing -- it's all open-source, doesn't cost anything, available
+for all major platforms and highly flexible; the key packages are just
+a download away, just follow the instructions at: \url{http://www.scipy.org/install.html}
 
+If you want to hack around the code, it might be useful to install
+\texttt{git} as well, a source-code version control tool (never to
+early to learn git$\ldots$): \url{https://git-scm.com/}
+
+\subsubsection{Running the analysis}
+\label{sec:running-analysis}
+
+Download the code from
+\url{https://bitbucket.org/hperrey/betalab_analysis} into a directory
+of your liking or clone the whole repository with \texttt{git} by running
+
+\texttt{git clone https://bitbucket.org/hperrey/betalab_analysis}
+
+Use a text editor of your choice (or ask the supervisor for
+recommendations) and open the file \texttt{analysis.py}. Find the part
+where the data file is opened and plotted. Adjust the path to your own
+data if needed.
+
+Now enter the directory and actually run the central analysis by executing \texttt{analysis.py} e.g. by
+entering
+
+\texttt{python3 analysis.py}
+
+in a terminal.
+
+\subsubsection{Energy calibration}
+\label{sec:energy-calib}
+
+Some information that might be useful to extend the energy
+calibration: Table \ref{tab:calib} shows the energies of electrons released from
+internal conversion for bismuth-207 and the relative intensities.
 
 \begin{table}[]
 \caption{Electron energies}
@@ -294,60 +350,202 @@ $M_2$ & 1.062 & 0.60
 \end{tabular}
 \end{table}
 
-\begin{table}[]
-\caption{Ingredients in $Q-T_e$ (complete this table in Excel)}
-\label{tab:fkp}
-\centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|}
-ChNr & $N(T_e)$ & $T_{e}$ (MeV) & $E_e$ (MeV) & $p$ (MeV/p) & $A$ & $f$ & $Q-T_e$ \\
-1 & &  &  &  &  &  & \\
-2 & From & From &  &  &  &See  & \\
-. & data & calib- & quest & quest & $p/m_e$ & eq. \ref{eq:f} & $\sqrt{\frac{N(T_e)p}{E_ff}}$\\
-. &  file & ration &  &  &  & \\
-. &  &  &  &  &  &  & \\
-1024 &  &  &  &  &  &  & 
-\end{tabular}
-\end{table}
+
+\section{The afternoon: a choice of further studies}
+\label{sec:afternoon}
+
+\begin{itemize}
+\item Prepare to report your findings \emph{in a way that the
+    whole group can understand}: what have you been doing, and why?
+  What to make of your result? How does it tie in with the experiment
+  and with the activities of the others?
+\item Feel free to give this a personal touch and to diverge on things
+  you have discovered or learned along the way -- the presentation
+  will be informal in style.
+\item Keep notes! Make pictures! Think of a joke to tell!
+\item If you don't finish the project or something does not work:
+  don't worry! That's life as an (experimental) physicist... Document
+  your findings and explain what went wrong to your colleagues so that
+  they (or you) don't make the same mistake again.
+\item There is overlapp between the different topics -- embrace it and
+  discuss among your colleagues!
+\end{itemize}
+
+\subsection{Uncovering Uncertainties}
+\label{sec:uncertainties}
+
+In order to interpret any measurement result, one has to fully
+understand the associated systematical (and statistical)
+uncertainties.
+
+\textbf{Mission:} Quantify the uncertainty of the $Q$ value measurement.
+
+\textbf{Hints:}
+\begin{itemize}
+\item What are \emph{possible} sources of systematic uncertainties?
+  Which ones are actually \emph{likely}?
+\item Which sources of uncertainty do you expect to contribute the most?
+\item How can you access these sources of uncertainties? I.e. by what
+  method/variation could you estimate their impact?
+\item Take measurements, document the effects
+\item Use the analysis code to run variation of the input data through
+  -- what is the effect on the final result?
+\item By what systematic procedure could one estimate the dominating
+  uncertainties and quantify them? Try it!
+\item How do your colleagues investigations tie into systematic
+  uncertainties of the experiment?
+\end{itemize}
 
 
+\subsection{Calibrate for better results}
+\label{sec:calibrate}
 
-\section{Preparatory questions}
+Any detector is only as good as its calibration. By improving the
+method and/or using additional data points in the calibration, we can
+improve on the accuracy of the measurement (and get a handle on the
+uncertainties associated with the calibration).
+
+\textbf{Mission:} Improve the energy calibration of the experimental setup.
+
+\textbf{Hints:}
+\begin{itemize}
+\item There is another source with known peaks from internal
+  conversion electrons available to collect data from: bismuth-207
+  ($^{207}$Bi).
+\item Are you satisfied with the data from $^{137}$Cs?
+\item How can the peaks be more precisely determined?
+\item Does the background subtraction work as expected?
+\item Are all data points (i.e. peaks) equally precise? How could you
+  weight their impact on the calibration?
+\item Should you exclude some points from the data?
+\item What is the impact on the calibration (and the $Q$ value) if you
+  vary the input data and/or method?
+\item In an ideal laboratory, how would you want to improve the
+  calibration further?
+\end{itemize}
+
+\subsection{One person's background is another one's data}
+\label{sec:background}
+
+\textbf{Mission:} Using plastic scintillator detectors, study the
+background due to cosmics.
+
+\textbf{Hints:}
+\begin{itemize}
+\item There are two large pedal plastic scintillators with PMTs
+  available -- use this as cosmic ray detector. What geometric
+  arrangement is best suited for such a measurement?
+\item \textbf{Important:} Before moving or connecting the pedal detectors to HV, consult
+  the supervisor and discuss the necessary steps with them! The PMTs
+  can only take negative (-) 1500V \emph{maximum}. Do not go beyond
+  -1300V before discussing this with the supervisor!
+\item We have several NIM electronic modules to construct a simple
+  counter with: discriminators, coincidence logic, and visual
+  scaler. Research how these function and how to connect them together.
+\item Use a scope to study the signals coming from the scintillators;
+  what do they look like and how do they vary from a source's signal?
+  What is the energy that we expect from cosmics?
+\item Determine the count rate and estimate the rate seen in the
+  detector used for measuring the $Q$ value -- how much do cosmics
+  contribute to the background and over what energy region? What could
+  one do to shield them?
+\end{itemize}
+
+\subsection{Open-signal surgery}
+\label{sec:}
+For the measurements performed in the morning, we used an MCA to
+give us pulse-height spectra. However, what do the signals from the
+actual detector look like that yielded these spectra?
+
+\textbf{Mission:} Connect a scope to the PMT and study its
+signals. Try to understand what you see.
+
+\textbf{Hints:}
+\begin{itemize}
+\item The scope supports to save waveforms/images -- a good way to
+  keep record of your findings.
+\item Trigger on signals of various heights; does their shape change
+  at all?
+\item Can you relate what you see to
+the spectra we measured?
+\item Do you notice anything unusual? Save those waveforms! What could
+  be the origin?
+\item How do the signals change with source? Or with high-voltate to the
+  PMT? (\textbf{Attention:} Do not change the HV before consulting
+  your supervisor!
+\item Do you notice any electronic noise? How do the pre-amp settings
+  influence this?
+\end{itemize}
+
+
+\section{Late afternoon: Concluding discussion and presentation of findings}
+\label{sec:final-presentation}
+
+\begin{itemize}
+\item Motivate your steps -- what provides your project to the experiment?
+\item Keep it simple -- everyone should understand and follow what you
+  have been doing.
+\item Try to relate what you have learned to the projects of
+  others.
+\item Stay away from any presentation software -- think more
+  show-and-tell/whiteboard/simple picture show instead of elaborate slide show.
+
+\end{itemize}
+
+\appendix
+\section{Warm-up questions}
 
 \begin{enumerate}
 \item Why is $^{32}P$ a suitable sample to use in this laboratory exercise?
-\label{q:P}
-
 \item How does the electron energy spectrum look like for a $\beta^-$ decay? Why? 
-\label{q:cont}
-
 \item Why must the proton undergoing $\beta^+$ decay be bound to a nucleus?
-\label{q:+}
-
-\item Can we treat $\beta^-$ as a point like interaction? Why? Hint: calculate the range the W-boson travels before it decay. The W mass is $\sim 80 GeV/c^2$. 
-\label{q:point}
-
 \item Calculate the Q-value for the process $^{32}P\rightarrow ^{32}S + e^- + \bar{\nu}$. Hint: you can neglect the neutrino mass and the difference in binding energy of the electrons, why? 
-
-\item Write down the general expression for the matrix element $V_{fi}$. Optional: Write also the expression in the specific case of $\beta$ decay in terms of the wave functions. Hint: assume that the electron and neutrino are free particles after the decay; in addition we know that $pr<<1$ ($p$ is the electron momentum, and $r$ the radius).  
-\label{q:V}
-
-\item Why can we neglect all the constants in the derivation?
-\label{q:const}
-
-
 \item Why can we neglect the recoil energy of the daughter particle? 
-\label{q:recoil}
-
 \item Why is plastic a good material for a scintillator?
-\label{q:plastic}
-
-
-\label{q:q}
- 
 \end{enumerate}
 
 
+\section{Final discussion points}
+\label{sec:further-discussion}
 
+Teachers notes/suggestions only -- ask away if you wish!
+
+\begin{itemize}
+\item What have we learned more since the measurements this morning?
+\item Were any of the results particularly surprising for you?
+\item Are we now ready to publish the results? What would we have to
+  do further?
+\item With all we know now, what would you do to improve the
+  experiment? Where do you see limiting factors to its precision?
+\end{itemize}
+
+\section{Feedback}
+\label{sec:feedback}
+
+Please fill out the following set of questions and hand them in
+(anonymously) to the supervisor. Feel free to leave the manual as a
+whole should you have noted any corrections/suggestions in it!
+
+\begin{itemize}
+\item What was your favorite part of the lab exercise?
+\vspace{3cm}
+
+\item What was your least favorite part? Why?
+\vspace{3cm}
+
+\item What information would liked to have had \emph{before} the lab?
+\vspace{3cm}
+
+\item What information did you miss \emph{during} the lab?
+\vspace{3cm}
+
+\item What do you feel you have learned from the lab?
+\vspace{3cm}
+
+\item Any more comments or suggestions?
+\vspace{5cm}
+
+\end{itemize}
 
 \end{document}
 
