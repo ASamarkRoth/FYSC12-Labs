@@ -146,8 +146,10 @@ if __name__ == '__main__':
     ## plot the p32 raw measurement
     plt.plot(p32.x, p32.y, 'o', label="P-32 raw data")  ## 'o' parameter: plot with markers
 
-
+    
+    ## Delete this to continue!
     plt.show()           ## <-- shows the plot (not needed with interactive plots)
+    log.info(" Stopping analysis here... modify code to continue! ")    
     sys.exit() ## quit for now...
 
     
@@ -164,7 +166,12 @@ if __name__ == '__main__':
     ## plot the background-subracted p32 measurement
     plt.plot(p32.x, p32.y, 'o', label="P-32 - bkgrd")  ## 'o' parameter: plot with markers
     plt.legend()     ## generate the legend (with the "label" information from the plots)
-    
+
+    ## Delete this to continue!
+    plt.show()           ## <-- shows the plot (not needed with interactive plots)
+    log.info(" Stopping analysis here... modify code to continue! ")    
+    sys.exit() ## quit for now...
+        
     
     ##                _ __________
     ##  ___ ___      / |___ /___  |
@@ -191,6 +198,11 @@ if __name__ == '__main__':
     ## plot the cs-137 e-suppressed data into same figure
     plt.plot(cs137_gamma.x, cs137_gamma.y, 'o', label="Cs-137 gamma bkgrd")
 
+    ## Delete this to continue!
+    plt.show()           ## <-- shows the plot (not needed with interactive plots)
+    log.info(" Stopping analysis here... modify code to continue! ")    
+    sys.exit() ## quit for now...
+    
     ## now subtract the background from the measurement
     cs137.subtract_from_data(cs137_gamma)
     ## plot the result
@@ -212,6 +224,11 @@ if __name__ == '__main__':
     ## generate the legend (with the "label" information from the plots)
     plt.legend()
 
+    ## Delete this to continue!
+    plt.show()           ## <-- shows the plot (not needed with interactive plots)
+    log.info(" Stopping analysis here... modify code to continue! ")    
+    sys.exit() ## quit for now...
+
     
     ##                                               _ _ _               _   _                 
     ##  ___ _ __   ___ _ __ __ _ _   _      ___ __ _| (_) |__  _ __ __ _| |_(_) ___  _ __      
@@ -230,6 +247,11 @@ if __name__ == '__main__':
     ## could use "plt.errorbar" to include uncertainties!
     plt.plot(ecalib_data_cs137[0], ecalib_data_cs137[1], 'o',label="Cs-137")
 
+    ## Delete this to continue!
+    plt.show()           ## <-- shows the plot (not needed with interactive plots)
+    log.info(" Stopping analysis here... modify code to continue! ")    
+    sys.exit() ## quit for now...
+    
     points_x = np.concatenate((ecalib_data_cs137[0])) ## concatenate: join array data together; useful when we have more data to actually join...
     points_y = np.concatenate((ecalib_data_cs137[1]))
     sigma    = np.concatenate((ecalib_sigma_cs137))
@@ -261,6 +283,12 @@ if __name__ == '__main__':
     plt.title("P-32 energy spectrum")
     plt.plot(p32.x, p32.y, 'o')
 
+    ## Delete this to continue!
+    plt.show()           ## <-- shows the plot (not needed with interactive plots)
+    log.info(" Stopping analysis here... modify code to continue! ")    
+    sys.exit() ## quit for now...
+  
+    
     ## _____                   _       _  __          _        ____  _       _
     ##|  ___|__ _ __ _ __ ___ (_)     | |/ /   _ _ __(_) ___  |  _ \| | ___ | |_
     ##| |_ / _ \ '__| '_ ` _ \| |_____| ' / | | | '__| |/ _ \ | |_) | |/ _ \| __|
@@ -282,6 +310,11 @@ if __name__ == '__main__':
     plt.title("P-32 Fermi-Kurie")
     plt.plot(p32.x, QminTe, 'o', label="data")
 
+    ## Delete this to continue!
+    plt.show()           ## <-- shows the plot (not needed with interactive plots)
+    log.info(" Stopping analysis here... modify code to continue! ")    
+    sys.exit() ## quit for now...
+    
     ## linear regression of the FM plot
     ## see http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.stats.linregress.html
     ## the fit does not really work on the edges of the FM plot, so we take the region 0.2<E [MeV]<1.5
