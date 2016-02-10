@@ -1,4 +1,5 @@
-% IMPORTANT: compile with:
+%%% TeX-command-extra-options: "-shell-escape"
+% IMPORTANT: compiling from the command line using:
 % pdflatex -shell-escape betaLabManual2.tex
 
 \documentclass[a4,11pt, notitlepage]{article}
@@ -67,7 +68,6 @@ completed the lab -- shall:
 \item evaluate experimental results.
 \end{itemize}
 
-\pagebreak
 \section{Information}
 
 
@@ -76,7 +76,7 @@ completed the lab -- shall:
 \begin{itemize}
 \item Supervisor: Hanno Perrey, office: B202
 \item Email: hanno.perrey@nuclear.lu.se, please contact me for any questions regarding the lab. 
-\item We start the lab 8:00 in hall L311. 
+\item We start the lab 8:30 in hall L311. 
 \item Bring: your laptop computer (preferably with working
   analysis setup, see below). 
 \item NO FOOD or DRINKS in L311
@@ -162,9 +162,20 @@ successful test of Fermi's Theory of weak decay.
 
 There are three different kinds of $\beta$ decay:
 \begin{itemize}
-\item[$\beta^-$] in this process, a neutron is converted to a proton with the emission of an electron and anti-neutrino, $n\rightarrow p + e^- + \bar \nu$. This decay occurs mainly for neutron rich nuclei; it can also happen for free neutrons.
-\item[$\beta^+$] in this process, a proton is converted to a neutron with the emission of a positron and a neutrino, $p\rightarrow n + e^+ + \bar \nu$. This decay occurs mainly for proton rich nuclei, and the proton must be bound to a nucleus.
-\item[E.C.] (Electron Capture) if the energy of the excited nucleus is not high enough for a $\beta^{\pm}$ decay, an electron near the nucleus can be captured by a proton, leaving the atom in an excited state, where the hole is filled by an outer electron, giving characteristic X-rays (the energy of the X-ray is the binding energy of the captured electron).
+\item[$\beta^-$] in this process, a neutron is converted to a proton
+  with the emission of an electron and anti-neutrino,
+  $n\rightarrow p + e^- + \bar \nu_e$. This decay occurs mainly for
+  neutron rich nuclei; it can also happen for free neutrons.
+\item[$\beta^+$] in this process, a proton is converted to a neutron
+  with the emission of a positron and a neutrino,
+  $p\rightarrow n + e^+ + \nu_e$. This decay occurs mainly for
+  proton rich nuclei, and the proton must be bound to a nucleus.
+\item[E.C.] (Electron Capture) if the energy of the excited nucleus is
+  not high enough for a $\beta^{\pm}$ decay, an electron near the
+  nucleus can be captured by a proton, leaving the atom in an excited
+  state, where the hole is filled by an outer electron, giving
+  characteristic X-rays (the energy of the X-ray is the binding energy
+  of the captured electron).
 \end{itemize}
 
 \subsubsection{Q-value}
@@ -172,7 +183,10 @@ There are three different kinds of $\beta$ decay:
 The released energy in a nuclear reaction is called the Q-value. It can be expressed as the difference in the nuclear binding energy before and after the decay: \begin{equation}
   Q_{\beta_-}=[m_{N}(X)-m_{N}(X')-m_e-m_{\nu}]\cdot c^2
 \end{equation}
-where $X$ is the mother nucleus, $X'$ is the daughter, and $m_N$ denote the \textit{nuclear} masses. Calculate the Q-value for the process we are looking at in this laboratory exercise, $^{32}P\rightarrow ^{32}S + e^- + \bar{\nu}$. 
+where $X$ is the mother nucleus, $X'$ is the daughter, and $m_N$
+denote the \textit{nuclear} masses. 
+%%%% !!!!!!!!!!
+%%%%Calculate the Q-value for the process we are looking at in this laboratory exercise, $^{32}P\rightarrow ^{32}S + e^- + \bar{\nu}$. 
 
 
 %
@@ -257,7 +271,7 @@ needs to be amplified. Firstly, the signal is converted from a current
 to a voltage pulse in the preamplifier, with a typical size of
 $\sim mV$. Secondly, the pulse is amplified in the main amplifier,
 where the signal go from $\sim mV$ to $\sim V$. The pulse is then
-analyzed in he MCA, where it is digitized and stored in channels which
+analyzed in the MCA, where it is digitized and stored in channels which
 can be displayed on a computer screen.
 
 To be able to translate the detected signal to the electron energy,
@@ -273,6 +287,18 @@ with known, discrete, energies from $^{207}Bi$ and $^{137}Cs$.
   \end{center}
 \end{figure}
 
+\section{Warm-up questions}
+
+\begin{enumerate}
+\item Why is $^{32}P$ a suitable sample to use in this laboratory exercise?
+\item How does the electron energy spectrum look like for a $\beta^-$ decay? Why? 
+\item Why must the proton undergoing $\beta^+$ decay be bound to a nucleus?
+\item Calculate the Q-value for the process $^{32}P\rightarrow ^{32}S + e^- + \bar{\nu}$. Hint: you can neglect the neutrino mass and the difference in binding energy of the electrons, why? 
+\item Why can we neglect the recoil energy of the daughter particle?
+\item By what mechanisms does a photon/charged particle lose energy
+  when traversing material?
+\item Why is plastic a good material for a scintillator?
+\end{enumerate}
 
 
 \section{The morning: measure $Q$ value of the $\beta$ decay of $^{32}$P}
@@ -359,8 +385,9 @@ Some information that might be useful to extend the energy
 calibration: Table \ref{tab:calib} shows the energies of electrons released from
 internal conversion for bismuth-207 and the relative intensities.
 
-\begin{table}[]
-\caption{Electron energies}
+\begin{table}[h]
+\caption{Energies and relative intensities for internal conversion
+  electrons of $^{207}$Bi (useful information in the detector calibration).}
 \label{tab:calib}
 \centering
 \begin{tabular}{ccc}
@@ -517,19 +544,6 @@ the spectra we measured?
 \end{itemize}
 
 \appendix
-\section{Warm-up questions}
-
-\begin{enumerate}
-\item Why is $^{32}P$ a suitable sample to use in this laboratory exercise?
-\item How does the electron energy spectrum look like for a $\beta^-$ decay? Why? 
-\item Why must the proton undergoing $\beta^+$ decay be bound to a nucleus?
-\item Calculate the Q-value for the process $^{32}P\rightarrow ^{32}S + e^- + \bar{\nu}$. Hint: you can neglect the neutrino mass and the difference in binding energy of the electrons, why? 
-\item Why can we neglect the recoil energy of the daughter particle?
-\item By what mechanisms does a photon/charged particle lose energy
-  when traversing material?
-\item Why is plastic a good material for a scintillator?
-\end{enumerate}
-
 
 \section{Final discussion points}
 \label{sec:further-discussion}

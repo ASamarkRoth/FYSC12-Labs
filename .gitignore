@@ -26,6 +26,7 @@
 # *.pdf
 *.fdb_latexmk
 *.fls
+*.pytxcode
 
 # os files (meta data)
 .DS_Store
