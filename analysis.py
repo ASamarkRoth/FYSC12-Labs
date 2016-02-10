@@ -252,13 +252,9 @@ if __name__ == '__main__':
     log.info(" Stopping analysis here... modify code to continue! ")    
     sys.exit() ## quit for now...
     
-    points_x = np.concatenate((ecalib_data_cs137[0])) ## concatenate: join array data together; useful when we have more data to actually join...
-    points_y = np.concatenate((ecalib_data_cs137[1]))
-    sigma    = np.concatenate((ecalib_sigma_cs137))
-
     ## linear regression of the data
     ## see http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.stats.linregress.html
-    slope, intercept, r_value, p_value, std_err = stats.linregress(points_x, points_y)
+    slope, intercept, r_value, p_value, std_err = stats.linregress(ecalib_data_cs137[0], ecalib_data_cs137[1])
 
     ## ALTERNATIVE METHODS TO FIT:
     ## p0 = [1., 1.] ## initial guess for the fitting (coefficients a, b)
