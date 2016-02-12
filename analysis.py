@@ -136,11 +136,16 @@ if __name__ == '__main__':
     plt.xlabel('channel number')
     plt.ylabel('counts')
     plt.title("P-32 MCA spectrum")
-    ## plt.text(60, .025, r'$\mu=100,\ \sigma=15$') ## to add text to the plot
-    ## plt.axis([40, 160, 0, 0.03]) ## to set the axis range
-    plt.yscale('log') ## set y axis to log scale
+    plt.axis([0, 512, 0, 70000]) ## to set the axis range
+    plt.text(200, 40000, r'Now all you need is data! :)') ## to add text to the plot
+    ## plt.yscale('log') ## set y axis to log scale
     plt.grid(True)
 
+    ## Delete this to continue!
+    plt.show()           ## <-- shows the plot (not needed with interactive plots)
+    log.info(" Stopping analysis here... modify code to continue! ")    
+    sys.exit() ## quit for now...
+    
     ## read in the p32 measurement file
     p32 = read_mca_data_file('data/p32.Spe')
     ## plot the p32 raw measurement
@@ -246,21 +251,16 @@ if __name__ == '__main__':
     ## plot the data from Cs-137
     ## could use "plt.errorbar" to include uncertainties!
     plt.plot(ecalib_data_cs137[0], ecalib_data_cs137[1], 'o',label="Cs-137")
-
-    ## Delete this to continue!
-    plt.show()           ## <-- shows the plot (not needed with interactive plots)
-    log.info(" Stopping analysis here... modify code to continue! ")    
-    sys.exit() ## quit for now...
     
     ## linear regression of the data
     ## see http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.stats.linregress.html
-    slope, intercept, r_value, p_value, std_err = stats.linregress(ecalib_data_cs137[0], ecalib_data_cs137[1])
-
+    slope = 1.
+    intercept = 0.
+    # .... something is missing here....
+    
     ## ALTERNATIVE METHODS TO FIT:
-    ## p0 = [1., 1.] ## initial guess for the fitting (coefficients a, b)
-    ## coeff, var_matrix = curve_fit(line, points_x, points_y, sigma=sigma, p0=p0)
-    ## slope = coeff[0]
-    ## intercept = coeff[1]
+    ## use "curve_fit" which allows to take uncertainties into account!
+    ## http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html
 
     log.info("Determined calibration constants from linear regression: E [MeV] = "+str(slope)+"*N_ch + " + str(intercept))
     x = np.arange(1,512)
