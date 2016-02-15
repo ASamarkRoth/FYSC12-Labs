@@ -118,10 +118,16 @@ def fit_gaussians_to_measurement(m):
         ## store the results
         gaussians.append(coeff)
     return gaussians
-        
+
+##                  _
+##  _ __ ___   __ _(_)_ __    _ __  _ __ ___   __ _ _ __ __ _ _ __ ___
+## | '_ ` _ \ / _` | | '_ \  | '_ \| '__/ _ \ / _` | '__/ _` | '_ ` _ \
+## | | | | | | (_| | | | | | | |_) | | | (_) | (_| | | | (_| | | | | | |
+## |_| |_| |_|\__,_|_|_| |_| | .__/|_|  \___/ \__, |_|  \__,_|_| |_| |_|
+##                           |_|              |___/
 if __name__ == '__main__':
     ## set up some print-out routines (logging)
-    FORMAT = '%(asctime)s %(name)s %(levelname)-8s %(message)s'
+    FORMAT = '%(asctime)s %(name)s:%(lineno)-4d %(levelname)-8s %(message)s'
     logging.basicConfig(format=FORMAT)
     log = logging.getLogger('betalab_analysis') ## set up logging
     log.setLevel("INFO")
@@ -132,32 +138,28 @@ if __name__ == '__main__':
     ##| |_) |_____|__) / __/
     ##| .__/     |____/_____|
     ##|_|    
-    ## setup the plot
+    ## setup the (first) plot
     plt.xlabel('channel number')
     plt.ylabel('counts')
     plt.title("P-32 MCA spectrum")
-    plt.axis([0, 512, 0, 70000]) ## to set the axis range
-    plt.text(200, 40000, r'Now all you need is data! :)') ## to add text to the plot
-    ## plt.yscale('log') ## set y axis to log scale
-    plt.grid(True)
+    plt.axis([0, 512, 1, 70000])                          ## to set the axis range
+    plt.text(200, 40000, r'Now all you need is data! :)') ## to add text into the plot
+    ##plt.yscale('log')                                     ## set y axis to log scale
+    plt.grid(True)                                        ## enable a grid to guide the eye
 
     ## Delete this to continue!
     plt.show()           ## <-- shows the plot (not needed with interactive plots)
-    log.info(" Stopping analysis here... modify code to continue! ")    
+    log.info("Stopping analysis here... modify code to continue! ")    
     sys.exit() ## quit for now...
     
     ## read in the p32 measurement file
     p32 = read_mca_data_file('data/p32.Spe')
+    if not p32:
+        ## looks like we couldn't open the file, so just exit here
+        sys.exit()
     ## plot the p32 raw measurement
     plt.plot(p32.x, p32.y, 'o', label="P-32 raw data")  ## 'o' parameter: plot with markers
-
-    
-    ## Delete this to continue!
-    plt.show()           ## <-- shows the plot (not needed with interactive plots)
-    log.info(" Stopping analysis here... modify code to continue! ")    
-    sys.exit() ## quit for now...
-
-    
+ 
     ## read in the background measurement file
     bkgrd = read_mca_data_file('data/p32-background.Spe')
     ## normalize the background to the measurement time ratio between P32 and bkgrd
@@ -174,7 +176,7 @@ if __name__ == '__main__':
 
     ## Delete this to continue!
     plt.show()           ## <-- shows the plot (not needed with interactive plots)
-    log.info(" Stopping analysis here... modify code to continue! ")    
+    log.info("Stopping analysis here... modify code to continue! ")    
     sys.exit() ## quit for now...
         
     
@@ -184,6 +186,14 @@ if __name__ == '__main__':
     ##| (__\__ \_____| |___) |/ /
     ## \___|___/     |_|____//_/
     ##    
+
+    ## read in the Cs137 file measured without Al plate
+    cs137 = read_mca_data_file('data/cs137.Spe')
+
+    if not cs137:
+        ## no data file could be loaded..
+        sys.exit()
+    
     ## plot into a new figure
     plt.figure()
     plt.grid(True)
@@ -191,8 +201,6 @@ if __name__ == '__main__':
     plt.ylabel('counts')
     plt.title("Cs-137")
 
-    ## read in the Cs137 file measured without Al plate
-    cs137 = read_mca_data_file('data/cs137.Spe')
     ## plot the cs-137 data
     plt.plot(cs137.x, cs137.y, 'o',label="Cs-137")
 
@@ -203,11 +211,6 @@ if __name__ == '__main__':
     ## plot the cs-137 e-suppressed data into same figure
     plt.plot(cs137_gamma.x, cs137_gamma.y, 'o', label="Cs-137 gamma bkgrd")
 
-    ## Delete this to continue!
-    plt.show()           ## <-- shows the plot (not needed with interactive plots)
-    log.info(" Stopping analysis here... modify code to continue! ")    
-    sys.exit() ## quit for now...
-    
     ## now subtract the background from the measurement
     cs137.subtract_from_data(cs137_gamma)
     ## plot the result
@@ -231,7 +234,7 @@ if __name__ == '__main__':
 
     ## Delete this to continue!
     plt.show()           ## <-- shows the plot (not needed with interactive plots)
-    log.info(" Stopping analysis here... modify code to continue! ")    
+    log.info("Stopping analysis here... modify code to continue! ")    
     sys.exit() ## quit for now...
 
     
@@ -253,7 +256,7 @@ if __name__ == '__main__':
     plt.plot(ecalib_data_cs137[0], ecalib_data_cs137[1], 'o',label="Cs-137")
     
     ## linear regression of the data
-    ## see http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.stats.linregress.html
+    ## http://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.linregress.html
     slope = 1.
     intercept = 0.
     # .... something is missing here....
@@ -281,7 +284,7 @@ if __name__ == '__main__':
 
     ## Delete this to continue!
     plt.show()           ## <-- shows the plot (not needed with interactive plots)
-    log.info(" Stopping analysis here... modify code to continue! ")    
+    log.info("Stopping analysis here... modify code to continue! ")    
     sys.exit() ## quit for now...
   
     
@@ -305,20 +308,22 @@ if __name__ == '__main__':
     plt.ylabel('Q-Te')
     plt.title("P-32 Fermi-Kurie")
     plt.plot(p32.x, QminTe, 'o', label="data")
-
-    ## Delete this to continue!
-    plt.show()           ## <-- shows the plot (not needed with interactive plots)
-    log.info(" Stopping analysis here... modify code to continue! ")    
-    sys.exit() ## quit for now...
     
     ## linear regression of the FM plot
     ## see http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.stats.linregress.html
     ## the fit does not really work on the edges of the FM plot, so we take the region 0.2<E [MeV]<1.5
-    lower_limit = np.where(p32.x>0.2)[0][0] ## first elements indicate first bin matching our criteria
-    upper_limit = np.where(p32.x>1.5)[0][0]
+    lower_limit, upper_limit = 1,2 ## initialize
+    try:
+        # search for the bins that match our criteria
+        lower_limit = np.where(p32.x>0.2)[0][0] ## first elements indicate first bin matching our criteria
+        upper_limit = np.where(p32.x>1.5)[0][0]
+    except IndexError:
+        log.error("Could not find any bins in the region of 0.2<E[MeV]<1.5 to fit!")
+
     slope, intercept, r_value, p_value, std_err = stats.linregress(p32.x[lower_limit:upper_limit], QminTe[lower_limit:upper_limit])
     x = np.arange(0,2,0.05) ## generate x axis for fit result (start, stop, stepsize)
     plt.plot(x,slope*x+intercept,label="linear regression")
+
     plt.legend()
 
     ## now the Q value is determined by where the linear regression intersects with the x axis (Q-Te = 0)
