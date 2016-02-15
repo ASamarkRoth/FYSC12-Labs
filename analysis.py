@@ -127,7 +127,7 @@ def fit_gaussians_to_measurement(m):
 ##                           |_|              |___/
 if __name__ == '__main__':
     ## set up some print-out routines (logging)
-    FORMAT = '%(asctime)s %(name)s:%(lineno)-4d %(levelname)-8s %(message)s'
+    FORMAT = '%(asctime)s %(name)s:line %(lineno)-4d %(levelname)-8s %(message)s'
     logging.basicConfig(format=FORMAT)
     log = logging.getLogger('betalab_analysis') ## set up logging
     log.setLevel("INFO")
