@@ -159,19 +159,17 @@ if __name__ == '__main__':
         sys.exit()
     ## plot the p32 raw measurement
     plt.plot(p32.x, p32.y, 'o', label="P-32 raw data")  ## 'o' parameter: plot with markers
- 
-    ## read in the background measurement file
-    bkgrd = read_mca_data_file('data/p32-background.Spe')
-    ## normalize the background to the measurement time ratio between P32 and bkgrd
-    log.info("Adjusting P-32 background normalization by: " + str(p32.duration/bkgrd.duration))
-    bkgrd.scale_data(p32.duration/bkgrd.duration)
-    ## show background also in plot
-    plt.plot(bkgrd.x, bkgrd.y, 'o', label="background")
 
-    ## now subtract the background from the p32 measurement
-    p32.subtract_from_data(bkgrd)
-    ## plot the background-subracted p32 measurement
-    plt.plot(p32.x, p32.y, 'o', label="P-32 - bkgrd")  ## 'o' parameter: plot with markers
+    ## Side quest: What about backgrounds? One should look at this...
+    ## -- load a file with a (long!) background measurement
+    ## => read in the background measurement file here using 'read_mca_data_file'
+    ## -- make sure that the background is correctly normalized to the P-32 data by taking measurement times into account
+    ## => use the "duration" property of our spectra to calculate the factor and use "scale_data" method to scale the _background_
+    ## -- subtract the background from the measurement data
+    ## => use the 'subtract_from_data' method of the Spectrum class 
+    ## -- plot both the background and the data w/o background into the same plot
+    ## => how much background is there? where is it located? will it affect the measurement precision?
+
     plt.legend()     ## generate the legend (with the "label" information from the plots)
 
     ## Delete this to continue!
@@ -204,17 +202,15 @@ if __name__ == '__main__':
     ## plot the cs-137 data
     plt.plot(cs137.x, cs137.y, 'o',label="Cs-137")
 
-    ## read in the gamma background measurement of Cs137
-    cs137_gamma = read_mca_data_file('data/cs137-background.Spe')
-    ## weight the spectrum according to the ratio of measurement durations
-    cs137_gamma.scale_data(cs137.duration/cs137_gamma.duration)
-    ## plot the cs-137 e-suppressed data into same figure
-    plt.plot(cs137_gamma.x, cs137_gamma.y, 'o', label="Cs-137 gamma bkgrd")
-
-    ## now subtract the background from the measurement
-    cs137.subtract_from_data(cs137_gamma)
-    ## plot the result
-    plt.plot(cs137.x, cs137.y, 'o', label="Cs-137 w/o gamma bkgrd")
+    ## Side quest: Is that peak in the data really electrons? And what about the gamma background?
+    ## -- load a file with a measurement of only the gamma background (how to do that?)
+    ## => read in the background measurement file here using 'read_mca_data_file'
+    ## -- make sure that the background is correctly normalized to the CS-137 data by taking measurement times into account
+    ## => use the "duration" property of our spectra to calculate the factor and use "scale_data" method to scale the _background_
+    ## -- subtract the background from the CS-137 measurement data
+    ## => use the 'subtract_from_data' method of the Spectrum class 
+    ## -- plot both the background and the CS-137 data w/o background into the same plot
+    ## => how much background is there? where is it located? will it affect the fit precision?
 
     ## fit all gaussians in our measurement
     fits = fit_gaussians_to_measurement(cs137)
