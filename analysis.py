@@ -81,7 +81,7 @@ def fit_gaussians_to_measurement(m):
     ## list to store the paramters of the fitted gaussians in
     gaussians = []
     
-    ## find peaks in m.y with widths given by an array
+    ## find peaks in m.y with range of widths given by an array (range from X1 to X2 in steps of X3)
     peakind = signal.find_peaks_cwt(m.y, np.arange(10,80,5)) 
 
     for p in peakind:
@@ -142,7 +142,7 @@ if __name__ == '__main__':
     plt.xlabel('channel number')
     plt.ylabel('counts')
     plt.title("P-32 MCA spectrum")
-    plt.axis([0, 512, 1, 70000])                          ## to set the axis range
+    plt.axis([0, 512, 1, 70000])                          ## to set the axis range ([xmin, xmax, ymin, ymax]), use xlim(), ylim() to set individually
     plt.text(200, 40000, r'Now all you need is data! :)') ## to add text into the plot
     ##plt.yscale('log')                                     ## set y axis to log scale
     plt.grid(True)                                        ## enable a grid to guide the eye
@@ -221,10 +221,9 @@ if __name__ == '__main__':
     ## now we have some data for our energy calibration:
     ## peak 0: pedestal, energy 0
     ## peak 1: internal conversion peak, 0.630 MeV
-    ecalib_data_cs137 = np.array([[fits[0][1], fits[1][1] ], #x
-                                  [0. , 0.630 ]] ) ## y
+    ecalib_data_cs137 = np.array([[fits[0][1], fits[1][1] ], [0. , 0.630 ]] ) ## [[x],[y]] values
     ## copy the sigma (the width of the gaussian) from the fit results
-    ecalib_sigma_cs137 = np.array([fits[0][2], fits[1][2]])                                  
+    ecalib_sigma_cs137 = np.array([fits[0][2], fits[1][2]])                   ## [[x],[y]] values            
     ## generate the legend (with the "label" information from the plots)
     plt.legend()
 
