@@ -280,7 +280,7 @@ if __name__ == '__main__':
     
     ## apply energy calibration
     log.info("Applying calibration constants")
-    sr90.energy_calibrate(slope,intercept)
+    sr90.calibrate(slope,intercept)
     
     ## plot into a new figure
     plt.figure()
