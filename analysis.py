@@ -16,13 +16,13 @@ class Spectrum:
         self.y = np.array(np.zeros(1))    ## creates a new empty array; will later store our y values
         self.name = filename   ## a more descriptive name, can be used e.g. in legends
         self.duration = 0
-    def subtract_from_data(self, m):
+    def subtract(self, m):
         self.y = self.y - m.y
         ## these are spectra: cannot have counts below 0, so remove these here and set them to 0 instead:
         self.y[self.y < 0] = 0;
-    def scale_data(self, scale):
+    def scale(self, scale):
         self.y *= scale
-    def energy_calibrate(self, slope, intercept):
+    def calibrate(self, slope, intercept):
         self.x = self.x*slope + intercept
 
 def gauss(x, *p):
@@ -52,7 +52,7 @@ def read_mca_data_file(filename):
                     log.debug("Parsing MEAS_TIM header info")
                     row = next(reader)
                     duration = [int(s) for s in row[0].split(' ')]
-                    m.duration = duration[1] ## two parts: CPU/realtime; take the second
+                    m.duration = duration[1] ## two parts: real time/live time; take the second
                 if row[0] == '$DATA:':
                     ## this is the last part of the header and contains the start/stop channel numbers
                     log.debug("Parsing DATA header info")
@@ -60,7 +60,7 @@ def read_mca_data_file(filename):
                     interval = [int(s) for s in row[0].split(' ')]
                     ## "DATA" is the last item: stop with the header processing
                     break
-            ## TODO!!! make sure that the file does not end before we have parsed the header!
+            ## TODO: make sure that the file does not end before we have parsed the header!
             log.debug("Done with header parsing")
             nbins = int(interval[1]-interval[0])+1
             m.y = np.array(np.zeros(nbins))
@@ -142,7 +142,7 @@ if __name__ == '__main__':
     plt.xlabel('channel number')
     plt.ylabel('counts')
     plt.title("P-32 MCA spectrum")
-    plt.axis([0, 512, 1, 70000])                          ## to set the axis range ([xmin, xmax, ymin, ymax]), use xlim(), ylim() to set individually
+    plt.xlim([0, 512])                                    ## to set the x-axis range ([xmin, xmax]), use ylim() to set y axis limits
     plt.text(200, 40000, r'Now all you need is data! :)') ## to add text into the plot
     ##plt.yscale('log')                                     ## set y axis to log scale
     plt.grid(True)                                        ## enable a grid to guide the eye
@@ -151,6 +151,7 @@ if __name__ == '__main__':
     plt.show()           ## <-- shows the plot (not needed with interactive plots)
     log.info("Stopping analysis here... modify code to continue! ")    
     sys.exit() ## quit for now...
+    ## ... delete until here :)
     
     ## read in the p32 measurement file
     p32 = read_mca_data_file('data/p32.Spe')
@@ -158,15 +159,15 @@ if __name__ == '__main__':
         ## looks like we couldn't open the file, so just exit here
         sys.exit()
     ## plot the p32 raw measurement
-    plt.plot(p32.x, p32.y, 'o', label="P-32 raw data")  ## 'o' parameter: plot with markers
+    plt.plot(p32.x, p32.y, marker='o', label="P-32 raw data")  ## marker='o' parameter: plot with markers
 
     ## Side quest: What about backgrounds? One should look at this...
     ## -- load a file with a (long!) background measurement
     ## => read in the background measurement file here using 'read_mca_data_file'
     ## -- make sure that the background is correctly normalized to the P-32 data by taking measurement times into account
-    ## => use the "duration" property of our spectra to calculate the factor and use "scale_data" method to scale the _background_
+    ## => use the "duration" property of our spectra to calculate the factor and use "scale" method to scale the _background_
     ## -- subtract the background from the measurement data
-    ## => use the 'subtract_from_data' method of the Spectrum class 
+    ## => use the 'subtract' method of the Spectrum class 
     ## -- plot both the background and the data w/o background into the same plot
     ## => how much background is there? where is it located? will it affect the measurement precision?
 
@@ -176,7 +177,8 @@ if __name__ == '__main__':
     plt.show()           ## <-- shows the plot (not needed with interactive plots)
     log.info("Stopping analysis here... modify code to continue! ")    
     sys.exit() ## quit for now...
-        
+    ## ... delete until here :)
+
     
     ##                _ __________
     ##  ___ ___      / |___ /___  |
@@ -200,15 +202,15 @@ if __name__ == '__main__':
     plt.title("Cs-137")
 
     ## plot the cs-137 data
-    plt.plot(cs137.x, cs137.y, 'o',label="Cs-137")
+    plt.plot(cs137.x, cs137.y, marker='o',label="Cs-137")
 
     ## Side quest: Is that peak in the data really electrons? And what about the gamma background?
     ## -- load a file with a measurement of only the gamma background (how to do that?)
     ## => read in the background measurement file here using 'read_mca_data_file'
     ## -- make sure that the background is correctly normalized to the CS-137 data by taking measurement times into account
-    ## => use the "duration" property of our spectra to calculate the factor and use "scale_data" method to scale the _background_
+    ## => use the "duration" property of our spectra to calculate the factor and use "scale" method to scale the _background_
     ## -- subtract the background from the CS-137 measurement data
-    ## => use the 'subtract_from_data' method of the Spectrum class 
+    ## => use the 'subtract' method of the Spectrum class 
     ## -- plot both the background and the CS-137 data w/o background into the same plot
     ## => how much background is there? where is it located? will it affect the fit precision?
 
@@ -218,19 +220,31 @@ if __name__ == '__main__':
     for g in fits:
         ## plot the gaussian fit
         plt.plot(cs137.x, gauss(cs137.x,*g), label="Gauss fit, $\sigma$="+str(g[2]))
+
     ## now we have some data for our energy calibration:
-    ## peak 0: pedestal, energy 0
-    ## peak 1: internal conversion peak, 0.630 MeV
-    ecalib_data_cs137 = np.array([[fits[0][1], fits[1][1] ], [0. , 0.630 ]] ) ## [[x],[y]] values
-    ## copy the sigma (the width of the gaussian) from the fit results
-    ecalib_sigma_cs137 = np.array([fits[0][2], fits[1][2]])                   ## [[x],[y]] values            
+    ## peak 0: internal conversion peak, 0.630 MeV
+
+    if len(fits)>1: ## check if we have at least one peak
+        ecalib_data_cs137 = np.array([ [ fits[0][1] ], [ 0.630 ] ] ) ## [[Ch #],[Energy]] values
+        ## copy the sigma (the width of the gaussian) from the fit results
+        ecalib_sigma_cs137 = np.array([fits[0][2])                   ## [Sigma] values
+    else:
+        ## could not reliably determine peak... need manual intervention!
+        log.error("Unexpected number of Gaussians found in spectrum! Please modify fit parameters!")
+        plt.show()           ## <-- shows the plot (not needed with interactive plots)
+        sys.exit() ## quit for now...
+                
     ## generate the legend (with the "label" information from the plots)
     plt.legend()
+    ## to set the x-axis range ([xmin, xmax]), use ylim() to set y axis limits
+    plt.xlim([0, 512])
+
 
     ## Delete this to continue!
     plt.show()           ## <-- shows the plot (not needed with interactive plots)
     log.info("Stopping analysis here... modify code to continue! ")    
     sys.exit() ## quit for now...
+    ## ... delete until here :)
 
     
     ##                                               _ _ _               _   _                 
@@ -246,9 +260,8 @@ if __name__ == '__main__':
     plt.ylabel('energy [MeV]')
     plt.title("Energy Calibration")
 
-    ## plot the data from Cs-137
-    ## could use "plt.errorbar" to include uncertainties!
-    plt.plot(ecalib_data_cs137[0], ecalib_data_cs137[1], 'o',label="Cs-137")
+    ## plot the data from Cs-137 including uncertainty (based on width of Gaussian)
+    plt.errorbar(ecalib_data_cs137[0], ecalib_data_cs137[1], xerr=ecalib_sigma_cs137, marker='o',label="Cs-137")
     
     ## linear regression of the data
     ## http://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.linregress.html
@@ -275,13 +288,14 @@ if __name__ == '__main__':
     plt.xlabel('energy [MeV]')
     plt.ylabel('counts')
     plt.title("P-32 energy spectrum")
-    plt.plot(p32.x, p32.y, 'o')
+    plt.plot(p32.x, p32.y, marker='o')
 
     ## Delete this to continue!
     plt.show()           ## <-- shows the plot (not needed with interactive plots)
     log.info("Stopping analysis here... modify code to continue! ")    
     sys.exit() ## quit for now...
-  
+    ## ... delete until here :)
+
     
     ## _____                   _       _  __          _        ____  _       _
     ##|  ___|__ _ __ _ __ ___ (_)     | |/ /   _ _ __(_) ___  |  _ \| | ___ | |_
@@ -302,7 +316,7 @@ if __name__ == '__main__':
     plt.xlabel('Te [MeV]')
     plt.ylabel('Q-Te')
     plt.title("P-32 Fermi-Kurie")
-    plt.plot(p32.x, QminTe, 'o', label="data")
+    plt.plot(p32.x, QminTe, marker='o', label="data")
     
     ## linear regression of the FM plot
     ## see http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.stats.linregress.html
@@ -326,8 +340,13 @@ if __name__ == '__main__':
 
     ## print results
     log.info("Determined linear regression to Fermi-Kurie plot: Q-Te = "+str(slope)+"*Te + " + str(intercept))
-    log.info("===> Q value for P32: Q = "+str(Q)+" MeV ")
-    plt.text(1.6, 25, 'Q = '+"{:.3f}".format(Q)+' MeV') ## to add text to the plot
+    log.info("===> Q value: Q = "+str(Q)+" MeV ")
+    ## label plot with Q value
+    plt.annotate('Q = '+"{:.3f}".format(Q)+' MeV', # text to put there
+                xy=(Q, 0),                         # where to point to
+                xytext=(0., 60),                   # offset for text
+                textcoords='offset points',
+                arrowprops=dict(arrowstyle="->", color = 'red'))
     
     ## final step:
     plt.show()           ## <-- shows the plot (not needed with interactive plots)
