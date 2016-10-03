@@ -287,7 +287,7 @@ if __name__ == '__main__':
     plt.grid(True)
     plt.xlabel('energy [MeV]')
     plt.ylabel('counts')
-    plt.title("Sr-90 energy spectrum")
+    plt.title("Sr-90/Y-90 energy spectrum")
     plt.plot(sr90.x, sr90.y, marker='o')
 
     ## Delete this to continue!
