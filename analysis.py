@@ -132,16 +132,16 @@ if __name__ == '__main__':
     log = logging.getLogger('betalab_analysis') ## set up logging
     log.setLevel("INFO")
 
-    ##            _________
-    ## _ __      |___ /___ \
-    ##| '_ \ _____ |_ \ __) |
-    ##| |_) |_____|__) / __/
-    ##| .__/     |____/_____|
-    ##|_|    
+    ## ____            ___   ___       __ __   __    ___   ___
+    ##/ ___| _ __     / _ \ / _ \     / / \ \ / /   / _ \ / _ \
+    ##\___ \| '__|___| (_) | | | |   / /   \ V /___| (_) | | | |
+    ## ___) | | |_____\__, | |_| |  / /     | |_____\__, | |_| |
+    ##|____/|_|         /_/ \___/  /_/      |_|       /_/ \___/
+
     ## setup the (first) plot
     plt.xlabel('channel number')
     plt.ylabel('counts')
-    plt.title("P-32 MCA spectrum")
+    plt.title("Sr-90/Y-90 MCA spectrum")
     plt.xlim([0, 512])                                    ## to set the x-axis range ([xmin, xmax]), use ylim() to set y axis limits
     plt.text(200, 40000, r'Now all you need is data! :)') ## to add text into the plot
     ##plt.yscale('log')                                     ## set y axis to log scale
@@ -153,18 +153,18 @@ if __name__ == '__main__':
     sys.exit() ## quit for now...
     ## ... delete until here :)
     
-    ## read in the p32 measurement file
-    p32 = read_mca_data_file('data/p32.Spe')
-    if not p32:
+    ## read in the sr90 measurement file
+    sr90 = read_mca_data_file('data/sr90.Spe')
+    if not sr90:
         ## looks like we couldn't open the file, so just exit here
         sys.exit()
-    ## plot the p32 raw measurement
-    plt.plot(p32.x, p32.y, marker='o', label="P-32 raw data")  ## marker='o' parameter: plot with markers
+    ## plot the sr90 raw measurement
+    plt.plot(sr90.x, sr90.y, marker='o', label="Sr-90/Y-90 raw data")  ## marker='o' parameter: plot with markers
 
     ## Side quest: What about backgrounds? One should look at this...
     ## -- load a file with a (long!) background measurement
     ## => read in the background measurement file here using 'read_mca_data_file'
-    ## -- make sure that the background is correctly normalized to the P-32 data by taking measurement times into account
+    ## -- make sure that the background is correctly normalized to the Sr-90 data by taking measurement times into account
     ## => use the "duration" property of our spectra to calculate the factor and use "scale" method to scale the _background_
     ## -- subtract the background from the measurement data
     ## => use the 'subtract' method of the Spectrum class 
@@ -280,15 +280,15 @@ if __name__ == '__main__':
     
     ## apply energy calibration
     log.info("Applying calibration constants")
-    p32.energy_calibrate(slope,intercept)
+    sr90.energy_calibrate(slope,intercept)
     
     ## plot into a new figure
     plt.figure()
     plt.grid(True)
     plt.xlabel('energy [MeV]')
     plt.ylabel('counts')
-    plt.title("P-32 energy spectrum")
-    plt.plot(p32.x, p32.y, marker='o')
+    plt.title("Sr-90 energy spectrum")
+    plt.plot(sr90.x, sr90.y, marker='o')
 
     ## Delete this to continue!
     plt.show()           ## <-- shows the plot (not needed with interactive plots)
@@ -304,19 +304,19 @@ if __name__ == '__main__':
     ##|_|  \___|_|  |_| |_| |_|_|     |_|\_\__,_|_|  |_|\___| |_|   |_|\___/ \__|    
     ## fermi-kurie calculations:
     mec2 = 0.510998910 ## MeV
-    pc = np.sqrt((p32.x + mec2)**2 - mec2**2)
+    pc = np.sqrt((sr90.x + mec2)**2 - mec2**2)
     A = pc/mec2
     f = 1.3604*A*A + 0.1973*A + 0.0439
-    Ee = (p32.x + mec2)
-    QminTe = np.sqrt((p32.y*pc)/(Ee*f))
+    Ee = (sr90.x + mec2)
+    QminTe = np.sqrt((sr90.y*pc)/(Ee*f))
 
     ## plot into a new figure
     plt.figure()
     plt.grid(True)
     plt.xlabel('Te [MeV]')
     plt.ylabel('Q-Te')
-    plt.title("P-32 Fermi-Kurie")
-    plt.plot(p32.x, QminTe, marker='o', label="data")
+    plt.title("Sr-90 Fermi-Kurie")
+    plt.plot(sr90.x, QminTe, marker='o', label="data")
     
     ## linear regression of the FM plot
     ## see http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.stats.linregress.html
@@ -324,12 +324,12 @@ if __name__ == '__main__':
     lower_limit, upper_limit = 1,2 ## initialize
     try:
         # search for the bins that match our criteria
-        lower_limit = np.where(p32.x>0.2)[0][0] ## first elements indicate first bin matching our criteria
-        upper_limit = np.where(p32.x>1.5)[0][0]
+        lower_limit = np.where(sr90.x>0.2)[0][0] ## first elements indicate first bin matching our criteria
+        upper_limit = np.where(sr90.x>1.5)[0][0]
     except IndexError:
         log.error("Could not find any bins in the region of 0.2<E[MeV]<1.5 to fit!")
 
-    slope, intercept, r_value, p_value, std_err = stats.linregress(p32.x[lower_limit:upper_limit], QminTe[lower_limit:upper_limit])
+    slope, intercept, r_value, p_value, std_err = stats.linregress(sr90.x[lower_limit:upper_limit], QminTe[lower_limit:upper_limit])
     x = np.arange(0,2,0.05) ## generate x axis for fit result (start, stop, stepsize)
     plt.plot(x,slope*x+intercept,label="linear regression")
 
