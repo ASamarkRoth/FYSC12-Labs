@@ -143,7 +143,9 @@ if __name__ == '__main__':
     plt.ylabel('counts')
     plt.title("Sr-90/Y-90 MCA spectrum")
     plt.xlim([0, 512])                                    ## to set the x-axis range ([xmin, xmax]), use ylim() to set y axis limits
-    plt.text(200, 40000, r'Now all you need is data! :)') ## to add text into the plot
+    plt.annotate('Now all you need is data! :)',          # text to put there
+                xy=(0.35, 0.5),                           # coordinates for text
+                xycoords='figure fraction')               # set relative coordinates
     ##plt.yscale('log')                                     ## set y axis to log scale
     plt.grid(True)                                        ## enable a grid to guide the eye
 
@@ -227,7 +229,7 @@ if __name__ == '__main__':
     if len(fits)>1: ## check if we have at least one peak
         ecalib_data_cs137 = np.array([ [ fits[0][1] ], [ 0.630 ] ] ) ## [[Ch #],[Energy]] values
         ## copy the sigma (the width of the gaussian) from the fit results
-        ecalib_sigma_cs137 = np.array([fits[0][2])                   ## [Sigma] values
+        ecalib_sigma_cs137 = np.array([fits[0][2]])                   ## [Sigma] values
     else:
         ## could not reliably determine peak... need manual intervention!
         log.error("Unexpected number of Gaussians found in spectrum! Please modify fit parameters!")
