@@ -24,17 +24,6 @@ class Spectrum:
         self.y *= scale
     def calibrate(self, slope, intercept):
         self.x = self.x*slope + intercept
-
-def gauss(x, *p):
-    """ gauss function to be used for fits to the data"""
-    A, mu, sigma = p
-    return A*np.exp(-(x-mu)**2/(2.*sigma**2))
-
-def line(x, *p):
-    """ straight line function to be used for fits to the data"""
-    a, b = p
-    return a*x+b
-
         
 def read_mca_data_file(filename):
     """Reads in a data file (csv format) stored by the Maestro MCA software and returns a 'Spectrum' object. Tested with Maestro Version 6.05 """
@@ -76,6 +65,26 @@ def read_mca_data_file(filename):
         sys.exit(-1)
     return m
 
+
+def gaussfcn(x, *p):
+    """ gauss function to be used for fits to the data"""
+    A, mu, sigma = p
+    return A*np.exp(-(x-mu)**2/(2.*sigma**2))
+
+class Gauss:
+    """A class to hold coefficients for Gaussian distributions"""
+    def __init__(self, A, mu, sigma):
+        self.A = A
+        self.mu = mu
+        self.sigma = sigma
+    def value(self, x):
+        return gaussfcn(x, self.A, self.mu, self.sigma)
+
+def line(x, *p):
+    """ straight line function to be used for fits to the data"""
+    a, b = p
+    return a*x+b
+
 def fit_gaussians_to_measurement(m):
     """ fits all gaussians in a spectrum measurement and returns a list of coefficients"""
     ## list to store the paramters of the fitted gaussians in
@@ -97,26 +106,27 @@ def fit_gaussians_to_measurement(m):
             try:
                 ## use the scipy curve_fit routine (uses non-linear least squares to perform the fit)
                 ## see http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.optimize.curve_fit.html
-                ## coeff, var_matrix = curve_fit(gauss, m.x, m.y, p0=p0) ## fit using the full data range, might not work with multiple peaks
-                coeff, var_matrix = curve_fit(gauss, m.x[p-10:p+10], m.y[p-10:p+10], p0=p0) ## fit using "slices" of the arrays with +/- 10 around peak
-            except (RuntimeError, OptimizeWarning):
+                coeff, var_matrix = curve_fit(gaussfcn, m.x[p-10:p+10], m.y[p-10:p+10], p0=p0) ## fit using "slices" of the arrays with +/- 10 around peak
+                ## create a Gauss object with the fitted coefficients for better code readability
+                g = Gauss(*coeff)
+            except (RuntimeError, OptimizeWarning, TypeError):
                 ## the minimization did not work out... log it and continue to next peak
                 log.info("  - gaussian fit failed!")
                 continue
         ## filter the results -- or we get a lot of "spurious" peaks
         xdynrange = m.x.shape[0] ## dynamic range in x
-        if coeff[2] > 0.1*xdynrange: ## check width of gaussian in percent of the dynamic range
-            log.info("  - sigma out of bounds: " + str(coeff[2]))
+        if g.sigma > 0.1*xdynrange: ## check width of gaussian in percent of the dynamic range
+            log.info("  - sigma out of bounds: " + str(g.sigma))
             continue
-        if coeff[1] > xdynrange-0.1*xdynrange or coeff[1] < 6: ## check center position: should not be at the limits of measurement range
-            log.info("  - mu out of bounds: " + str(coeff[1]))
+        if g.mu > xdynrange-0.1*xdynrange or g.mu < 6: ## check center position: should not be at the limits of measurement range
+            log.info("  - mu out of bounds: " + str(g.mu))
             continue
-        if coeff[0] < 0.25*np.average(m.y): ## check if the peak hight is at least 25% over the average data value
-            log.info("  - A out of bounds: " + str(coeff[0]))
+        if g.A < 0.25*np.average(m.y): ## check if the peak hight is at least 25% over the average data value
+            log.info("  - A out of bounds: " + str(g.A))
             continue            
-        log.info("  - fit result: A = " + str(coeff[0]) + ", mu = " + str(coeff[1]) + ", sigma = " + str(coeff[2]) + ". ")
+        log.info("  - fit result: A = " + str(g.A) + ", mu = " + str(g.mu) + ", sigma = " + str(g.sigma) + ". ")
         ## store the results
-        gaussians.append(coeff)
+        gaussians.append(g)
     return gaussians
 
 ##                  _
@@ -150,7 +160,7 @@ if __name__ == '__main__':
     plt.grid(True)                                        ## enable a grid to guide the eye
 
     ## Delete this to continue!
-    plt.show()           ## <-- shows the plot (not needed with interactive plots)
+    plt.show()           ## <-- shows the plot
     log.info("Stopping analysis here... modify code to continue! ")    
     sys.exit() ## quit for now...
     ## ... delete until here :)
@@ -176,7 +186,7 @@ if __name__ == '__main__':
     plt.legend()     ## generate the legend (with the "label" information from the plots)
 
     ## Delete this to continue!
-    plt.show()           ## <-- shows the plot (not needed with interactive plots)
+    plt.show()           ## <-- shows the plot
     log.info("Stopping analysis here... modify code to continue! ")    
     sys.exit() ## quit for now...
     ## ... delete until here :)
@@ -221,34 +231,44 @@ if __name__ == '__main__':
     ## loop over fit results
     for g in fits:
         ## plot the gaussian fit
-        plt.plot(cs137.x, gauss(cs137.x,*g), label="Gauss fit, $\sigma$="+str(g[2]))
+        plt.plot(cs137.x, g.value(cs137.x), label="Gauss fit, $\sigma$="+str(g.sigma))
 
     ## now we have some data for our energy calibration:
     ## peak 0: internal conversion peak, 0.630 MeV
 
-    if len(fits)>1: ## check if we have at least one peak
-        ecalib_data_cs137 = np.array([ [ fits[0][1] ], [ 0.630 ] ] ) ## [[Ch #],[Energy]] values
+    if len(fits)>=1: ## check if we have at least one peak
+        ## now create two arrays, one holding the channel number of the fitted peak
+        ## the other the corresponding energy
+        ecalib_cs137_channel = np.array( [ fits[0].mu ] )   ## [Ch# peak1, Ch# peak2, .... ]
+        ecalib_cs137_energy  = np.array( [ 0.630 ] )        ## [E peak1, E peak2, ... ] in MeV
         ## copy the sigma (the width of the gaussian) from the fit results
-        ecalib_sigma_cs137 = np.array([fits[0][2]])                   ## [Sigma] values
+        ecalib_cs137_sigma   = np.array( [ fits[0].sigma ] )## [Sigma] values for each peak
     else:
         ## could not reliably determine peak... need manual intervention!
         log.error("Unexpected number of Gaussians found in spectrum! Please modify fit parameters!")
-        plt.show()           ## <-- shows the plot (not needed with interactive plots)
-        sys.exit() ## quit for now...
+        plt.show()     ## <-- shows the plot
+        sys.exit()     ## quit 
                 
     ## generate the legend (with the "label" information from the plots)
     plt.legend()
     ## to set the x-axis range ([xmin, xmax]), use ylim() to set y axis limits
     plt.xlim([0, 512])
 
-
     ## Delete this to continue!
-    plt.show()           ## <-- shows the plot (not needed with interactive plots)
+    plt.show()           ## <-- shows the plot
     log.info("Stopping analysis here... modify code to continue! ")    
     sys.exit() ## quit for now...
     ## ... delete until here :)
 
+    ## ____  _      ____   ___ _____
+    ##| __ )(_)    |___ \ / _ \___  |
+    ##|  _ \| |_____ __) | | | | / /
+    ##| |_) | |_____/ __/| |_| |/ /
+    ##|____/|_|    |_____|\___//_/
+    ##
+    ## ... nothing here yet ... time to copy&paste from Cs-137!
     
+        
     ##                                               _ _ _               _   _                 
     ##  ___ _ __   ___ _ __ __ _ _   _      ___ __ _| (_) |__  _ __ __ _| |_(_) ___  _ __      
     ## / _ \ '_ \ / _ \ '__/ _` | | | |    / __/ _` | | | '_ \| '__/ _` | __| |/ _ \| '_ \     
@@ -262,9 +282,14 @@ if __name__ == '__main__':
     plt.ylabel('energy [MeV]')
     plt.title("Energy Calibration")
 
-    ## plot the data from Cs-137 including uncertainty (based on width of Gaussian)
-    plt.errorbar(ecalib_data_cs137[0], ecalib_data_cs137[1], xerr=ecalib_sigma_cs137, marker='o',label="Cs-137")
-    
+    ## PLOT the data from Cs-137 including uncertainties (based on width of Gaussian fit)
+    plt.errorbar(x=ecalib_cs137_channel, y=ecalib_cs137_energy, xerr=ecalib_cs137_sigma, marker='o',label="Cs-137")
+
+    ## might want to COMBINE data arrays from different calibration sources for the fit:
+    ## use
+    ## new_array = np.concatenate( array1, array2 )
+    ## to do so. Then change the data set in the fit command.
+        
     ## linear regression of the data
     ## http://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.linregress.html
     slope = 1.
@@ -293,7 +318,7 @@ if __name__ == '__main__':
     plt.plot(sr90.x, sr90.y, marker='o')
 
     ## Delete this to continue!
-    plt.show()           ## <-- shows the plot (not needed with interactive plots)
+    plt.show()           ## <-- shows the plot
     log.info("Stopping analysis here... modify code to continue! ")    
     sys.exit() ## quit for now...
     ## ... delete until here :)
@@ -320,19 +345,21 @@ if __name__ == '__main__':
     plt.title("Sr-90 Fermi-Kurie")
     plt.plot(sr90.x, QminTe, marker='o', label="data")
     
-    ## linear regression of the FM plot
-    ## see http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.stats.linregress.html
-    ## the fit does not really work on the edges of the FM plot, so we take the region 0.2<E [MeV]<1.5
+    ## linear regression of the FM plot see
+    ## http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.stats.linregress.html
+    ## the fit does not really work on the edges of the FM plot, so we
+    ## take the linear region of lower_limit<E [MeV]<upper_limit (to
+    ## be determined from the plot)
     lower_limit, upper_limit = 1,2 ## initialize
     try:
         # search for the bins that match our criteria
         lower_limit = np.where(sr90.x>0.2)[0][0] ## first elements indicate first bin matching our criteria
         upper_limit = np.where(sr90.x>1.5)[0][0]
     except IndexError:
-        log.error("Could not find any bins in the region of 0.2<E[MeV]<1.5 to fit!")
+        log.error("Could not find any bins to fit! Please check the limit settings!")
 
     slope, intercept, r_value, p_value, std_err = stats.linregress(sr90.x[lower_limit:upper_limit], QminTe[lower_limit:upper_limit])
-    x = np.arange(0,2,0.05) ## generate x axis for fit result (start, stop, stepsize)
+    x = np.arange(0,2.5,0.05) ## generate x axis for fit result (start, stop, stepsize)
     plt.plot(x,slope*x+intercept,label="linear regression")
 
     plt.legend()
@@ -351,4 +378,4 @@ if __name__ == '__main__':
                 arrowprops=dict(arrowstyle="->", color = 'red'))
     
     ## final step:
-    plt.show()           ## <-- shows the plot (not needed with interactive plots)
+    plt.show()           ## <-- shows the plot
