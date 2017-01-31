@@ -14,7 +14,7 @@ class Spectrum:
         self.filename = filename
         self.x = np.array(np.zeros(1))    ## creates a new empty array; will later store our x values
         self.y = np.array(np.zeros(1))    ## creates a new empty array; will later store our y values
-        self.name = filename   ## a more descriptive name, can be used e.g. in legends
+        self.name = filename              ## a more descriptive name, can be used e.g. in legends
         self.duration = 0
     def subtract(self, m):
         self.y = self.y - m.y
@@ -24,7 +24,7 @@ class Spectrum:
         self.y *= scale
     def calibrate(self, slope, intercept):
         self.x = self.x*slope + intercept
-        
+
 def read_mca_data_file(filename):
     """Reads in a data file (csv format) stored by the Maestro MCA software and returns a 'Spectrum' object. Tested with Maestro Version 6.05 """
     log = logging.getLogger('betalab_analysis') ## set up logging
@@ -51,11 +51,11 @@ def read_mca_data_file(filename):
                     break
             ## TODO: make sure that the file does not end before we have parsed the header!
             log.debug("Done with header parsing")
-            nbins = int(interval[1]-interval[0])+1
-            m.y = np.array(np.zeros(nbins))
+            nchannel = int(interval[1]-interval[0])+1
+            m.y = np.array(np.zeros(nchannel))
             ## continue, now reading data
             for idx, row in enumerate(reader):
-                if idx >= nbins:
+                if idx >= nchannel:
                     break
                 m.y[idx] = int(row[0])
             m.x = np.arange(interval[0], interval[1]+1,1)
@@ -287,7 +287,7 @@ if __name__ == '__main__':
 
     ## might want to COMBINE data arrays from different calibration sources for the fit:
     ## use
-    ## new_array = np.concatenate( array1, array2 )
+    ## new_array = np.concatenate( [ array1, array2 ] )
     ## to do so. Then change the data set in the fit command.
         
     ## linear regression of the data
@@ -296,7 +296,7 @@ if __name__ == '__main__':
     intercept = 0.
     # .... something is missing here....
     
-    ## ALTERNATIVE METHODS TO FIT:
+    ## ADVANCED METHOD TO FIT:
     ## use "curve_fit" which allows to take uncertainties into account!
     ## http://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html
 
