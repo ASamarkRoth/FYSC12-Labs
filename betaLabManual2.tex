@@ -76,10 +76,10 @@ completed the lab -- shall:
 \begin{itemize}
 \item Supervisor: Hanno Perrey, office: B202
 \item Email: hanno.perrey@nuclear.lu.se, please contact me for any questions regarding the lab. 
-\item We start the lab 8:30 in hall L311. 
-\item Bring: your laptop computer (preferably with working
+\item Bring: your laptop computer (with working
   analysis setup, see below) and a USB key. 
-\item NO FOOD or DRINKS in L311
+\item You have to have signed the risk assessment informing you about the safety
+  rules in the lab before attending (will be done during the intro lecture).
 \end{itemize}
 
 
@@ -351,15 +351,12 @@ to do so.
 \subsubsection{Prerequisites}
 \label{sec:prerequisites}
 
-The analysis is written in Python3 with the SciPy tools for scientific
-computing -- it's all open-source, doesn't cost anything, available
-for all major platforms and highly flexible; the key packages are just
-a download away: for Windows or OSX systems,
-Anaconda\footnote{\url{https://www.continuum.io/downloads}, please
-  choose the version for Python 3.X.} provides
-the complete toolkit while for Linux-based systems, you can simply use
-your distribution's package manager. Detailed instructions for all
-operating systems can be found at: \url{http://www.scipy.org/install.html}
+The analysis is written in Python3 with the SciPy
+library\footnote{\url{http://www.scipy.org}} for scientific computing -- it's all
+  open-source, doesn't cost anything, available for all major platforms and
+  highly flexible; and the key packages are just a download away:
+  Anaconda\footnote{\url{https://www.continuum.io/downloads}, choose the version
+    for Python 3.X.} provides the complete toolkit we need.
 
 If you want to hack around in the code, it might be useful to install
 \texttt{git} as well, a source-code version control tool (never to
@@ -375,7 +372,7 @@ Download the code from
 \url{https://bitbucket.org/hperrey/betalab_analysis} into a directory
 of your liking or clone the whole repository with \texttt{git} (if
 installed previously) by running
-\begin{minted}[mathescape]{bash}
+\begin{minted}{bash}
 git clone https://bitbucket.org/hperrey/betalab_analysis
 \end{minted}
 on the command prompt (also called \emph{Terminal} or \emph{Konsole}
