@@ -30,9 +30,9 @@ def line(x, *p):
     a, b = p
     return a*x+b
 
-def fit_gaussian_at_idx(x, y, idx, width=10):
+def fit_gaussian_at_idx(x, y, idx, npoints=10):
     """ takes a spectrum measurement and an index for a position in the data (x/y) where
-    a Gaussian fit should be performed. Takes into account N surrounding data points given by 'width' argument """
+    a Gaussian fit should be performed. Takes into account N surrounding data points given by 'npoints' argument """
     log = logging.getLogger('fit_gaussian') ## set up logging
     log.info("Fitting data at position x = " + str(x[idx]) + " with a Gaussian")
     ## p0 is the initial guess for the fitting coefficients (A, mu and sigma above)
@@ -47,8 +47,8 @@ def fit_gaussian_at_idx(x, y, idx, width=10):
             ## use the scipy curve_fit routine (uses non-linear least squares to perform the fit)
             ## see http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.optimize.curve_fit.html
             ## fit using "slices" of the arrays with +/- 10 around peak (or less if out of bounds)
-            uppvar = min(len(x)-idx, width)
-            lowvar = min(idx, width)
+            uppvar = min(len(x)-idx, npoints)
+            lowvar = min(idx, npoints)
             coeff, var_matrix = curve_fit(gaussfcn,
                                           x[idx-lowvar:idx+uppvar],
                                           y[idx-lowvar:idx+uppvar],
@@ -60,25 +60,28 @@ def fit_gaussian_at_idx(x, y, idx, width=10):
             ## the minimization did not work out... log it and continue to next peak
             log.info("  - gaussian fit failed!")
 
-def fit_gaussian_at_pos(x, y, pos, width=10):
+def fit_gaussian_at_pos(x, y, pos, npoints=10):
     """ fits x,y values at given x position with a Gaussian. """
-    g = fit_gaussian_at_idx(x, y, idx=np.where(x>=pos)[0][0], width=width)
+    g = fit_gaussian_at_idx(x, y, idx=np.where(x>=pos)[0][0], npoints=npoints)
     if g is None:
-        print("Fit failed! :(")
+        print("Fit at x = {}: failed! :(".format(round(x)))
     return g
 
-def fit_all_gaussians(x, y, width=10, loglevel="WARNING"):
-    """ fits all gaussians in a spectrum measurement and returns a list of coefficients """
+def fit_all_gaussians(x, y, npoints=10, widths = np.arange(10,80,5), loglevel="WARNING"):
+    """ fits all gaussians in a spectrum measurement and returns a list of coefficients. 
+    The range of widths considered for fit is given by an array (e.g. 'np.arange(X1,X2,X3)': 
+    range from X1 to X2 in steps of X3)."""
+    logging.basicConfig()
     log = logging.getLogger('fit_all_gaussians_in_spectrum') ## set up logging
     log.setLevel(loglevel)
     ## list to store the parameters of the fitted gaussians in
     gaussians = []
 
     ## find peaks in y with range of widths given by an array (range from X1 to X2 in steps of X3)
-    peakind = signal.find_peaks_cwt(y, np.arange(10,80,5)) 
+    peakind = signal.find_peaks_cwt(y, widths) 
     log.info("Found {} peak(s) in the data, fitting them with gaussians:".format(len(peakind)))
     for p in peakind:
-        g = fit_gaussian_at_idx(x, y, p)
+        g = fit_gaussian_at_idx(x, y, p, npoints=npoints)
         if not g:
             continue
         ## filter the results -- or we get a lot of "spurious" peaks
