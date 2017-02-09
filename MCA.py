@@ -3,6 +3,7 @@ import csv                               ## for reading in our data files
 import logging                           ## for orderly print output
 import numpy as np                       ## for handling of data
 import sys                               ## useful system calls (used to exit cleanly)
+import os                                ## path manipulations
 
 class Spectrum:
     """A class to hold our spectrum measurement data and meta data (such as duration)"""
@@ -10,7 +11,8 @@ class Spectrum:
         self.filename = filename
         self.x = np.array(np.zeros(1))    ## creates a new empty array; will later store our x values
         self.y = np.array(np.zeros(1))    ## creates a new empty array; will later store our y values
-        self.name = filename              ## a more descriptive name, can be used e.g. in legends
+        self.name = os.path.splitext(     ## a more descriptive name, can be used e.g. in legends
+                os.path.basename(filename))[0] ## init with file name without extension
         self.duration = 0
     def subtract(self, m):
         self.y = self.y - m.y
