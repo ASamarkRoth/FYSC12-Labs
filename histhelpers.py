@@ -12,6 +12,7 @@ import csv
 import numpy as np
 import logging
 import sys
+import os
 
 class AquaHist:
     """A class to hold AquaDAQ measurement data and meta data"""
@@ -19,7 +20,8 @@ class AquaHist:
         self.filename = filename
         self.data = np.array(np.zeros(1))    ## creates a new empty histogram; will later store our data
         self.bins = np.array(np.zeros(1))
-        self.name = filename                     ## a more descriptive name, can be used e.g. in legends
+        self.name = os.path.splitext(     ## a more descriptive name, can be used e.g. in legends
+                os.path.basename(filename))[0] ## init with file name without extension
         self.title = ""
         self.xAxisTitle = ""
         self.yAxisTitle = ""
@@ -67,7 +69,7 @@ def import_hist_from_csv(file):
         # set up the AquaHist object to be returned later
         h = AquaHist(file)
         row = next(reader) # parse next line
-        h.name = row[1] # the file name of the original ROOT file
+        h.name = os.path.basename(row[1]) # the file name of the original ROOT file
         row = next(reader) # parse next line
         h.title = row[1]
         row = next(reader)
