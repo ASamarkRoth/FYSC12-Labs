@@ -80,6 +80,10 @@ completed the lab -- shall:
   analysis setup, see below) and a USB key. 
 \item You have to have signed the risk assessment informing you about the safety
   rules in the lab before attending (will be done during the intro lecture).
+\item This lab does \emph{not} require any written report to be handed in.
+  However, coming prepared (see below) and turning in the results worked on
+  during the day are mandatory. The grade for the lab will be based on the
+  latter as well as the active participation during the lab.
 \end{itemize}
 
 
@@ -87,12 +91,15 @@ completed the lab -- shall:
 \subsection{Prepare BEFORE the lab}
 
 \begin{itemize}
-\item Read Krane chap. 7.3, 7.6 (3 pages), 9.1, 9.2 and 9.3.; you
-  should be able to say something to each of the warm-up questions in
-  section \ref{sec:warm-up-questions}.
+  
 \item Read the lab manual.
 \item Setup your computer to run the analysis code (see section \ref{sec:prerequisites})
-  and test it by following the first step.
+  and test it by following the first step. If you have issues (or no computer
+  available), tell the lab supervisor as early as possible.
+\item Prepare short, \emph{written-down} answers to the warm-up questions in
+  section \ref{sec:warm-up-questions}. Preferably, write them into the Jupyter
+  Notebook we will be using during the lab.
+\item Recommended reading: Krane chap. 7.3, 7.6 (3 pages), 9.1, 9.2 and 9.3.
 \end{itemize}
 
 
@@ -301,7 +308,8 @@ with known, discrete, energies from $^{207}Bi$ and $^{137}Cs$.
 \item By what mechanisms does a photon/charged particle lose energy
   when traversing material?
 \item Why is plastic a good material for a scintillator? What
-  properties can you think of that are important to consider?
+  properties can you think of that might be important to consider?
+\item What is the function of the photomultiplier tube? What properties are important?
 \end{enumerate}
 
 
@@ -340,11 +348,11 @@ This is the rough outline:
 
 The ``online'' visualization that the Maestro MCA software allows is
 very helpful but limited and tedious to use for multiple data samples
+or to estimate systematic uncertainties
 -- no way around writing our own code!
 
 Lucky for you, pretty much the whole analysis is already coded and
-uploaded to
-\url{https://bitbucket.org/hperrey/betalab_analysis}. The next
+uploaded to Live@Lund. The next
 sections explain what is needed in order to run the analysis and how
 to do so.
 
@@ -352,47 +360,34 @@ to do so.
 \label{sec:prerequisites}
 
 The analysis is written in Python3 with the SciPy
-library\footnote{\url{http://www.scipy.org}} for scientific computing -- it's all
-  open-source, doesn't cost anything, available for all major platforms and
+library\footnote{\url{http://www.scipy.org}} for scientific computing and run
+inside a Jupyter Notebook\footnote{\url{https://jupyter.org/}} -- it's all
+  free and open software, available for all major platforms and
   highly flexible; and the key packages are just a download away:
   Anaconda\footnote{\url{https://www.continuum.io/downloads}, choose the version
     for Python 3.X.} provides the complete toolkit we need.
 
-If you want to hack around in the code, it might be useful to install
-\texttt{git} as well, a source-code version control tool (never to
-early to learn git$\ldots$): \url{https://git-scm.com/}. It is
-incredibly useful when collaborating on code or (\LaTeX) documents and
-allows to track and merge changes easily. A powerful tool well-worth
-looking into -- there are lots of tutorials\footnote{e.g. \url{https://help.github.com/articles/good-resources-for-learning-git-and-github/}} online.
-
 \subsubsection{Running the analysis}
 \label{sec:running-analysis}
 
-Download the code from
-\url{https://bitbucket.org/hperrey/betalab_analysis} into a directory
-of your liking or clone the whole repository with \texttt{git} (if
-installed previously) by running
+Download the zipped code from Live@Lund into a directory
+of your liking and extract the file contents.
+
+Now start up the Jupyter server by running
 \begin{minted}{bash}
-git clone https://bitbucket.org/hperrey/betalab_analysis
+cd path/to/the/directory/you/chose
+jupyter notebook
 \end{minted}
 on the command prompt (also called \emph{Terminal} or \emph{Konsole}
-depending on the OS).
+depending on the OS). Alternatively, you can look for and click the \emph{Jupyter Notebook}
+icon installed by Anaconda.
 
-Use the development environment of Anaconda (called ``Spyder'') or a
-text editor with syntax highlighting of your choice (or ask the supervisor for
-recommendations) and open the file \texttt{analysis.py}.
+Now your default web browser should launch and display the Jupyter application
+running at \url{http://localhost:8888}. Navigate to the Jupyter notebook you
+want to use for the lab and select it to open it in a new tab.
 
-Now enter the directory and actually run the central analysis by
-executing \texttt{analysis.py}, e.g. by using the ``Run'' command of
-Spyder or by entering
-\begin{minted}[mathescape]{bash}
-python analysis.py
-\end{minted}
-in a terminal (depending on your installation that might have to be
-\texttt{python3} instead).
-
-Now you should see a little plot with some text in it -- and you are all
-set for the lab!
+Follow the instructions in the notebook until the point where you see the first
+plot -- and you are all set for the lab!
 
 
 \section{The afternoon: a choice of further studies}
@@ -432,12 +427,11 @@ uncertainties.
   could vary if one would completely redo the experiment?
   Which ones are actually \emph{likely}?
 \item Which sources of uncertainty do you expect to contribute the
-  most?
+  most during the actual experiment?
+\item Which sources of uncertainty do you expect to contribute the
+  most during the analysis and calculation of the $Q$ value?
 \item How can you access these sources of uncertainties? I.e. by what
   method/variation could you estimate their impact?
-\item What backgrounds do you expect to have? Take measurements, and
-  analyse the background's energy spectra -- how can we reduce or
-  compensate for these backgrounds?
 \item Use the analysis code to run variation of the input data through
   -- what is the effect on the final result?
 \item By what systematic procedure could one estimate the dominating
@@ -497,33 +491,6 @@ $M_2$ & 1.062 & 0.60
 \end{tabular}
 \end{table}
 
-
-\subsection{One person's background is another one's data}
-\label{sec:background}
-
-\noindent\textbf{Mission:} Using plastic scintillator detectors, study the
-background due to cosmics.
-
-\noindent\textbf{Hints:}
-\begin{itemize}
-\item There are two large pedal plastic scintillators with PMTs
-  available -- use this as cosmic ray detector. What geometric
-  arrangement is best suited for such a measurement?
-\item \textbf{Important:} Before moving or connecting the pedal detectors to HV, consult
-  the supervisor and discuss the necessary steps with them! The PMTs
-  can only take negative (-) 1500V \emph{maximum}. Do not go beyond
-  -1300V before discussing this with the supervisor!
-\item Use a scope to study the signals coming from the scintillators;
-  what do they look like and how do they vary from a source's signal?
-  What is the energy that we expect from cosmics?
-\item We have several NIM electronic modules to construct a simple
-  counter with: discriminators, coincidence logic, and visual
-  scaler. Research how these function and how to connect them together.
-\item Determine the count rate and estimate the rate seen in the
-  detector used for measuring the $Q$ value -- how much do cosmics
-  contribute to the background and over what energy region? What could
-  one do to shield them?
-\end{itemize}
 
 \subsection{Open-signal surgery}
 \label{sec:}
