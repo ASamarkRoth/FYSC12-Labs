@@ -37,8 +37,10 @@
 
 \vspace{10pt}
 \begin{abstract}
-The purpose of this laboratory exercise is to determine the energy released in the process (the \textit{Q-value}) for a $\beta$-transition by studying the decay of the phosphorus isotope 
-\\$^{32}P\rightarrow ^{32}S + e^- + \bar{\nu}$, and to verify Fermis Theory of the weak decay. The measurements are done by a plastic scintillation detector in combination with a multi channel analyzer, and the result is compared with the theoretically calculated value. 
+The purpose of this laboratory exercise is to determine the energy released in the process (the \textit{Q-value}) for a $\beta$-transition by studying the decay of the Strontium isotope 
+\\$^{90}Sr\rightarrow ^{90}Y + e^- + \bar{\nu}$, and to verify Fermis Theory of
+the weak decay.
+The measurements are done by a plastic scintillation detector in combination with a multi channel analyzer, and the result is compared with the theoretically calculated value. 
 \end{abstract}
 
 \begin{figure}[htp]
@@ -111,7 +113,7 @@ completed the lab -- shall:
 \item Warm-up discussion about beta decay and introduction to the
   experimental setup.
 \item Collecting and analysing data to determine the $Q$ value of the
-  $\beta$ decay of $^{32}$P.
+  $\beta$ decay of $^{90}$Sr.
 \end{itemize}
 
 \noindent\textbf{Lunch break} 
@@ -150,7 +152,7 @@ is greatly appreciate in the continued development of this exercise!
 The purpose of this laboratory exercise is to measure the energy
 released in the process (the \textit{Q-value}) for a
 $\beta$-transition by studying the weak decay of the isotope
-phosphorus-32 to sulfur ($^{32}P\rightarrow ^{32}S + e^- + \bar{\nu}$) and to compare the
+Strontium-90 to yttrium ($^{90}Sr\rightarrow ^{90}Y + e^- + \bar{\nu}$) and to compare the
 resulting value to the theoretical expectation. 
 
 For measuring the energy of the electrons from the decay, we use a
@@ -195,7 +197,7 @@ The released energy in a nuclear reaction is called the Q-value. It can be expre
 where $X$ is the mother nucleus, $X'$ is the daughter, and $m_N$
 denote the \textit{nuclear} masses. 
 %%%% !!!!!!!!!!
-%%%%Calculate the Q-value for the process we are looking at in this laboratory exercise, $^{32}P\rightarrow ^{32}S + e^- + \bar{\nu}$. 
+%%%%Calculate the Q-value for the process we are looking at in this laboratory exercise, $^{90}Sr\rightarrow ^{90}Y + e^- + \bar{\nu}$. 
 
 
 %
@@ -207,7 +209,7 @@ denote the \textit{nuclear} masses.
 
 \subsection{Fermi's Theory of beta decay}
 
-In this exercise we want to determine the Q-value of phosphorus-32
+In this exercise we want to determine the Q-value of Strontium-90
 decaying into sulfur. The electrons and neutrinos from this
 spontaneous decay will share the Q-value as kinetic energy. The
 neutrinos cannot be detected, but we can measure the kinetic energy of
@@ -299,12 +301,20 @@ with known, discrete, energies from $^{207}Bi$ and $^{137}Cs$.
 \section{Warm-up questions}
 \label{sec:warm-up-questions}
 
+These questions will be discussed in the group to prepare for the experiment.
+Write down a couple of sentences for each of the following questions
+\emph{before} coming to the lab -- either on paper or preferably in your Jupyter
+Notebook:
+
 \begin{enumerate}
-\item Why is $^{32}P$ a suitable sample to use in this laboratory exercise?
-\item How does the electron energy spectrum look like for a $\beta^-$ decay? Why? 
-\item Why must the proton undergoing $\beta^+$ decay be bound to a nucleus?
-\item Calculate the Q-value for the process $^{32}P\rightarrow ^{32}S + e^- + \bar{\nu}$. Hint: you can neglect the neutrino mass and the difference in binding energy of the electrons, why? 
-\item Why can we neglect the recoil energy of the daughter particle?
+\item How does the electron energy spectrum look like for a $\beta^-$ decay?
+  Why?
+\item What is the Fermi-Kurie plot and how does it relate to the $Q$ value of
+  the process?
+\item Why is $^{90}Sr$ a suitable sample to use in this laboratory exercise?
+  What might be a challenge using this isotope?
+\item Calculate the Q-value for the process $^{90}Sr\rightarrow ^{90}Y + e^- +
+  \bar{\nu}$. Hint: Some terms in the equation can be neglected, why? 
 \item By what mechanisms does a photon/charged particle lose energy
   when traversing material?
 \item Why is plastic a good material for a scintillator? What
@@ -313,14 +323,14 @@ with known, discrete, energies from $^{207}Bi$ and $^{137}Cs$.
 \end{enumerate}
 
 
-\section{The morning: measure $Q$ value of the $\beta$ decay of $^{32}$P}
+\section{The morning: measure $Q$ value of the $\beta$ decay of $^{90}$Sr}
 This part of the laboratory exercise is going to be ``guided'' yet
 interactive. Please see section \ref{sec:prerequisites} for what you
 need to run the analysis on your own computer as we go through the measurement steps.
 
 This is the rough outline:
 \begin{enumerate}
-\item Measure $^{32}P$
+\item Measure $^{90}Sr$
   \begin{itemize}
   \item Discuss: How long should the measurement run? Does the spectra
     look as expected? Is this all we need to determine $Q$?
@@ -365,7 +375,9 @@ inside a Jupyter Notebook\footnote{\url{https://jupyter.org/}} -- it's all
   free and open software, available for all major platforms and
   highly flexible; and the key packages are just a download away:
   Anaconda\footnote{\url{https://www.continuum.io/downloads}, choose the version
-    for Python 3.X.} provides the complete toolkit we need.
+    for Python 3!} provides the complete toolkit we need.
+  You can find more detailed installation instructions online.\footnote{For
+  example: \url{https://jupyter.readthedocs.io/en/latest/install.html}}
 
 \subsubsection{Running the analysis}
 \label{sec:running-analysis}
@@ -386,8 +398,8 @@ Now your default web browser should launch and display the Jupyter application
 running at \url{http://localhost:8888}. Navigate to the Jupyter notebook you
 want to use for the lab and select it to open it in a new tab.
 
-Follow the instructions in the notebook until the point where you see the first
-plot -- and you are all set for the lab!
+Follow the instructions in the notebook, fill out the warm-up questions, and
+execute the first python blocks -- and you are all set for the lab!
 
 
 \section{The afternoon: a choice of further studies}
@@ -550,8 +562,9 @@ Teachers notes/suggestions only -- ask away if you wish!
 \item Were any of the results particularly surprising for you?
 \item Are we now ready to publish the results? What would we have to
   do further?
+\item What are the dominant uncertainties you are aware of? What causes them?
 \item With all we know now, what would you do to improve the
-  experiment? Where do you see limiting factors to its precision?
+  experiment? How would you remove limiting factors in particular to its precision?
 \end{itemize}
 
 \pagebreak
