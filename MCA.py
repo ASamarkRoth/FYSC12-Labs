@@ -60,6 +60,6 @@ def load_spectrum(filename):
             log.debug("Loaded all data from file")
     except IOError:
         log.error("Could not find the file '"+str(filename)+"'")
-        sys.exit(-1)
+        return None
     return m
 
