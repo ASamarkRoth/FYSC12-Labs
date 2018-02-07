@@ -1,6 +1,6 @@
 %%% TeX-command-extra-options: "-shell-escape"
 % IMPORTANT: compiling from the command line using:
-% pdflatex -shell-escape betaLabManual2.tex
+% pdflatex -shell-escape KF7_beta-lab_manual.tex
 
 \documentclass[a4,11pt, notitlepage]{article}
 
@@ -135,7 +135,7 @@ completed the lab -- shall:
 
 \textbf{Important: }For this laboratory exercise, you \emph{do not} have to hand in any
 written report. Therefore, your \emph{active} participation in the laboratory experiment is
-the only and key prerequisite for a passing grade: by generally asking questions,
+the key prerequisite for a passing grade: by generally asking questions,
 raising ideas for investigations, and by discussing the experiment and
 its result within the group. And of course, by following your own
 initiative in the afternoon when investigating a subject of your
@@ -156,7 +156,7 @@ Strontium-90 to yttrium ($^{90}Sr\rightarrow ^{90}Y + e^- + \bar{\nu}$) and to c
 resulting value to the theoretical expectation. 
 
 For measuring the energy of the electrons from the decay, we use a
-plastic scintillation detector in combination with a Multi Channel
+plastic scintillation detector in combination with a Multi-Channel
 Analyzer (MCA). Two additional radioactive sources are available for
 the energy calibration of the detector.
 
@@ -215,11 +215,11 @@ spontaneous decay will share the Q-value as kinetic energy. The
 neutrinos cannot be detected, but we can measure the kinetic energy of
 the electrons and receive an energy spectrum. We can in principle
 determine the Q-value from the spectrum; the highest recorded
-energy. But the count rate near the end point energy is small due to
-noise and background and the limited resolution of the detector, so
-the value cannot be determined from the spectrum with high enough
+energy. But the count rate near the end point energy is small,
+backgrounds contribute significantly, and the limited resolution of the detector
+make it difficult for the value to be determined with high enough
 accuracy. To calculate a better approximation of the Q-value from the
-electron count rate, the Fermi Theory is used to construct a
+electron count rate, Fermi's Theory is used to construct a
 Fermi-Kurie plot, giving us a linear function, which can be
 extrapolated. The intersection with the x-axis is the Q-value; in this
 way the value can be determined more precisely. In order to understand
@@ -246,7 +246,7 @@ The Q-value can now easily be obtained by plotting $Q-T_e$ against $T_e$, which 
 
 \section{The detector and the experimental equipment}
 
-A plastic scintillator is used for detecting the radiation. The
+A plastic scintillator is used for detecting the radiation. In such a device,
 incident radiation interacts with the plastic molecules and excites
 them. A molecule can be excited in two ways: firstly, electrons in the
 atoms can be excited to higher states ($\sim 1 eV$); and secondly, the
@@ -264,12 +264,25 @@ material is transparent to its own radiation, see Fig. \ref{fig:mol}.
   \end{center}
 \end{figure}
 
+This property is important for the light collection efficiency of a scintillator
+material -- however, there are other characteristic properties of scintillators
+which need to be considered for any given application: the light output in
+number of scintillation photons produced per unit of deposited energy, short
+rise- and decay times for rate capability, and linearity and stopping power
+within the spectral range and for the radiation type of interest. Beyond those,
+the practical properties of the material are also important: temperature
+tolerance, mechanical stability, radiation hardness, ability to shape the
+material, risks when handling the material, and cost of production.
 
-The light from the molecular deexcitation strikes a photocathode and
-release one or more photoelectrons per photon, called
-\textit{secondary electrons}, via Compton scattering. See
-Fig. \ref{fig:setup} for the experimental setup. The secondary
-electron are accelerated and multiplied in a photomultiplier tube
+Plastic scintillators offer decent light output and timing properties, but do
+not perform as well in these respects as for example inorganic crystals such as
+NaI. Also, due to the low $Z$ of plastics, the cross-section for the
+photo-electric effect is suppressed, and gamma-rays interact with the material
+via Compton scattering
+
+The light from the molecular deexcitation processes then strikes a photocathode and
+releases one \textit{photoelectron} per photon, via the photo-electric effect.
+These secondary electrons are accelerated and multiplied in a photomultiplier tube
 (PMT) containing dynodes at different potential. The PMT hence produce
 an output voltage pulse, where the amplitude of the pulse is
 proportional to the number of scintillation events, which in turn is
@@ -283,14 +296,15 @@ to a voltage pulse in the preamplifier, with a typical size of
 $\sim mV$. Secondly, the pulse is amplified in the main amplifier,
 where the signal go from $\sim mV$ to $\sim V$. The pulse is then
 analyzed in the MCA, where it is digitized and stored in channels which
-can be displayed on a computer screen.
+can be displayed on a computer screen. See
+Fig. \ref{fig:setup} for the full experimental setup.
 
 To be able to translate the detected signal to the electron energy,
 the detector must be calibrated with the help of detecting radiation
 with known, discrete, energies from $^{207}Bi$ and $^{137}Cs$.
 
-\begin{figure}[htp]
-  \vspace{40pt}
+\begin{figure}[htbp]
+%  \vspace{40pt}
   \begin{center}
     \includegraphics[width=15.0cm]{figures/Setup.png}
     \caption{The experimental setup.}
@@ -382,10 +396,8 @@ inside a Jupyter Notebook\footnote{\url{https://jupyter.org/}} -- it's all
 \subsubsection{Running the analysis}
 \label{sec:running-analysis}
 
-Download the zipped code from Live@Lund into a directory
-of your liking and extract the file contents.
-
-Now start up the Jupyter server by running
+Download the notebook from Live@Lund into a directory
+of your liking. Now start up the Jupyter server by running
 \begin{minted}{bash}
 cd path/to/the/directory/you/chose
 jupyter notebook
