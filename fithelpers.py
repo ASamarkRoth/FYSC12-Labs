@@ -30,6 +30,11 @@ def line(x, *p):
     a, b = p
     return a*x+b
 
+def inverseline(x, *p):
+    """ straight line function (inverted parameters) to be used for fits to x(y) data"""
+    a, b = p
+    return (1/a)*x-(b/a)
+
 def fit_gaussian_at_idx(x, y, idx, npoints=10):
     """ takes a spectrum measurement and an index for a position in the data (x/y) where
     a Gaussian fit should be performed. Takes into account N surrounding data points given by 'npoints' argument """
@@ -62,14 +67,14 @@ def fit_gaussian_at_idx(x, y, idx, npoints=10):
 
 def fit_gaussian_at_pos(x, y, pos, npoints=10):
     """ fits x,y values at given x position with a Gaussian. """
-    g = fit_gaussian_at_idx(x, y, idx=np.where(x>=pos)[0][0], npoints=npoints)
+    g = fit_gaussian_at_idx(x, y, idx=np.where(x >= pos)[0][0], npoints=npoints)
     if g is None:
         print("Fit at x = {}: failed! :(".format(round(x)))
     return g
 
 def fit_all_gaussians(x, y, npoints=10, widths = np.arange(10,80,5), loglevel="WARNING"):
-    """ fits all gaussians in a spectrum measurement and returns a list of coefficients. 
-    The range of widths considered for fit is given by an array (e.g. 'np.arange(X1,X2,X3)': 
+    """ fits all gaussians in a spectrum measurement and returns a list of coefficients.
+    The range of widths considered for fit is given by an array (e.g. 'np.arange(X1,X2,X3)':
     range from X1 to X2 in steps of X3)."""
     logging.basicConfig()
     log = logging.getLogger('fit_all_gaussians_in_spectrum') ## set up logging
