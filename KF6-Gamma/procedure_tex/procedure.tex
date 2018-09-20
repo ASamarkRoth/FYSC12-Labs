@@ -1,0 +1,96 @@
+\documentclass[12pt]{article}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{verbatim}
+
+\usepackage{url}
+\usepackage{hyperref}
+
+\parindent0cm\textwidth15.5cm\oddsidemargin0cm
+\textheight23cm\topskip-1cm\headheight0cm\topmargin0cm
+
+\renewcommand{\familydefault}{cmss}
+\renewcommand{\seriesdefault}{m}
+%\renewcommand{\shapedefault}{n,sc,it,sl}
+\renewcommand{\shapedefault}{n}
+
+\begin{document}
+
+\begin{center} {\Large\bf\boldmath Procedure, KF6 $\gamma$ Spectroscopy}\\
+\end{center}
+
+{\bf Supervisor:}\\
+Anton S\r{a}mark-Roth,     2227733, B213, \texttt{Anton.Samark-Roth@nuclear.lu.se}\\
+(supported by) Luis Sarmiento, 2221707, B220, \texttt{Luis.Sarmiento@nuclear.lu.se}\\
+
+
+\section*{Before lunch-break}
+Discussion:
+\begin{itemize}
+  \item The main principles of the interaction of $\gamma$-ray with matter is walked through.
+  \item The students are split into two groups. The groups focus on the principles of $\gamma$-detectors, one on the scintillator and the other on the semiconductor. After a preparation, each of the groups gives a brief presentation and there is a discussion. The preparatory exercise is discussed and specifically, the following detector properties are focused:
+    \begin{itemize}
+      \item Energy resolution
+      \item Detection efficiency
+    \end{itemize}
+  \item The measurement electronics connected to the detectors are walked through by the supervisor. The role of the following components is described:
+  \begin{itemize}
+    \item Preamplifier
+    \item Amplifier/Shaper
+    \item Analogue to digital converter (ADC)
+    \item Multichannel analyser (MCA)
+  \end{itemize}
+\end{itemize}
+
+Hands on:
+\begin{itemize}
+  \item Each group is either directed to the NaI(Tl) detector or the HPGe detector. With the help of a supervisor the physical detector components with the measurement electronics are studied. The electronic instruments and signals are deeper examined with the help of an oscilloscope and through discussions of the generated spectra on the computer.
+  \item The program Maestro is used to analyse the spectra. The students \textit{play} with the program and try out the procedure of fitting peaks. With the assistance of a supervisor the setup is calibrated.
+\end{itemize}
+
+\section*{After lunch-break}
+Measurements of different sources with both detectors will be performed. As the data is acquired, the following will be discussed about the ongoing measurement:
+\begin{itemize}
+  \item Identification of the $\gamma$ source.
+  \item Different features of $\gamma$-decays exist and how they affect the detection.
+    \begin{itemize}
+      \item What effects have the main $\gamma$-ray - matter interactions; photoelectric absorption, Compton scattering and pair production, on the obtained spectra?
+      \item What other processes compete or occurs simultaneously as the emission of $\gamma$-rays?
+    \end{itemize}
+  \item How do we observe the different properties of the detectors in the measurements?
+\end{itemize}
+
+\section*{Tasks}
+More specifically the following properties of $\gamma$-ray detection and nuclear structure, will be studied and discussed \underline{and they are to be included in the reports}:
+\begin{enumerate}
+  \item Explain the main features of the spectra from the $^{22}$Na, $^{137}$Cs and $^{232}$Th source measurements. All in all the following should be explained at least to one spectrum:
+    \begin{itemize}
+      \item Where is the full energy peak and what does it represent?
+      \item What is the Compton continuum, Compton edge and the backscatter peak and why do they appear?
+      \item In which spectrum can one observe single and double escape peaks, why and what are they?
+      \item How can we know that a source emits $\beta^{+}$ particles?
+      \item X-rays can be observed. From what process do they stem and from what element are they emitted?
+    \end{itemize}
+  \item Calculate the peak centroids and full width at half maximum (FWHM) by the means of a Gaussian fit for all the peaks that are to be used in the calibration and in the calculation of the deuteron binding energy.
+  \item Perform an energy calibration of both detectors on the basis of at least five peaks from the measurements of $^{22}$Na, $^{60}$Co, $^{137}$Cs and $^{232}$Th (only for HPGe). Recall that the energy calibration is the linear dependence between the ADC channel number and the energies of the above-mentioned peaks. It should be performed with a linear regression.
+  \item Determine the ratio between the emitted 1273 keV $\gamma$ rays and the photons emitted from the annihilation of the $\beta^+$ decay of $^{22}$Na. Do this from the measured peak intensities of the NaI(Tl) scintillator spectrum. Correct the obtained values for efficiency ($\varepsilon_{eff}$) and peak-to-total ratio ($\varepsilon_{P/T}$). See ``KF6-Attachments.pdf`` for efficiency values and note that the cylindrical NaI-scintillator has dimensions 7.62x7.62~cm$^2$ (diameter and length). Compare the result to the expected value. Do not forget to propagate the errors.
+  \item Determine the internal conversion coefficient ($\alpha$) for $^{137}$Ba from the measured peak intensities of the $^{137}$Cs source, i.e. the area of the peaks, of the HPGe semiconductor spectrum. Do not forget to correct for efficiency (see Krane Figure 7.28, note that the efficiency here corresponds to $\varepsilon_{eff} \cdot \varepsilon_{P/T}$), the emission of Auger electrons (see Table T1 in the ``KF6-Attachments.pdf``) and the error analysis. Most likely your result will lie significantly above the literature value. Try to reason why and include it in the report.
+  \item Plot the FWHM as a function of $\gamma$-ray energy, for at least the calibration peaks, for both detectors. Discuss the results:
+    \begin{itemize}
+      \item Why are the FWHM values of the HPGe detector lower than for the NaI(Tl)?
+      \item What kind of relationship exists between the FWHM and the $\gamma$-ray energy? Discuss your findings and try to connect them to the definition of energy resolution.
+    \end{itemize}
+  \item From the measurement of the $^{252}$Cf source (surrounded by water) with the HPGe detector determine the binding energy of the deuteron. Also, describe how the the deuteron is created.
+  \item A calibrated spectrum of background radiation can be found in the file ``Background.txt'' in \href{https://github.com/ASamarkRoth/gammalab\_analysis}{https://github.com/ASamarkRoth/gammalab\_analysis}. The spectrum was taken with a HPGe detector over a weekend. To load this data have a look at the {\it Jupyter Notebook}. Determine the energies of the $\gamma$-rays from this background measurement and try to associate them with an isotope. Use either the document available in this folder or an internet database: \\
+    KF6-RadionuclideTable-Gamma.pdf \\
+    https://www-nds.iaea.org/xgamma\_standards/
+\end{enumerate}
+
+\underline{Do not forget to propagate errors in all calculations.} All measured spectra will be saved in ASCII format and is to be brought with you after the lab on a USB-drive. For tips on how to perform the data analysis see the jupyter notebook located at: \\ \href{https://github.com/ASamarkRoth/gammalab\_analysis}{https://github.com/ASamarkRoth/gammalab\_analysis}.
+
+
+\section*{Report}
+Reports should be in \texttt{.pdf}. The deadline for handing in the reports is 10 working days after the laboratory has been conducted.
+Please submit via live@lund (under assignments).
+
+\end{document}

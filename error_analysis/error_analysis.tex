@@ -1,0 +1,350 @@
+\documentclass[12pt]{article}
+%\documentstyle[12pt,helvet,epsf,graphicx]{article}
+
+%\usepackage{graphicx}
+%\usepackage[pdftex]{graphicx}
+%\usepackage{epsf}
+%\usepackage{helvet}
+
+\parindent0cm
+\oddsidemargin-1cm\textwidth16cm\topmargin-1cm\voffset0cm\textheight26cm
+\pagestyle{empty}
+\unitlength1cm
+
+\begin{document}
+
+%\DeclareGraphicsExtensions{.pdf,.png,.gif,.jpg}
+\renewcommand{\rmdefault}{phv}
+\renewcommand{\sup}[1]{$^{\footnotesize\textsl{#1}}$}
+\newcommand{\su}[1]{$^{\footnotesize\textrm{#1}}$}
+\renewcommand{\sb}[1]{$_{\footnotesize\textrm{#1}}$}
+\newcommand{\sss}[2]{$^{\footnotesize\textsl{#1}}_{\footnotesize\textsl{#2}}$}
+\newcommand{\susu}[2]{$^{\footnotesize\textrm{#1}}_{\footnotesize\textrm{#2}}$}
+\newcommand{\WB}{{\bf WB}\\}
+
+\normalsize\vspace*{-1cm}
+
+D.~Rudolph\\
+
+{\Large\bf FYS023 - Practical Introduction Error Analysis}\\
+Theory: see literature, for example\\
+{\small P.R. Bevington, {\it Data Reduction and Error Analysis
+for the Physical Sciences},\\ (McGraw-Hill Book Company, New York).}\\
+
+{\large\bf 1. Definitions}\\
+Every experimental measurement is associated with errors (uncertainties).\\
+{\bf Systematic error:}\\
+Reproducible inaccuracy introduced by faulty
+equipment, calibration, or technique.\\ %alpha source
+{\bf Statistical error:}\\
+Indefiniteness of result due to finite precision
+of experiment. Measure of fluctuation in result after repeated
+experimentation.\\ % Peak positions and intensities
+{\bf Significant digits:}\\
+\hspace*{1em}1. The leftmost nonzero digit is the most significant digit.\\
+\hspace*{1em}2a. If there is no decimal point, the rightmost nonzero digit
+is the least significant \hspace*{2em}digit.\\
+\hspace*{1em}2b. If there is a decimal point, the rightmost digit
+is the last significant digit,\\ \hspace*{2em}even if it is a 0.\\
+\hspace*{1em}3. All digits between the least and most significant digits
+are counted as significant \hspace*{2em}digits.\\
+
+{\large Always use a {\bf consistent} and {\bf reasonable} number of
+significant digits (with respect to errors and uncertainties)!!}\\
+% 976.45, 0.094, 400., 4.00x10^2
+% 976.45(43), 976.45\pm43, plus unreasonable example!
+
+{\large\bf 2. (Weighted) Mean}\\
+For a series of $N$ measurements of the same quantity $x$:\\
+Mean value (mean of the sample):\\
+\begin{displaymath}
+\overline{x}=\frac{1}{N}\sum_i{x_i}
+\end{displaymath}
+Mean (centroid or average value of the quantity $x$):\\
+\begin{displaymath}
+\mu\equiv \lim_{N \rightarrow \infty}\left(\frac{1}{N}\sum_i{x_i}\right)
+\end{displaymath}
+The most probable estimate of the mean $\mu$ is the average $\overline{x}$
+of the observations: $\mu\simeq\overline{x}$.\\
+
+\pagebreak
+The measure of the dispersion of a series of observations is the
+standard deviation $\sigma$. The variance $\sigma^2$ is defined as the
+limit of the average of the squares of the deviations from the mean:\\
+\begin{displaymath}
+\sigma^2\equiv \lim_{N \rightarrow
+  \infty}\left(\frac{1}{N}\sum_i{(x_i-\mu)^2}\right)
+\end{displaymath}
+The sample standard deviation $s$, which can be considered as the
+best experimental estimate of $\sigma$ (finite number of measurements
+instead of infinite sum), is given by:\\
+\begin{displaymath}
+\sigma^2\simeq s^2\equiv\frac{1}{N-1}\sum_i{(x_i-\overline{x})^2}
+\end{displaymath}
+%$N-1$ in the denominator is the number of degrees of freedom left
+%after determining $\overline{x}$ from $N$ observations.
+Important for physical results is the estimated error of the mean:
+\begin{displaymath}
+{s_{\overline{x}}}^2\simeq {\sigma_\mu}^2=\frac{\sigma^2}{N}
+\end{displaymath}
+The result should be presented in the form
+\begin{displaymath}
+(1)\hspace*{3mm}
+\overline{x}\pm s_{\overline{x}} \hspace*{2cm}\mbox{or}\hspace*{3mm}
+(2)\hspace*{2cm}\overline{x}(s_{\overline{x}})
+\end{displaymath}
+with a proper and consistent number of digits and physical units, if
+applicable! In case of (2), no decimal points are given in the paratheses,
+only the respective number of significant digits.\\
+{\bf Examples:} \\
+$L=(54.43\pm 0.05)$~cm or $L=54.43(5)$~cm\\
+$D=101.3$~mm $\pm 3.4$~mm or $D=101.3(34)$~mm.\\
+
+It is now assumed that each individual measurement $x_i$ is associated
+with its own uncertainty $\sigma_i$ (for example, due to different measuring
+times). Then one should calculate the so-called {\bf weighted mean}\\
+\begin{displaymath}
+\overline{x}=\frac{\sum{(x_i/{\sigma_i}^2)}}{\sum{(1/{\sigma_i}^2)}}
+\stackrel{\sigma_i=\sigma}{\longrightarrow}\frac{1}{N}\sum_i{x_i}
+\hspace*{4mm}\mbox{and}\hspace*{4mm}
+{\sigma_\mu}^2=\frac{1}{\sum{(1/{\sigma_i}^2)}}
+\stackrel{\sigma_i=\sigma}{\longrightarrow}\frac{\sigma^2}{N}
+\end{displaymath}
+These formula follow from the method of least-squares minimization
+and the maximum likelihood method (or so-called $\chi^2$ minimization,
+see below and textbooks for details!).
+
+\newpage
+{\large\bf 3. Least-Squares Fit to a Straight Line}\\
+A certain characteristic of an experiment, $y$, should be determined,
+which is known to be a function of some other quantity $x$, i.e.,
+a function $f$ shall be determined with $y=f(x)$. Here, one can
+make $N$ measures $y_i$ at different values $x_i$, where $i$ is an index
+labelling the different measurements.\\
+
+{\large Special case: Linear function $f(x)=a+bx$}\\
+The least-squares fitting procedure means to minimize $\chi^2$ with
+respect to each of the coefficients simultaneously. $\chi^2$ is the
+(weighted) sum of squares of deviations of the measured points
+$(x_i,y_i)$ from the presumed function $f$:\\
+\begin{displaymath}
+\chi^2=\sum_i{\left[\frac{1}{{\sigma_i}^2}(y_i-a-bx_i)^2\right]}
+\end{displaymath}
+The coeffcients of the least squares fitting are ($\sigma_i=\sigma=const.$ on
+the right hand side):\\
+\begin{displaymath}
+a=\frac{1}{\Delta}\left(
+\sum{\frac{{x_i}^2}{{\sigma_i}^2}}
+\sum{\frac{y_i}{{\sigma_i}^2}} -
+\sum{\frac{x_i}{{\sigma_i}^2}}
+\sum{\frac{x_iy_i}{{\sigma_i}^2}}\right)\hspace*{2cm}
+a=\frac{1}{\Delta}(\sum{{x_i}^2}\sum{y_i}-\sum{x_i}\sum{x_iy_i})
+\end{displaymath}
+\begin{displaymath}
+b=\frac{1}{\Delta}\left(
+\sum{\frac{1}{{\sigma_i}^2}}
+\sum{\frac{x_iy_i}{{\sigma_i}^2}} -
+\sum{\frac{x_i}{{\sigma_i}^2}}
+\sum{\frac{y_i}{{\sigma_i}^2}}\right)\hspace*{2cm}
+b=\frac{1}{\Delta}(N\sum{x_iy_i}-\sum{x_i}\sum{y_i})
+\end{displaymath}
+\begin{displaymath}
+\Delta=\sum{\frac{1}{{\sigma_i}^2}}
+\sum{\frac{{x_i}^2}{{\sigma_i}^2}} -
+\left(\sum{\frac{x_i}{{\sigma_i}^2}}\right)^2\hspace*{2cm}
+\Delta=N\sum{{x_i}^2}-(\sum{x_i})^2
+\end{displaymath}
+\begin{displaymath}
+{\sigma_a}^2\simeq \frac{1}{\Delta}\sum{\frac{{x_i}^2}{{\sigma_i}^2}}
+\hspace*{4mm}
+{\sigma_b}^2\simeq \frac{1}{\Delta}\sum{\frac{1}{{\sigma_i}^2}}
+\hspace*{2cm}
+{\sigma_a}^2\simeq \frac{\sigma^2}{\Delta}\sum{{x_i}^2}
+\hspace*{4mm}
+{\sigma_b}^2\simeq N\frac{\sigma^2}{\Delta}
+\end{displaymath}
+\begin{displaymath}
+\hspace*{9cm}
+\sigma^2\simeq s^2=\frac{1}{N-2}\sum{(y_i-a-bx_i)^2}
+\end{displaymath}
+
+{\bf Note:}\\
+${\sigma_i}^2\simeq y_i$ in case of statistical fluctuations, i.e.,
+raw data counts such as the number of counts in a channel in, for
+example, $\gamma$-ray spectra.
+
+\newpage
+{\large\bf 4. Error propagation}\\
+In which way are uncertainties propagated or carried over from
+some parameters of an experiment to the final result?\\
+Example 1:
+Volume of a cylinder, $V=\pi r^2\cdot h$, $r$ radius, $h$ height.\\
+Example 2:
+Ratio of intensities, $Y_i$, of two $\gamma$-ray peaks, $R=Y_1/Y_2$.\\
+
+The error in the final result can be approximated by the sum of the products
+of the errors in each dimension (parameter) times the effect that dimension
+has on the final value:\\
+\begin{displaymath}
+\Delta V\simeq \Delta r\left(\frac{\partial V}{\partial r}\right)_{h=const.}
++\Delta h\left(\frac{\partial V}{\partial h}\right)_{r=const.}
+= \pi(2rh\Delta r + r^2\Delta h) = V\left(
+2\frac{\Delta r}{r}+\frac{\Delta h}{h}\right)
+\end{displaymath}
+\begin{displaymath}
+\Delta R\simeq
+ \Delta Y_1\left(\frac{\partial R}{\partial Y_1}\right)_{Y2=const.}
++\Delta Y_2\left(\frac{\partial R}{\partial Y_2}\right)_{Y1=const.}
+= \frac{\Delta Y_1}{Y_2} + \Delta Y_2\frac{Y_1}{{Y_2}^2}
+= R\left(\frac{\Delta Y_1}{Y_1}+\frac{\Delta Y_2}{Y_2}\right)
+\end{displaymath}
+{\bf Note:} This approximation neglects higher-order terms in the
+Taylor's expansion. If the errors are (relatively) large, second partial
+(cross) derivatives  must be included!\\
+
+(More) general case:\\
+\begin{displaymath}
+x=f(u,v,...)
+\hspace*{4mm}\mbox{and thus (may not always be exact)}\hspace*{4mm}
+\overline{x}=f(\overline{u},\overline{v},...)\hspace*{4mm}\mbox{and}
+\end{displaymath}
+\begin{displaymath}
+x_i-\overline{x}\simeq
+(u_i-\overline{u})\left(\frac{\partial x}{\partial u}\right)+
+(v_i-\overline{v})\left(\frac{\partial x}{\partial v}\right)+...
+\end{displaymath}
+Together with
+\begin{displaymath}
+{\sigma_x}^2= \lim_{N \rightarrow
+  \infty}\left(\frac{1}{N}\sum_i{(x_i-\overline{x})^2}\right),
+{\sigma_u}^2= \lim_{N \rightarrow
+  \infty}\left(\frac{1}{N}\sum_i{(u_i-\overline{u})^2}\right),
+{\sigma_v}^2= \lim_{N \rightarrow
+  \infty}\left(\frac{1}{N}\sum_i{(v_i-\overline{v})^2}\right)
+\end{displaymath}
+\begin{displaymath}
+\mbox{and}\hspace*{5mm} {\sigma_{uv}}^2\equiv \lim_{N \rightarrow
+  \infty}\left(\frac{1}{N}\sum_i{(u_i-\overline{u})(v_i-\overline{v})}\right),
+\end{displaymath}
+one obtains
+\begin{displaymath}
+{\sigma_x}^2\simeq
+{\sigma_u}^2\left(\frac{\partial x}{\partial u}\right)^2+
+{\sigma_v}^2\left(\frac{\partial x}{\partial v}\right)^2+
+2{\sigma_{uv}}^2\left(\frac{\partial x}{\partial u}\right)
+\left(\frac{\partial x}{\partial v}\right)+...
+\end{displaymath}
+${\sigma_{uv}}^2$ is called covariance between the variables $u$ and $v$
+and can be important in case the measurement of the corresponding two
+parameters are correlated. Usually, this is not the case, and the cross
+term(s) can be disregarded.
+
+\pagebreak
+{\bf Some useful cases} for $x=f(u,v)$:\\
+\begin{displaymath}
+x=au\pm bv: \hspace*{1cm}
+{\sigma_x}^2=a^2{\sigma_u}^2+b^2{\sigma_v}^2+2ab{\sigma_{uv}}^2
+\end{displaymath}
+\begin{displaymath}
+x=\pm auv: \hspace*{1cm}\frac{{\sigma_x}}{x}=\sqrt{
+\left(\frac{{\sigma_u}}{u}\right)^2+\left(\frac{{\sigma_v}}{v}\right)^2+
+2\frac{{\sigma_{uv}}^2}{uv}}
+\end{displaymath}
+\begin{displaymath}
+x=\pm \frac{au}{v}: \hspace*{1cm}\frac{{\sigma_x}}{x}=\sqrt{
+\left(\frac{{\sigma_u}}{u}\right)^2+\left(\frac{{\sigma_v}}{v}\right)^2-
+2\frac{{\sigma_{uv}}^2}{uv}}
+\end{displaymath}
+\begin{displaymath}
+x=au^{\pm b}: \hspace*{1cm}\frac{{\sigma_x}}{x}=b\frac{{\sigma_u}}{u}
+\hspace*{4cm}
+\end{displaymath}
+\begin{displaymath}
+x=ae^{\pm bu}: \hspace*{1cm}\frac{{\sigma_x}}{x}=b\sigma_u\hspace*{4cm}
+\end{displaymath}
+\vspace*{1cm}
+
+{\large\bf 5. Example}\\
+A $\gamma$-ray detector set-up was calibrated with several radioactive
+sources. The channel numbers of the positions of a total of four peaks
+with known energies have been measured. The intensities of the 511 and
+1275~keV line were measured four times each.\\
+
+\begin{tabular}{cccccc}
+$E_{\gamma}$ (keV) & channel number & number of counts\\
+$y_i$&$x_i$&$Y_i$ & ($=\sigma_i^2$!!)\\
+\hline
+ 279.2 & 107.1(5) \\
+ 511.0 & 180.1(7) & 203500 & 220100 & 157400 & 188300 \\
+       & 227.3(8) \\
+1274.5 & 421.3(11) & 115500 & 121100 &  89100 & 107200 \\
+2614.5 & 841.9(18) \\
+\hline
+\end{tabular}
+\vspace*{4mm}
+
+1. Determine $R=Y(511\,{\rm keV})/2Y(1275\,{\rm keV})$.\\
+2. What is the energy of the unknown peak?
+\vspace*{4mm}
+
+1.\\
+$R_1=203500/2\cdot 115500= 0.8810$\\
+$\Delta R_1=\sigma_{R1}=R_1\sqrt{(\sigma_{Y1}/Y_1)^2+(\sigma_{Y2}/Y_2)^2}
+          =R_1\sqrt{1/Y_1+1/Y_2}=0.0032$\\
+$R_2=0.9088$, $\Delta R_2=0.0033$\\
+$R_3=0.8833$, $\Delta R_3=0.0037$\\
+$R_4=0.8783$, $\Delta R_4=0.0034$\\
+
+(Mean value: $\overline{R}= 0.8879 \pm 0.0020$)\\
+Weighted mean: $\overline{R}= 0.8881 \pm 0.0017$\\
+
+{\bf Note:} Usually, the $Y_i$ have explicitly measured uncertainties
+due to background substraction in the spectra!
+
+\pagebreak
+2.\\
+Linear regression: $E_\gamma = a + b\cdot ch$~keV, $ch$ is channel number\\
+
+a) Using equal weight, i.e., right hand side of formulae or $\sigma_i=1$!\\
+
+$\sum{1/{\sigma_i}^2} = \sum{1} = 4$\\
+$\sum{x_i/{\sigma_i}^2} = \sum{x_i} = 1550.4$\\
+$\sum{y_i/{\sigma_i}^2} = \sum{y_i} = 4679.2$\\
+$\sum{x_iy_i/{\sigma_i}^2} = \sum{x_iy_i} = 2860027.75$\\
+$\sum{{x_i}^2/{\sigma_i}^2} = \sum{{x_i}^2} = 930195.75$\\
+$\Delta=1317042.75$, $\sigma=4.16921186$\\
+
+$a=-62.0(17)$~keV, $b=3.1779(36)$~keV/channel\\
+
+$E_\gamma=(-62.0 + 3.1779\cdot 227.3)~\mbox{keV} = 660.4$~keV\\
+$\Delta E_\gamma=\sqrt{(\Delta a)^2 + (\Delta b\cdot 227.3)^2} = 1.9$~keV\\
+
+{\bf Note:}\\
+These results do NOT include the uncertainties of the
+position of the peaks!\\
+
+b) Using weights from measurement\\
+
+$\sum{1/{\sigma_i}^2} = \sum{1} = 7.17590$\\
+$\sum{x_i/{\sigma_i}^2} = \sum{x_i} = 1403.98$\\
+$\sum{y_i/{\sigma_i}^2} = \sum{y_i} = 4019.91$\\
+$\sum{x_iy_i/{\sigma_i}^2} = \sum{x_iy_i} = 1430550$\\
+$\sum{{x_i}^2/{\sigma_i}^2} = \sum{{x_i}^2} = 477531$\\
+$\Delta=1455559$\\
+
+$a=-61.0(6)$~keV, $b=3.1752(22)$~keV/channel\\
+
+$E_\gamma=a+b\cdot ch$, $\frac{\partial E_\gamma}{\partial a}=1$,
+$\frac{\partial E_\gamma}{\partial b}=ch$,
+$\frac{\partial E_\gamma}{\partial ch}=b$.\\
+
+$E_\gamma=(-61.0 + 3.1725\cdot 227.3)~\mbox{keV} = 660.7$~keV\\
+$\Delta E_\gamma=\sqrt{(\Delta a)^2 + (\Delta b\cdot 227.3)^2
++ (\Delta ch\cdot 3.1725)^2} = 2.7$~keV\\
+
+This is the way it should be done!\\
+\end{document}
+
+
+
+

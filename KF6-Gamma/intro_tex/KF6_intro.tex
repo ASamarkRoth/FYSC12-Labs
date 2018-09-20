@@ -1,0 +1,167 @@
+\documentclass[12pt]{article}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{verbatim}
+
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{float}
+
+\parindent0cm\textwidth15.5cm\oddsidemargin0cm
+\textheight23cm\topskip-1cm\headheight0cm\topmargin0cm
+
+\renewcommand{\familydefault}{cmss}
+\renewcommand{\seriesdefault}{m}
+%\renewcommand{\shapedefault}{n,sc,it,sl}
+\renewcommand{\shapedefault}{n}
+
+\begin{document}
+
+\begin{center} {\Large\bf\boldmath KF6 - $\gamma$ Spectroscopy}\\
+\end{center}
+
+{\bf Supervisor:}\\
+Anton S\r{a}mark-Roth,     2227733, B213, \texttt{Anton.Samark-Roth@nuclear.lu.se}\\
+(supported by) Luis Sarmiento, 2221707, B220, \texttt{Luis.Sarmiento@nuclear.lu.se}\\
+
+{\bf The lab:}\\
+Starting \underline{8.30 in H212}.
+\\
+
+\section*{Learning Outcomes}
+\begin{itemize}
+  \item Understand what $\gamma$ spectroscopy is.
+  \item Know the $\gamma$-ray matter interactions.
+  \item Be able to explain the basic principles of radiation detection.
+  \item Understand the basic properties of $\gamma$-ray detectors:
+  \begin{itemize}
+    \item Efficiency
+    \item Resolution
+  \end{itemize}
+  \item Be able to discuss the differences between the two types of detectors; scintillators and semiconductors.
+  \item Learn how to measure $\gamma$-ray sources and identify radioactive species.
+  \item Be able to interpret $\gamma$-ray spectra and understand how the different features of $\gamma$-ray decays and nuclear structure properties such as $\gamma$-ray matter interactions are highlighted therein.
+%\item Measure a series of calibration sources: $^{60}$Co, $^{137}$Cs,  $^{22}$Na, $^{203}$Hg, and $^{232}$Th and exploit their differentfeatures to highlight different aspects in $\gamma$-ray decay.
+  \item Be able to measure the deuteron binding energy.
+  \item Learn how to perform \textbf{data analysis} in the context of $\gamma$-ray spectroscopy:
+  \begin{itemize}
+    \item Read in data file.
+    \item Perform Gaussian fits to peaks and extract detector resolutions.
+    \item Perform detector calibrations.
+    \item Calculate full energy peak ratios and internal conversion coefficients.
+    \item Perform a statistical analysis of the results, propagate errors and interpret results.
+  \end{itemize}
+\end{itemize}
+
+
+\subsection*{Bring}
+\begin{itemize}
+  %\item Lab manual with all attachments.
+  \item Krane Book.
+  \item Calculator/laptop.
+  \item USB stick (one person per group).
+\end{itemize}
+
+
+\subsection*{Preparations before the lab}
+\begin{itemize}
+  \item Read Krane 7.1 only on interactions of $\gamma$-rays with matter. %Why is this not included? Too much?
+  \item Read Krane 7.3 on scintillator detectors.
+  \item Read Krane 7.4 on semiconductor detectors.
+  \item Read Krane 7.6 on energy measurements.
+  \item Complete the preparatory exercise (see next section).
+  \item Introduce yourself to data analysis, by walking through the {\it jupyter notebook} located at \href{https://github.com/ASamarkRoth/gammalab\_analysis}{https://github.com/ASamarkRoth/gammalab\_analysis} and the document on error analysis, named ``error\_analysis.pdf'' .
+
+\end{itemize}
+During the morning you will give a mini-presentation on one of the detectors.
+
+\subsection*{Report}
+Reports should be in \texttt{.pdf}. The deadline for handing in the
+reports is 10 working days after the laboratory has been conducted.
+Please hand in the reports via live@lund (under assignments).
+All reports are processed by \textit{Urkund}, a plagiarism checker.
+
+
+\section*{Exercises before the lab} \label{sec:exe}
+
+{\bf\small Efficiency corrections:}\\
+More often than not, one finds that some kind of correction needs to
+be applied to experimental data in order to compensate for some
+limitation of the instruments. Important quantities for the corrections are presented in Table \ref{tab:I}. In two of the exercises that will be
+performed in this lab, we will be interested in the total number of
+photons emitted by a radioactive sample during the measurement.  The
+number of photons counted by us will deviate from the number $I_0$
+emitted by the sample so that we only detect a fraction, $I_{det}$, of
+these. The deviation comes about due to three reasons:
+
+\begin{description}
+\item[Angular coverage:] The detector does not surround the sample but
+    only covers a small part of the solid angle around the sample. For
+      isotropic sources it is clear that \emph{only} those $\gamma$ rays
+        going into the direction of the detector would be detected.
+\item[Efficiency:] All incoming photons do not interact with the
+  detector. If we call the number incident on the detector $I_{in}$, only a
+  subset, $I$, of these will interact according to the detector
+  efficiency, $\epsilon_{eff.}=I_{det}/I_{in}$.
+\item[Peak-to-total-ratio:] The measurement we make will result in an
+  energy spectrum of the photons that have interacted with the
+  detector. A photon will deposit some or all of its energy in the
+  detector depending on the way in which it interacts (see Krane ch. 7.1). We will count the ones that deposit all of its energy in
+  the detector (these are fully absorbed and denoted full energy), which means that we get a subset,
+  $I_{fe}$, of the number of photons, $I_{in}$, that interact with the
+  detector. The number of fully absorbed photons $I_{fe}$ (full energy, the ones we
+  count) is related to $I_{det}$ through $\epsilon_{P/T} = I_{fe}/I_{det}$, where
+  $P/T$ is called the peak-to-total-ratio. Since we are interested in
+  knowing the total number that interacted with the detector, we need
+  to correct for this as well.
+\end{description}
+
+\begin{table}[H]
+  \centering
+  \caption{Quantities important for efficiency corrections.}
+\begin{tabular}{c l}
+  \hline
+  $I_0$ & $\gamma$-rays emitted by the source \\
+  $I_{in}$ & $\gamma$-rays incident on the detector \\
+  $I_{det}$ & $\gamma$-rays detected \\
+  $I_{fe}$ & $\gamma$-rays detected with full energy \\
+  \hline
+  $\epsilon_{eff.}$ & Intrinsic efficiency of detector \\
+  $\epsilon_{P/T}$ & Peak-to-total-ratio \\
+\end{tabular}
+\label{tab:I}
+\end{table}
+
+
+{\bf\small Task:}\\
+In preparation for the lab, write down an expression to correct for
+these effects so that we get an estimate of the total number of
+photons, $I_0$, emitted by the sample. Assume that we know the solid
+angle $\Omega$ of the detector with respect to the sample, and that
+the sample is emitting isotropically (all emission angles are equally
+probable). Also assume that we know the values of $\epsilon_{P/T}$ and
+that it corresponds to the energy of the radiation we are looking
+at. During the laboratory we will see that the correction factors
+$\epsilon_{P/T}$ and $\epsilon_{eff.}$ depend on the energy of the
+incoming radiation but assume here that you are looking at incoming
+radiation with constant energy. Thus, the correction factors are
+constants.\\
+
+{\bf\small Yield corrections:}\\
+Certain nuclear deexcitations do not always occur with the emission of
+a gamma ray. Sometimes a phenomenon called {\it internal conversion}
+happens. Before the lab get acquainted with the phenomena and discuss
+how the efficiency correction is affected by this.\\
+
+{\bf\small Gamma-ray detectors:}\\
+We will use two common detector types during the lab: a scintillator
+and a semiconductor detector. During the lab, you will be divided into
+two groups and each group will be assigned one of the detector types
+and asked to explain it to the other group. In preparation for this,
+read about the detectors in the indicated pages in
+Krane so that you can explain the main principles in simple terms. We
+will use a NaI(Tl)-detector, which is a crystal scintillator and a
+High Purity Germanium detector (HPGe) which is a semiconductor. It is
+enough to describe in general terms how the semiconductor works, do
+not focus too much on the specifics of the HPGe-detector. The same goes for the scintillator and the NaI(Tl) detector.
+\end{document}
