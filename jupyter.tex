@@ -1,0 +1,87 @@
+%%% TeX-command-extra-options: "-shell-escape"
+% IMPORTANT: compiling from the command line using:
+% pdflatex -shell-escape jupyter.tex
+
+\documentclass[a4,11pt, notitlepage]{article}
+
+\usepackage{fixltx2e}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel} 
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{mathpazo}
+\usepackage{fullpage}
+\usepackage{epsfig}
+\usepackage{color}
+\usepackage{subfigure}
+\usepackage{listings}
+\usepackage{SIunits}
+\usepackage{rotating}
+\usepackage{url}
+\usepackage[hmargin=3cm,vmargin=3.5cm]{geometry}  
+\usepackage{listings}
+
+\usepackage{minted}
+
+\begin{document} 
+ 
+
+\title{Instructions for FYSC12 labs:\\ How to install and run Jupyter Notebooks}
+%\author{}
+\date{}
+\maketitle
+
+\vspace{-1cm}
+%\section{Data Analysis}
+%\label{sec:data-analysis}
+
+The ``online'' visualization that the Maestro MCA software allows is
+very helpful but limited and tedious to use for multiple data samples
+or to estimate systematic uncertainties
+-- no way around writing our own code!
+
+Lucky for you, key aspects of the analysis are already coded and
+uploaded to Live@Lund. The next
+sections explain what is needed in order to run the analysis and how
+to do so.
+
+\section{Installing Prerequisites}
+\label{sec:prerequisites}
+
+The analysis is written in Python3 with the SciPy
+library\footnote{\url{http://www.scipy.org}} for scientific computing and run
+inside a Jupyter Notebook\footnote{\url{https://jupyter.org/}} -- it's all
+  free and open software, available for all major platforms and
+  highly flexible; and the key packages are just a download away:
+  Anaconda\footnote{\url{https://www.continuum.io/downloads}, choose the version
+    for Python 3!} provides the complete toolkit we need.
+  You can find more detailed installation instructions online.\footnote{For
+  example: \url{https://jupyter.readthedocs.io/en/latest/install.html}}
+
+\section{Running the Analysis}
+\label{sec:running-analysis}
+
+Download the zipped code from Live@Lund into a directory
+of your liking and extract the file contents.
+
+Now start up the Jupyter server by running
+\begin{minted}{bash}
+cd path/to/the/directory/you/chose
+jupyter notebook
+\end{minted}
+on the command prompt (also called \emph{Terminal} or \emph{Konsole}
+depending on the OS). Alternatively, you can look for and click the \emph{Jupyter Notebook}
+icon installed by Anaconda.
+
+Now your default web browser should launch and display the Jupyter application
+running at \url{http://localhost:8888}. Navigate to the Jupyter notebook you
+want to use for the lab and select it to open it in a new tab.
+
+Follow the instructions in the notebook at least until the point where you see the first
+plot -- and you are all set for the lab!
+
+
+\end{document}
+
+
