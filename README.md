@@ -23,7 +23,7 @@ It is possible to run the notebook on your local computer as follows:
 
 ```bash
 conda env create -f environment.yml
-source activate GammaLabAnalysis
+source activate FYSC12-Labs
 ./postBuild
 ```
 4. Run the notebook via `jupyter-notebook` or if you prefer with `jupyter-lab`.

@@ -1,4 +1,4 @@
-name: GammaLabAnalysis
+name: FYSC12-Labs
 channels:
   - conda-forge
   - defaults

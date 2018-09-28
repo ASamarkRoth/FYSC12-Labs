@@ -63,3 +63,21 @@ def load_spectrum(filename):
         return None
     return m
 
+#This function reads the calibrated background spectrum that is to be analysed in the gamma lab.
+def load_calibrated_spectrum(filename):
+    log = logging.getLogger('gammalab_analysis') ## set up logging
+    m = Spectrum(filename) ## create a new Spectrum measurement object; this is what we return in the end
+    m.x = np.zeros(8192)
+    m.y = np.zeros(8192)
+    log.info("Reading calibrated data from file '" + filename + "'")
+    try:
+        with open(filename) as f: #the with keyword handles the opening (__enter__ method) and closing (__exit__ method) of the file automatically
+            reader = csv.reader(f)
+            for idx, row in enumerate(reader):
+                channel, energy = row[0].split() 
+                m.y[idx] = int(channel)
+                m.x[idx] = float(energy)
+    except IOError:
+        log.error("Could not find the file '"+str(filename)+"'")
+        sys.exit(-1)
+    return m

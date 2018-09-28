@@ -14,10 +14,11 @@ def gaussfcn(x, *p):
 
 class Gauss:
     """A class to hold coefficients for Gaussian distributions"""
-    def __init__(self, A, mu, sigma):
+    def __init__(self, A, mu, sigma, covar_matrix):
         self.A = A
         self.mu = mu
         self.sigma = sigma
+        self.covar_matrix = covar_matrix
     def value(self, x):
         return gaussfcn(x, self.A, self.mu, self.sigma)
     def as_string(self, ndigits=4):
@@ -59,7 +60,7 @@ def fit_gaussian_at_idx(x, y, idx, npoints=10):
                                           y[idx-lowvar:idx+uppvar],
                                           p0=p0)
             ## create a Gauss object with the fitted coefficients for better code readability
-            g = Gauss(*coeff)
+            g = Gauss(*coeff, var_matrix)
             return g
         except (RuntimeError, OptimizeWarning, TypeError):
             ## the minimization did not work out... log it and continue to next peak
@@ -67,14 +68,14 @@ def fit_gaussian_at_idx(x, y, idx, npoints=10):
 
 def fit_gaussian_at_pos(x, y, pos, npoints=10):
     """ fits x,y values at given x position with a Gaussian. """
-    g = fit_gaussian_at_idx(x, y, idx=np.where(x >= pos)[0][0], npoints=npoints)
+    g = fit_gaussian_at_idx(x, y, idx=np.where(x>=pos)[0][0], npoints=npoints)
     if g is None:
-        print("Fit at x = {}: failed! :(".format(round(x)))
+        print("Fit at x = {}: failed! :(".format(pos))
     return g
 
 def fit_all_gaussians(x, y, npoints=10, widths = np.arange(10,80,5), loglevel="WARNING"):
-    """ fits all gaussians in a spectrum measurement and returns a list of coefficients.
-    The range of widths considered for fit is given by an array (e.g. 'np.arange(X1,X2,X3)':
+    """ fits all gaussians in a spectrum measurement and returns a list of coefficients. 
+    The range of widths considered for fit is given by an array (e.g. 'np.arange(X1,X2,X3)': 
     range from X1 to X2 in steps of X3)."""
     logging.basicConfig()
     log = logging.getLogger('fit_all_gaussians_in_spectrum') ## set up logging
@@ -101,6 +102,7 @@ def fit_all_gaussians(x, y, npoints=10, widths = np.arange(10,80,5), loglevel="W
             log.info("  - A out of bounds: " + str(g.A))
             continue
         log.info("  - fit result: A = " + str(g.A) + ", mu = " + str(g.mu) + ", sigma = " + str(g.sigma) + ". ")
+        ## store the results
         ## store the results
         gaussians.append(g)
     return gaussians
