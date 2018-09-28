@@ -330,3 +330,6 @@ target/
 
 # pyenv
 .python-version
+
+# vim swap files
+.*.sw*
