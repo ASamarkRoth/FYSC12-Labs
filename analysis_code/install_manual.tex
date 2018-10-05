@@ -1,0 +1,123 @@
+%%% TeX-command-extra-options: "-shell-escape"
+% IMPORTANT: compiling from the command line using:
+% pdflatex -shell-escape jupyter.tex
+
+\documentclass[a4,11pt, notitlepage]{article}
+
+\usepackage{fixltx2e}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{mathpazo}
+\usepackage{fullpage}
+\usepackage{epsfig}
+\usepackage{color}
+\usepackage{subfigure}
+\usepackage{listings}
+\usepackage{SIunits}
+\usepackage{rotating}
+\usepackage{url}
+\usepackage[hmargin=3cm,vmargin=3.5cm]{geometry}
+\usepackage{listings}
+
+\begin{document}
+
+
+\title{Instructions for FYSC12 labs:\\ How to install and run Jupyter Notebooks}
+%\author{}
+\date{}
+\maketitle
+
+\vspace{-1cm}
+%\section{Data Analysis}
+%\label{sec:data-analysis}
+
+The ``online'' visualization that the Maestro MCA software allows is
+very helpful but limited and tedious to use for multiple data samples
+or to estimate systematic uncertainties
+-- no way around writing our own code!
+
+Lucky for you, key aspects of the analysis are already coded and
+uploaded to Live@Lund. The next
+sections explain what is needed in order to run the analysis and how
+to do so.
+
+\section{Installing Prerequisites}
+\label{sec:prerequisites}
+
+The analysis is written in Python3 with the SciPy
+library\footnote{\url{http://www.scipy.org}} for scientific computing and run
+inside a Jupyter Notebook\footnote{\url{https://jupyter.org/}} -- it's all
+  free and open software, available for all major platforms and
+  highly flexible; and the key packages are just a download away:
+  Anaconda\footnote{\url{https://www.continuum.io/downloads}, choose the version
+    for Python 3!} provides the complete toolkit we need.
+  You can find more detailed installation instructions online.\footnote{For
+  example: \url{https://jupyter.readthedocs.io/en/latest/install.html}}
+
+
+\section{Running the Analysis}
+\label{sec:running-analysis}
+Download the zipped code from Live@Lund into a directory
+of your liking and extract the file contents.
+
+\subsection*{Conda environment}
+An environment in conda\footnote{\url{https://conda.io/docs/user-guide/tasks/manage-environments.html}}, makes it easy to have portable code, i.e. program that can run on any computer with any operative system.
+The {\emph FYSC12} environment is described by the file {\emph environment.yml} in the folder 'analysis\_code'.
+You have two options on how to install and activate the environment:
+
+\newpage
+\subsection*{1 - With the Anaconda Navigator (recommended)}
+\begin{itemize}
+  \item Open the navigator.
+  \item Click 'Environment' on the left-hand menu.
+  \item Click 'Import' on the bottom of the GUI.
+  \item Navigate to the folder you downloaded and choose the file 'environment.yml'.
+  \item Once the installation is completed, click on the 'play' button to activate the environment.
+  \item NOTE: whenever you want to run the FYSC12 notebooks you need to activate the environment first.
+\end{itemize}
+
+\subsection*{2 - From a command prompt}
+
+Run the following in a command prompt (also called \emph{Terminal} or \emph{Konsole} (also possible with the conda prompt):
+
+\begin{lstlisting}{bash}
+cd path/to/the/directory/you/chose
+conda env create -f environment.yml
+(On Linux) source activate FYSC12-Labs
+(On Mac) source activate FYSC12-Labs ?
+(With conda prompt) conda activate FYSC12-Labs ?
+(On Windows) conda activate FYSC12-Labs ?
+./postBuild
+\end{lstlisting}
+
+
+\subsection*{Open the jupyter notebook}
+Now start up the Jupyter server by \\
+
+
+Look for and click the \emph{Jupyter Notebook} icon in the Anaconda navigator. \\
+
+
+Alternatively:
+\begin{lstlisting}{bash}
+cd path/to/the/directory/you/chose
+jupyter notebook
+\end{lstlisting}
+on the command prompt (also called \emph{Terminal} or \emph{Konsole}
+depending on the OS). \\
+
+Now your default web browser should launch and display the Jupyter application
+running at \url{http://localhost:8888}. Navigate to the Jupyter notebook you
+want to use for the lab and select it to open it in a new tab.
+
+\section*{For the KF7-Beta lab}
+In the opened jupyter server navigate to the folder KF7-Beta and open the file 'beta-lab\_notebook.ipynb'.
+Follow the instructions in the notebook at least until the point where you see the first plot -- and you are all set for the lab!
+
+
+\end{document}
+
+
