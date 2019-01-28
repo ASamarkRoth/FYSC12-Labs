@@ -60,18 +60,18 @@ Measurements of different sources with both detectors will be performed. As the 
 \end{itemize}
 
 \section*{Tasks}
-More specifically the following properties of $\gamma$-ray detection and nuclear structure, will be studied and discussed \underline{and they are to be included in the reports}:
+The following properties of $\gamma$-ray detection and nuclear structure, will be studied and discussed \underline{and they are to be included in the reports}:
 \begin{enumerate}
-  \item Explain the main features of the spectra from the $^{22}$Na, $^{137}$Cs and $^{232}$Th source measurements. All in all the following should be explained at least to one spectrum:
+  \item Explain the main features of the spectra from the $^{22}$Na, $^{137}$Cs and $^{232}$Th source measurements. The following should be explained at least to one spectrum:
     \begin{itemize}
       \item Where is the full energy peak and what does it represent?
-      \item What is the Compton continuum, Compton edge and the backscatter peak and why do they appear?
+      \item What are the Compton continuum, Compton edge and the backscatter peak and why do they appear?
       \item In which spectrum can one observe single and double escape peaks, why and what are they?
       \item How can we know that a source emits $\beta^{+}$ particles?
       \item X-rays can be observed. From what process do they stem and from what element are they emitted?
     \end{itemize}
   \item Calculate the peak centroids and full width at half maximum (FWHM) by the means of a Gaussian fit for all the peaks that are to be used in the calibration and in the calculation of the deuteron binding energy.
-  \item Perform an energy calibration of both detectors on the basis of at least five peaks from the measurements of $^{22}$Na, $^{60}$Co, $^{137}$Cs and $^{232}$Th (only for HPGe). Recall that the energy calibration is the linear dependence between the ADC channel number and the energies of the above-mentioned peaks. It should be performed with a linear regression.
+  \item Perform an energy calibration of both detectors on the basis of at least five peaks from the measurements of $^{22}$Na, $^{60}$Co, $^{137}$Cs (and $^{232}$Th for HPGe). Recall that the energy calibration is the linear dependence between the ADC channel number and the energies of the above-mentioned peaks. It should be performed with a linear regression. Do not forget to include errors.
   \item Determine the ratio between the emitted 1273 keV $\gamma$ rays and the photons emitted from the annihilation of the $\beta^+$ decay of $^{22}$Na. Do this from the measured peak intensities of the NaI(Tl) scintillator spectrum. Correct the obtained values for efficiency ($\varepsilon_{eff}$) and peak-to-total ratio ($\varepsilon_{P/T}$). See ``KF6-Attachments.pdf`` for efficiency values and note that the cylindrical NaI-scintillator has dimensions 7.62x7.62~cm$^2$ (diameter and length). Compare the result to the expected value. Do not forget to propagate the errors.
   \item Determine the internal conversion coefficient ($\alpha$) for $^{137}$Ba from the measured peak intensities of the $^{137}$Cs source, i.e. the area of the peaks, of the HPGe semiconductor spectrum. Do not forget to correct for efficiency (use the following: $\varepsilon_{eff} \cdot \varepsilon_{P/T} = 0.9$ and 0.3 at x-ray energies and at 662 keV, respectively), the emission of Auger electrons (see Table T1 in the ``KF6-Attachments.pdf``) and the error analysis. Compare the obtained value with literature and discuss.
   \item Plot the FWHM as a function of $\gamma$-ray energy, for at least the calibration peaks, for both detectors. Discuss the results:
@@ -85,11 +85,21 @@ More specifically the following properties of $\gamma$-ray detection and nuclear
     https://www-nds.iaea.org/xgamma\_standards/
 \end{enumerate}
 
-\underline{Do not forget to propagate errors in all calculations.} All measured spectra will be saved in ASCII format and is to be brought with you after the lab on a USB-drive. For tips on how to perform the data analysis see the jupyter notebook located at: \\ \href{https://github.com/ASamarkRoth/gammalab\_analysis}{https://github.com/ASamarkRoth/gammalab\_analysis}.
+\underline{Do not forget to propagate errors in all calculations.} All measured spectra will be saved in ASCII format and is to be taken with you after the lab on a USB-drive. For tips on how to perform the data analysis see the jupyter notebook located at: \\ \href{https://github.com/ASamarkRoth/gammalab\_analysis}{https://github.com/ASamarkRoth/gammalab\_analysis}.
 
 
 \section*{Report}
 Reports should be in \texttt{.pdf}. The deadline for handing in the reports is 10 working days after the laboratory has been conducted.
 Please submit via live@lund (under assignments).
 
+\section*{Useful Websites \& reference material}
+\begin{itemize}
+    \item \href{http://bricc.anu.edu.au}{http://bricc.anu.edu.au} - BrIcc - internal conversion coefficient calculator
+    \item \href{https://www.nndc.bnl.gov/nudat2/reSize.jsp?cc=5}{https://www.nndc.bnl.gov/nudat2/reSize.jsp?cc=5} - NuDat2 - interactive chart of nuclides
+    \item \href{http://www.lnhb.fr/nuclear-data/nuclear-data-table}{http://www.lnhb.fr/nuclear-data/nuclear-data-table/} - LNHB reccommended data - decay data sheets
+    \item Krane, sections 7.1, 7.3, 7.4, 7.6
+    \item Nuclears Physics, Principles and Applications - John Lilley - sections 5.3, 5.4, 6.3, 6.4, 6.5 (available online through library)
+    \item Practical Gamma-ray Spectrometry - Gordon R. Gilmore (available online through library)
+    \item Radiation Detection and Measurement - Glenn G. Knoll
+\end{itemize}
 \end{document}
