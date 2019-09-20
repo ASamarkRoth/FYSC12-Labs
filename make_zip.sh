@@ -29,8 +29,11 @@ cp -r analysis_code FYSC12-Labs/
 
 #cleaning from unnecessary files
 rm -rf FYSC12-Labs/analysis_code/__pycache__
-rm -rf FYSC12-Labs/analysis_codepynb_checkpoints
 rm -rf FYSC12-Labs/analysis_code/.ipynb_checkpoints
+rm -rf FYSC12-Labs/analysis_code/KF6-Gamma/__pycache__
+rm -rf FYSC12-Labs/analysis_code/KF6-Gamma/.ipynb_checkpoints
+rm -rf FYSC12-Labs/analysis_code/FYSC12-Intro/__pycache__
+rm -rf FYSC12-Labs/analysis_code/FYSC12-Intro/.ipynb_checkpoints
 rm FYSC12-Labs/analysis_code/install_manual.aux
 rm FYSC12-Labs/analysis_code/install_manual.log
 rm FYSC12-Labs/analysis_code/install_manual.tex
