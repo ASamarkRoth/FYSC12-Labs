@@ -10,6 +10,7 @@ mkdir -p FYSC12-Labs
 #cd ../../
 cp intro_meeting/reports_presentation_tex/presentation.pdf FYSC12-Labs/Howto-Reports-Slides.pdf
 cp intro_meeting/fysc12_labguidelines.pdf FYSC12-Labs/FYSC12-LabGuidelines.pdf
+cp intro_meeting/lund-university-radiation-protection-regulations.pdf FYSC12-Labs/lund-university-radiation-protection-regulations.pdf
 
 #error_analysis
 cp error_analysis/error_analysis.pdf FYSC12-Labs/
