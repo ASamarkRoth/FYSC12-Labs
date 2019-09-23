@@ -21,6 +21,7 @@ cp KF6-Gamma/intro_tex/KF6_intro.pdf FYSC12-Labs/KF6-Gamma/KF6-intro.pdf
 cp KF6-Gamma/procedure_tex/procedure.pdf FYSC12-Labs/KF6-Gamma/KF6-procedure.pdf 
 cp KF6-Gamma/KF6-RadionuclideTable-Gamma.pdf FYSC12-Labs/KF6-Gamma/KF6-RadionuclideTable-Gamma.pdf
 cp KF6-Gamma/KF6-Attachments.pdf FYSC12-Labs/KF6-Gamma/KF6-Attachments.pdf
+cp KF6-Gamma/KF6_Pro_Forma_Report.pdf FYSC12-Labs/KF6-Gamma/KF6_Pro_Forma_Report.pdf
 
 #KF7-Beta
 
