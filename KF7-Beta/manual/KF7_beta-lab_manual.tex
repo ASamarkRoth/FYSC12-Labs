@@ -279,20 +279,19 @@ In such a device, incident radiation interacts with the plastic molecules and ex
 %tolerance, mechanical stability, radiation hardness, ability to shape the
 %material, risks when handling the material, and cost of production.
 When the molecules de-excite, one or more photons are emitted. The energy of these photos depends of the energy distance between the excited state of the molecule and its ground state, but in general, the light is emitted in the visible (or near it) and it is anyhow not enough to further excite other molecules. 
-Being the scintillating material transparent to its own light, this can easily travel into the scintillating bar and be collected at one of the end by the PMT.
-\footnote{
+Being the scintillating material transparent to its own light, this can easily travel into the scintillating bar and be collected at one of the end by the PMT\,\footnote{
 Plastic scintillators offer decent light output and timing properties, but do
 not perform as well in these respects as for example inorganic crystals such as
 NaI. Also, due to the low $Z$ of plastics, the cross-section for the
 photo-electric effect is suppressed, and gamma-rays interact with the material
-via Compton scattering.} 
+via Compton scattering.}. 
 In this way, the light produced into the plastic scintillator is proportional to the energy loss by the particle in the material itself. 
 
 A PMT is a device that converts a light signal (down to a single photon) into an electrical signal (in current). 
 It consists of a tube under vacuum, close on one side by a glass (or crystal) window, a photosensitive surface, called a photocathode, and several (typically $10$ - $14$) metallic electrodes known as dynodes.
 When a photon hits the photocathode of a PMT,  %(covered and protected by a glass window), 
 one \emph{photo-electron} is emitted via photo-electric effect. 
-If an increasing voltage (typically of the order of $800$ - $2\,000\,V$) is applied to the dynodes, the electron emitted by the photocathode are accelerated toward the dynode chain. 
+If an increasing voltage (typically of the order of $800$ - $2\,000\,V$) is applied to the dynodes, the electrons emitted by the photocathode are accelerated toward the dynode chain. 
 Upon impacting the first dynode, a photoelectron will invoke the release of additional electron that are accelerated toward the next dynode, and so on. %The surface composition and geometry of the dynodes determines their ability to serve as electron multipliers. 
 A typical \emph{gain factor} for a commercial PMT is of the order of $10^4$ - $10^8$, depending of the number and the geometry of the dynodes. 
 
@@ -300,7 +299,7 @@ At the end of the dynode chain is an anode or collection electrode. Over a very 
 \begin{figure}[htbp]
 %  \vspace{40pt}
   \begin{center}
-    \includegraphics[width=15.0cm]{figures/photomultiplier.jpg}
+    \includegraphics[width=0.5\textwidth]{figures/photomultiplier.jpg}
     \caption{Working principle of a PMT. (source \url{http://hamamatsu.magnet.fsu.edu})}
 \label{fig:PMT}
   \end{center}
@@ -335,7 +334,7 @@ To acquire the signal from the detector, we will use a \emph{Multi-Channel Analy
 This is a device that acquires an analogue signal (it works perfectly with the pulses from a PMT), digitise it and perform some analysis. 
 In particular, we will use a function that identify the pulse relative to a single event and calculate the area of it. 
 The area of the pulse will be proportional to current provided form the PMT; but this is proportional to the light collected by the photocathode that is proportional... 
-At the end, we will have a measure that is proportional to the energy loss by the particle. 
+at the end, we will have a measure that is proportional to the energy loss by the particle. 
 
 For each event, the MCA will provide a number, called \emph{ADC-channel}. 
 To make science, this number needs to be translate to energy (for example in $MeV$). 
@@ -436,7 +435,7 @@ library\footnote{\url{http://www.scipy.org}} for scientific computing and run
 inside a Jupyter Notebook\footnote{\url{https://jupyter.org/}} -- it's all
   free and open software, available for all major platforms and
   highly flexible; and the key packages are just a download away:
-  Anaconda\footnote{\url{https://www.continuum.io/downloads}, choose the version
+  Anaconda\footnote{\url{https://www.anaconda.com/distribution/}, choose the version
     for Python 3!} provides the complete toolkit we need.
   You can find more detailed installation instructions online.\footnote{For
   example: \url{https://jupyter.readthedocs.io/en/latest/install.html}}
