@@ -10,6 +10,7 @@ mkdir -p FYSC12-Labs
 #cd ../../
 cp intro_meeting/reports_presentation_tex/presentation.pdf FYSC12-Labs/Howto-Reports-Slides.pdf
 cp intro_meeting/fysc12_labguidelines.pdf FYSC12-Labs/FYSC12-LabGuidelines.pdf
+cp intro_meeting/FYSC12ProFormaLabReport.zip FYSC12-Labs/FYSC12ProFormaLabReport.zip
 cp intro_meeting/lund-university-radiation-protection-regulations.pdf FYSC12-Labs/lund-university-radiation-protection-regulations.pdf
 
 #error_analysis
@@ -21,7 +22,7 @@ cp KF6-Gamma/intro_tex/KF6_intro.pdf FYSC12-Labs/KF6-Gamma/KF6-intro.pdf
 cp KF6-Gamma/procedure_tex/procedure.pdf FYSC12-Labs/KF6-Gamma/KF6-procedure.pdf 
 cp KF6-Gamma/KF6-RadionuclideTable-Gamma.pdf FYSC12-Labs/KF6-Gamma/KF6-RadionuclideTable-Gamma.pdf
 cp KF6-Gamma/KF6-Attachments.pdf FYSC12-Labs/KF6-Gamma/KF6-Attachments.pdf
-cp KF6-Gamma/KF6_Pro_Forma_Report.pdf FYSC12-Labs/KF6-Gamma/KF6_Pro_Forma_Report.pdf
+#cp KF6-Gamma/KF6_Pro_Forma_Report.pdf FYSC12-Labs/KF6-Gamma/KF6_Pro_Forma_Report.pdf
 
 #KF7-Beta
 
@@ -31,6 +32,7 @@ cp -r analysis_code FYSC12-Labs/
 
 #cleaning from unnecessary files
 rm -rf FYSC12-Labs/analysis_code/__pycache__
+rm -rf FYSC12-Labs/analysis_code/requirements.txt
 rm -rf FYSC12-Labs/analysis_code/.ipynb_checkpoints
 rm -rf FYSC12-Labs/analysis_code/KF6-Gamma/__pycache__
 rm -rf FYSC12-Labs/analysis_code/KF6-Gamma/.ipynb_checkpoints

@@ -21,7 +21,6 @@
 \newcommand{\sss}[2]{$^{\footnotesize\textsl{#1}}_{\footnotesize\textsl{#2}}$}
 \newcommand{\susu}[2]{$^{\footnotesize\textrm{#1}}_{\footnotesize\textrm{#2}}$}
 \newcommand{\WB}{{\bf WB}\\}
-
 \normalsize\vspace*{-1cm}
 
 D.~Rudolph\\
@@ -177,32 +176,33 @@ example, $\gamma$-ray spectra.
 {\large\bf 4. Error propagation}\\
 In which way are uncertainties propagated or carried over from
 some parameters of an experiment to the final result?\\
-Example 1:
-Volume of a cylinder, $V=\pi r^2\cdot h$, $r$ radius, $h$ height.\\
-Example 2:
-Ratio of intensities, $Y_i$, of two $\gamma$-ray peaks, $R=Y_1/Y_2$.\\
+%Example 1:
+%Volume of a cylinder, $V=\pi r^2\cdot h$, $r$ radius, $h$ height.\\
+%Example 2:
+%Ratio of intensities, $Y_i$, of two $\gamma$-ray peaks, $R=Y_1/Y_2$.\\
+%
+%The error in the final result can be approximated by the sum of the products
+%of the errors in each dimension (parameter) times the effect that dimension
+%has on the final value:\\
+%\begin{displaymath}
+%\Delta V\simeq \Delta r\left(\frac{\partial V}{\partial r}\right)_{h=const.}
+%+\Delta h\left(\frac{\partial V}{\partial h}\right)_{r=const.}
+%= \pi(2rh\Delta r + r^2\Delta h) = V\left(
+%2\frac{\Delta r}{r}+\frac{\Delta h}{h}\right)
+%\end{displaymath}
+%\begin{displaymath}
+%\Delta R\simeq
+% \Delta Y_1\left(\frac{\partial R}{\partial Y_1}\right)_{Y2=const.}
+%+\Delta Y_2\left(\frac{\partial R}{\partial Y_2}\right)_{Y1=const.}
+%= \frac{\Delta Y_1}{Y_2} + \Delta Y_2\frac{Y_1}{{Y_2}^2}
+%= R\left(\frac{\Delta Y_1}{Y_1}+\frac{\Delta Y_2}{Y_2}\right)
+%\end{displaymath}
+%{\bf Note:} This approximation neglects higher-order terms in the
+%Taylor's expansion. If the errors are (relatively) large, second partial
+%(cross) derivatives  must be included!\\
 
-The error in the final result can be approximated by the sum of the products
-of the errors in each dimension (parameter) times the effect that dimension
-has on the final value:\\
-\begin{displaymath}
-\Delta V\simeq \Delta r\left(\frac{\partial V}{\partial r}\right)_{h=const.}
-+\Delta h\left(\frac{\partial V}{\partial h}\right)_{r=const.}
-= \pi(2rh\Delta r + r^2\Delta h) = V\left(
-2\frac{\Delta r}{r}+\frac{\Delta h}{h}\right)
-\end{displaymath}
-\begin{displaymath}
-\Delta R\simeq
- \Delta Y_1\left(\frac{\partial R}{\partial Y_1}\right)_{Y2=const.}
-+\Delta Y_2\left(\frac{\partial R}{\partial Y_2}\right)_{Y1=const.}
-= \frac{\Delta Y_1}{Y_2} + \Delta Y_2\frac{Y_1}{{Y_2}^2}
-= R\left(\frac{\Delta Y_1}{Y_1}+\frac{\Delta Y_2}{Y_2}\right)
-\end{displaymath}
-{\bf Note:} This approximation neglects higher-order terms in the
-Taylor's expansion. If the errors are (relatively) large, second partial
-(cross) derivatives  must be included!\\
-
-(More) general case:\\
+%(More) general case:\\
+A general case:\\
 \begin{displaymath}
 x=f(u,v,...)
 \hspace*{4mm}\mbox{and thus (may not always be exact)}\hspace*{4mm}
