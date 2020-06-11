@@ -29,107 +29,130 @@ class Gauss:
                                                      round(self.sigma, ndigits)))
     
 
-def perform_Gaussian_fit(data_x, data_y, mu_guess, n, left_selection=None, right_selection=None, plotting_main = 1, printing = 1, plotting_subt=1):
-    # make a copy of original data:
+def fit_Gaussian(x, y, mu_guess, n):
+    """ a simple function that tries to fit a Gaussian and return a Gauss object if fit was successful """
+    A_guess = y[mu_guess]
+    sigma_guess = 1
+    guess = [A_guess, mu_guess, sigma_guess]
+    
+    ## scypi gives a warning if the fit does not work; we want to know about those, so we set them up to be caught here:
+    import warnings
+    from scipy.optimize import OptimizeWarning
+    with warnings.catch_warnings():
+        warnings.simplefilter("error", OptimizeWarning)
+        ## perform the gaussian fit to the data:
+        try:
+            ## use the scipy curve_fit routine (uses non-linear least squares to perform the fit)
+            ## see http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.optimize.curve_fit.html
+            estimates, covar_matrix = curve_fit(GaussFunc,
+                                    x[mu_guess-n:mu_guess+n],
+                                    y[mu_guess-n:mu_guess+n],
+                                    p0=guess)
+            ## create a Gauss object with the fitted coefficients for better code readability
+            g_final = Gauss(estimates[0], estimates[1], estimates[2], covar_matrix)
+            return g_final
+        except (RuntimeError, OptimizeWarning, TypeError):
+            print("Gaussian fit failed! Try specifying another mu_guess.")
+            return 0
+    
+
+# def perform_Gaussian_fit(x, y, mu_guess, n, left_selection=None, right_selection=None, plotting_main = 1, printing = 1, plotting_subt=1):
+#     ############ Fit a Gaussian to data ######################################   
+
+#     A_guess = y[mu_guess]
+#     sigma_guess = 1
+#     guess = [A_guess, mu_guess, sigma_guess]
+    
+#     ## scypi gives a warning if the fit does not work; we want to know about those, so we set them up to be caught here:
+#     import warnings
+#     from scipy.optimize import OptimizeWarning
+#     with warnings.catch_warnings():
+#         warnings.simplefilter("error", OptimizeWarning)
+#         ## perform the gaussian fit to the data:
+#         try:
+#             ## use the scipy curve_fit routine (uses non-linear least squares to perform the fit)
+#             ## see http://docs.scipy.org/doc/scipy-0.16.1/reference/generated/scipy.optimize.curve_fit.html
+#             estimates, covar_matrix = curve_fit(GaussFunc,
+#                                     x[mu_guess-n:mu_guess+n],
+#                                     y[mu_guess-n:mu_guess+n],
+#                                     p0=guess)
+#             ## create a Gauss object with the fitted coefficients for better code readability
+#             g_final = Gauss(estimates[0], estimates[1], estimates[2], covar_matrix)
+            
+#             if (plotting_main):
+#                 color = 'forestgreen'
+#                 if (g_final.covar_matrix[2][2]>g_final.sigma):
+#                     color = 'red'
+#                 plt.figure()
+#                 plt.step(x[mu_guess-n:mu_guess+n], y[mu_guess-n:mu_guess+n], where='mid', color='cornflowerblue', label='data')
+#                 plt.plot(x[mu_guess-n:mu_guess+n], GaussFunc(x[mu_guess-n:mu_guess+n], g_final.A, g_final.mu, g_final.sigma), color=color, label = 'Gaussian fit')
+#                 plt.legend(loc='upper right', frameon=False)
+#                 plt.show()
+        
+#             if (printing):
+#                 print("Estimates of (A mu sigma) = (", g_final.A, g_final.mu, g_final.sigma, ")\n")
+#                 print("Covariance matrix = \n", g_final.covar_matrix, "\n")
+#                 print("Uncertainties in the estimated parameters: \n[ sigma^2(A) sigma^2(mu), sigma^2(sigma) ] = \n[", g_final.covar_matrix[0][0], g_final.covar_matrix[1][1], g_final.covar_matrix[2][2], "]\n" )
+            
+#             return g_final
+
+def perform_Gaussian_fit(data_x, data_y, mu_guess, n, left_selection=None, right_selection=None, plotting_main = 1, printing = 1):
     x = data_x.copy()
     y = data_y.copy()
     
-    """Fit a Guassian to data"""
+    A_guess = y[mu_guess]
+    sigma_guess = 1
+    guess = [A_guess, mu_guess, sigma_guess]
+    
     if (left_selection and right_selection):
-        
         ############ Selecting points to fit linear function 
         x_selected = np.concatenate([x[left_selection[0]:(left_selection[1]+1)], x[right_selection[0]:(right_selection[1]+1)]])
         y_selected = np.concatenate([y[left_selection[0]:(left_selection[1]+1)], y[right_selection[0]:(right_selection[1]+1)]])
 
-        if (plotting_subt): 
-            print("Selected data regions to fit the line:")
-            plt.figure()  
-            #plotting data
-            plt.step(data_x[mu_guess-n:mu_guess+n], data_y[mu_guess-n:mu_guess+n], where='mid')
-            #plot points to which linear function is fitted 
-            plt.step(x[left_selection[0]:(left_selection[1]+1)], y[left_selection[0]:(left_selection[1]+1)], where='mid', color='y')
-            plt.step(x[right_selection[0]:(right_selection[1]+1)], y[right_selection[0]:(right_selection[1]+1)], where='mid', color='y')
-            #plot dashed lines  
-            plt.plot([left_selection[0]-0.5, left_selection[0]-0.5], [y[left_selection[0]]+0.5, y[mu_guess]], color='y', linestyle="--")
-            plt.plot([left_selection[1]+0.5, left_selection[1]+0.5], [y[left_selection[1]]+0.5, y[mu_guess]], color='y', linestyle="--")
-            plt.plot([right_selection[0]-0.5, right_selection[0]-0.5], [y[right_selection[0]]+0.5, y[mu_guess]], color='y', linestyle="--")
-            plt.plot([right_selection[1]+0.5, right_selection[1]+0.5], [y[right_selection[1]]+0.5, y[mu_guess]], color='y', linestyle="--")
-            plt.show()
-
         ############ Fitting linear function to selected points 
         guess = [2, 1]
-        estimates, covar_matrix = curve_fit(LineFunc,
+        estimates_lin, covar_matrix = curve_fit(LineFunc,
                                             x_selected,
                                             y_selected,
                                             p0 = guess)
 
-        print("Linear fit coefficients (k m) = (", estimates[0], estimates[1], ")\n")
-        
-        if(plotting_subt):
-            plt.figure()
-            #plotting data
-            plt.step(data_x[mu_guess-n:mu_guess+n], data_y[mu_guess-n:mu_guess+n], where='mid')
-            #plot points to which linear function is fitted 
-            plt.step(x[left_selection[0]:(left_selection[1]+1)], y[left_selection[0]:(left_selection[1]+1)], where='mid', color='y')
-            plt.step(x[right_selection[0]:(right_selection[1]+1)], y[right_selection[0]:(right_selection[1]+1)], where='mid', color='y')
-            #plot dashed lines  
-            plt.plot([left_selection[0]-0.5, left_selection[0]-0.5], [y[left_selection[0]]+0.5, y[mu_guess]], color='y', linestyle="--")
-            plt.plot([left_selection[1]+0.5, left_selection[1]+0.5], [y[left_selection[1]]+0.5, y[mu_guess]], color='y', linestyle="--")
-            plt.plot([right_selection[0]-0.5, right_selection[0]-0.5], [y[right_selection[0]]+0.5, y[mu_guess]], color='y', linestyle="--")
-            plt.plot([right_selection[1]+0.5, right_selection[1]+0.5], [y[right_selection[1]]+0.5, y[mu_guess]], color='y', linestyle="--")
-            # plot linear fit
-            plt.plot(x_selected, LineFunc(x_selected, estimates[0], estimates[1]), color='r', label='linear fit') 
-            plt.show()
-
+        print("Linear fit coefficients (k m) = (", estimates_lin[0], estimates_lin[1], ")\n")
         ############ Subtract area under the linear fit
-
-        y_lin = LineFunc(x[mu_guess-n:mu_guess+n], estimates[0], estimates[1])
-        y_before =  y[mu_guess-n:mu_guess+n].copy() # just for plotting 
-        y[mu_guess-n:mu_guess+n] = y[mu_guess-n:mu_guess+n] - y_lin
-
-        if (plotting_subt):
-            plt.figure()
-            #plotting data
-            plt.step(x[mu_guess-n:mu_guess+n], data_y[mu_guess-n:mu_guess+n], where='mid', label = 'original data')
-            #plot points to which linear function is fitted 
-            plt.step(x[left_selection[0]:(left_selection[1]+1)], y[left_selection[0]:(left_selection[1]+1)], where='mid', color='y')
-            plt.step(x[right_selection[0]:(right_selection[1]+1)], y[right_selection[0]:(right_selection[1]+1)], where='mid', color='y')
-            #plot dashed lines  
-            plt.plot([left_selection[0]-0.5, left_selection[0]-0.5], [y[left_selection[0]]+0.5, y[mu_guess]], color='y', linestyle="--")
-            plt.plot([left_selection[1]+0.5, left_selection[1]+0.5], [y[left_selection[1]]+0.5, y[mu_guess]], color='y', linestyle="--")
-            plt.plot([right_selection[0]-0.5, right_selection[0]-0.5], [y[right_selection[0]]+0.5, y[mu_guess]], color='y', linestyle="--")
-            plt.plot([right_selection[1]+0.5, right_selection[1]+0.5], [y[right_selection[1]]+0.5, y[mu_guess]], color='y', linestyle="--")
-            # plot linear fit
-            plt.plot(x_selected, LineFunc(x_selected, estimates[0], estimates[1]), color='r', label='linear fit') 
-            # plot data with substracted background 
-            plt.step(x[mu_guess-n:mu_guess+n], y[mu_guess-n:mu_guess+n], where='mid', color='g')
-            plt.legend(loc='best', frameon=False)
-            plt.show()
-
-        
+        y_lin = LineFunc(x[mu_guess-n:mu_guess+n], estimates_lin[0], estimates_lin[1])
+        y_subst = y[mu_guess-n:mu_guess+n] - y_lin
+        y[mu_guess-n:mu_guess+n] = y_subst
+            
     ############ Fit a Gaussian to data ######################################   
-
-    A_guess = y[mu_guess]
-    sigma_guess = 1
-    guess = [A_guess, mu_guess, sigma_guess]
-
-    estimates, covar_matrix = curve_fit(GaussFunc,
-                                    x,
-                                    y,
-                                    p0=guess)
-    g_final = Gauss(estimates[0], estimates[1], estimates[2], covar_matrix )
+    g_final = fit_Gaussian(x, y, mu_guess, n)
     
-    color = "forestgreen"
-#     if ((1-mu_guess/g_final.mu) <= 0.005):
-#         color = 'forestgreen'
-#     else:
-#         color = 'r'
-           
-    
+    if(g_final==0):
+           return
+
+    if (g_final.covar_matrix[2][2]<g_final.sigma):
+        color = 'forestgreen'
+    else:
+        color = 'r'
+       
     if (plotting_main):
         plt.figure()
-        plt.step(x[mu_guess-n:mu_guess+n], y[mu_guess-n:mu_guess+n], where='mid', color='cornflowerblue', label='data')
-        plt.plot(x[mu_guess-n:mu_guess+n], GaussFunc(x[mu_guess-n:mu_guess+n], g_final.A, g_final.mu, g_final.sigma), color=color, label = 'Gaussian fit')
+        #plotting data
+        plt.step(data_x[mu_guess-n:mu_guess+n], data_y[mu_guess-n:mu_guess+n], where='mid', color='cornflowerblue', label='data')
+        
+        if (left_selection and right_selection):
+            #plot points to which linear function is fitted 
+            plt.step(data_x[left_selection[0]:(left_selection[1]+1)], data_y[left_selection[0]:(left_selection[1]+1)], where='mid', color='y')
+            plt.step(data_x[right_selection[0]:(right_selection[1]+1)], data_y[right_selection[0]:(right_selection[1]+1)], where='mid', color='y')
+            #plot support lines  
+            plt.plot([left_selection[0]-0.5, left_selection[0]-0.5], [data_y[left_selection[0]]+0.5, data_y[mu_guess]], color='y', linestyle="--")
+            plt.plot([left_selection[1]+0.5, left_selection[1]+0.5], [data_y[left_selection[1]]+0.5, data_y[mu_guess]], color='y', linestyle="--")
+            plt.plot([right_selection[0]-0.5, right_selection[0]-0.5], [data_y[right_selection[0]]+0.5, data_y[mu_guess]], color='y', linestyle="--")
+            plt.plot([right_selection[1]+0.5, right_selection[1]+0.5], [data_y[right_selection[1]]+0.5, data_y[mu_guess]], color='y', linestyle="--")
+            # plot linear fit
+            plt.plot(x_selected, LineFunc(x_selected, estimates_lin[0], estimates_lin[1]), color='r', label = 'linear fit') 
+            # plot Gaussian 
+            plt.plot(x[mu_guess-n:mu_guess+n], y_lin + GaussFunc(x[mu_guess-n:mu_guess+n], g_final.A, g_final.mu, g_final.sigma), color=color, label = 'Gaussian fit')
+        else:
+            plt.plot(x[mu_guess-n:mu_guess+n], GaussFunc(x[mu_guess-n:mu_guess+n], g_final.A, g_final.mu, g_final.sigma), color=color, label = 'Gaussian fit')
         plt.legend(loc='upper right', frameon=False)
         plt.show()
         
@@ -139,3 +162,117 @@ def perform_Gaussian_fit(data_x, data_y, mu_guess, n, left_selection=None, right
         print("Uncertainties in the estimated parameters: \n[ sigma^2(A) sigma^2(mu), sigma^2(sigma) ] = \n[", g_final.covar_matrix[0][0], g_final.covar_matrix[1][1], g_final.covar_matrix[2][2], "]\n" )
  
     return g_final
+
+
+
+    
+# def perform_Gaussian_fit(data_x, data_y, mu_guess, n, left_selection=None, right_selection=None, plotting_main = 1, printing = 1, plotting_subt=1):
+#     # make a copy of original data:
+#     x = data_x.copy()
+#     y = data_y.copy()
+    
+#     """Fit a Guassian to data"""
+#     if (left_selection and right_selection):
+        
+#         ############ Selecting points to fit linear function 
+#         x_selected = np.concatenate([x[left_selection[0]:(left_selection[1]+1)], x[right_selection[0]:(right_selection[1]+1)]])
+#         y_selected = np.concatenate([y[left_selection[0]:(left_selection[1]+1)], y[right_selection[0]:(right_selection[1]+1)]])
+
+#         if (plotting_subt): 
+#             print("Selected data regions to fit the line:")
+#             plt.figure()  
+#             #plotting data
+#             plt.step(data_x[mu_guess-n:mu_guess+n], data_y[mu_guess-n:mu_guess+n], where='mid')
+#             #plot points to which linear function is fitted 
+#             plt.step(x[left_selection[0]:(left_selection[1]+1)], y[left_selection[0]:(left_selection[1]+1)], where='mid', color='y')
+#             plt.step(x[right_selection[0]:(right_selection[1]+1)], y[right_selection[0]:(right_selection[1]+1)], where='mid', color='y')
+#             #plot dashed lines  
+#             plt.plot([left_selection[0]-0.5, left_selection[0]-0.5], [y[left_selection[0]]+0.5, y[mu_guess]], color='y', linestyle="--")
+#             plt.plot([left_selection[1]+0.5, left_selection[1]+0.5], [y[left_selection[1]]+0.5, y[mu_guess]], color='y', linestyle="--")
+#             plt.plot([right_selection[0]-0.5, right_selection[0]-0.5], [y[right_selection[0]]+0.5, y[mu_guess]], color='y', linestyle="--")
+#             plt.plot([right_selection[1]+0.5, right_selection[1]+0.5], [y[right_selection[1]]+0.5, y[mu_guess]], color='y', linestyle="--")
+#             plt.show()
+
+#         ############ Fitting linear function to selected points 
+#         guess = [2, 1]
+#         estimates, covar_matrix = curve_fit(LineFunc,
+#                                             x_selected,
+#                                             y_selected,
+#                                             p0 = guess)
+
+#         print("Linear fit coefficients (k m) = (", estimates[0], estimates[1], ")\n")
+        
+#         if(plotting_subt):
+#             plt.figure()
+#             #plotting data
+#             plt.step(data_x[mu_guess-n:mu_guess+n], data_y[mu_guess-n:mu_guess+n], where='mid')
+#             #plot points to which linear function is fitted 
+#             plt.step(x[left_selection[0]:(left_selection[1]+1)], y[left_selection[0]:(left_selection[1]+1)], where='mid', color='y')
+#             plt.step(x[right_selection[0]:(right_selection[1]+1)], y[right_selection[0]:(right_selection[1]+1)], where='mid', color='y')
+#             #plot dashed lines  
+#             plt.plot([left_selection[0]-0.5, left_selection[0]-0.5], [y[left_selection[0]]+0.5, y[mu_guess]], color='y', linestyle="--")
+#             plt.plot([left_selection[1]+0.5, left_selection[1]+0.5], [y[left_selection[1]]+0.5, y[mu_guess]], color='y', linestyle="--")
+#             plt.plot([right_selection[0]-0.5, right_selection[0]-0.5], [y[right_selection[0]]+0.5, y[mu_guess]], color='y', linestyle="--")
+#             plt.plot([right_selection[1]+0.5, right_selection[1]+0.5], [y[right_selection[1]]+0.5, y[mu_guess]], color='y', linestyle="--")
+#             # plot linear fit
+#             plt.plot(x_selected, LineFunc(x_selected, estimates[0], estimates[1]), color='r', label='linear fit') 
+#             plt.show()
+
+#         ############ Subtract area under the linear fit
+
+#         y_lin = LineFunc(x[mu_guess-n:mu_guess+n], estimates[0], estimates[1])
+#         y_before =  y[mu_guess-n:mu_guess+n].copy() # just for plotting 
+#         y[mu_guess-n:mu_guess+n] = y[mu_guess-n:mu_guess+n] - y_lin
+
+#         if (plotting_subt):
+#             plt.figure()
+#             #plotting data
+#             plt.step(x[mu_guess-n:mu_guess+n], data_y[mu_guess-n:mu_guess+n], where='mid', label = 'original data')
+#             #plot points to which linear function is fitted 
+#             plt.step(x[left_selection[0]:(left_selection[1]+1)], y[left_selection[0]:(left_selection[1]+1)], where='mid', color='y')
+#             plt.step(x[right_selection[0]:(right_selection[1]+1)], y[right_selection[0]:(right_selection[1]+1)], where='mid', color='y')
+#             #plot dashed lines  
+#             plt.plot([left_selection[0]-0.5, left_selection[0]-0.5], [y[left_selection[0]]+0.5, y[mu_guess]], color='y', linestyle="--")
+#             plt.plot([left_selection[1]+0.5, left_selection[1]+0.5], [y[left_selection[1]]+0.5, y[mu_guess]], color='y', linestyle="--")
+#             plt.plot([right_selection[0]-0.5, right_selection[0]-0.5], [y[right_selection[0]]+0.5, y[mu_guess]], color='y', linestyle="--")
+#             plt.plot([right_selection[1]+0.5, right_selection[1]+0.5], [y[right_selection[1]]+0.5, y[mu_guess]], color='y', linestyle="--")
+#             # plot linear fit
+#             plt.plot(x_selected, LineFunc(x_selected, estimates[0], estimates[1]), color='r', label='linear fit') 
+#             # plot data with substracted background 
+#             plt.step(x[mu_guess-n:mu_guess+n], y[mu_guess-n:mu_guess+n], where='mid', color='g')
+#             plt.legend(loc='best', frameon=False)
+#             plt.show()
+
+        
+#     ############ Fit a Gaussian to data ######################################   
+
+#     A_guess = y[mu_guess]
+#     sigma_guess = 1
+#     guess = [A_guess, mu_guess, sigma_guess]
+
+#     estimates, covar_matrix = curve_fit(GaussFunc,
+#                                     x,
+#                                     y,
+#                                     p0=guess)
+#     g_final = Gauss(estimates[0], estimates[1], estimates[2], covar_matrix )
+    
+#     color = "forestgreen"
+# #     if ((1-mu_guess/g_final.mu) <= 0.005):
+# #         color = 'forestgreen'
+# #     else:
+# #         color = 'r'
+           
+    
+#     if (plotting_main):
+#         plt.figure()
+#         plt.step(x[mu_guess-n:mu_guess+n], y[mu_guess-n:mu_guess+n], where='mid', color='cornflowerblue', label='data')
+#         plt.plot(x[mu_guess-n:mu_guess+n], GaussFunc(x[mu_guess-n:mu_guess+n], g_final.A, g_final.mu, g_final.sigma), color=color, label = 'Gaussian fit')
+#         plt.legend(loc='upper right', frameon=False)
+#         plt.show()
+        
+#     if (printing):
+#         print("Estimates of (A mu sigma) = (", g_final.A, g_final.mu, g_final.sigma, ")\n")
+#         print("Covariance matrix = \n", g_final.covar_matrix, "\n")
+#         print("Uncertainties in the estimated parameters: \n[ sigma^2(A) sigma^2(mu), sigma^2(sigma) ] = \n[", g_final.covar_matrix[0][0], g_final.covar_matrix[1][1], g_final.covar_matrix[2][2], "]\n" )
+ 
+#     return g_final
