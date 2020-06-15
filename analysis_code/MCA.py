@@ -57,7 +57,7 @@ def load_spectrum(filename):
                     break
                 m.y[idx] = int(row[0])
             m.x = np.arange(interval[0], interval[1]+1,1)
-            m.x = m.x + 0.5
+            #m.x = m.x + 0.5
             log.debug("Loaded all data from file")
     except IOError:
         log.error("Could not find the file '"+str(filename)+"'")
