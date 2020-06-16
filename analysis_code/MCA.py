@@ -9,7 +9,9 @@ class Spectrum:
     """A class to hold our spectrum measurement data and meta data (such as duration)"""
     def __init__(self, filename):
         self.filename = filename
-        self.x = np.array(np.zeros(1))    ## creates a new empty array; will later store our x values
+        self.bin_edges = np.array(np.zeros(1))    ## creates a new empty array; will store edges of our bins
+        self.bin_centers = np.array(np.zeros(1))
+        self.energy = np.array(np.zeros(1))
         self.y = np.array(np.zeros(1))    ## creates a new empty array; will later store our y values
         self.name = os.path.splitext(     ## a more descriptive name, can be used e.g. in legends
                 os.path.basename(filename))[0] ## init with file name without extension
@@ -21,7 +23,9 @@ class Spectrum:
     def scale(self, scale):
         self.y *= scale
     def calibrate(self, slope, intercept):
-        self.x = self.x*slope + intercept
+        self.energy = self.energy*slope + intercept
+    def calculate_bin_centers(self):
+        self.bin_centers = 0.5*(self.bin_edges[1:] + self.bin_edges[:-1])
 
 def load_spectrum(filename):
     """Reads in a data file (csv format) stored by the Maestro MCA software and returns a 'Spectrum' object. Tested with Maestro Version 6.05 """
@@ -56,8 +60,8 @@ def load_spectrum(filename):
                 if idx >= nchannel:
                     break
                 m.y[idx] = int(row[0])
-            m.x = np.arange(interval[0], interval[1]+1,1)
-            #m.x = m.x + 0.5
+            m.bin_edges = np.arange(interval[0], interval[1]+2,1)
+            m.calculate_bin_centers()
             log.debug("Loaded all data from file")
     except IOError:
         log.error("Could not find the file '"+str(filename)+"'")

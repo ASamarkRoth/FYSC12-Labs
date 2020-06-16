@@ -126,13 +126,3 @@ def perform_Gaussian_fit(data_x, data_y, mu_guess, n, left_selection=None, right
  
     return g_final
 
-# def plot_interactive_fit(data_xx, y, mu_guess, n):
-#     gauss = perform_Gaussian_fit(x, y, mu_guess, n)
-
-# def perform_Gaussian_fit_with_widget(x, y, mu_guess, n):
-#     interactive_plot = interactive(plot_interactive_fit, x=fixed(x), data_y=fixed(y), mu_guess=(3200, 3400, 1), n=(15, 45, 1), continuous_update=False)
-#     interactive_plot.children[0].description=r'mu_guess' # slider
-#     interactive_plot.children[1].description=r'n'
-#     interactive_plot.children[0].continuous_update = True
-#     interactive_plot.children[1].continuous_update = False
-#     return interactive_plot
