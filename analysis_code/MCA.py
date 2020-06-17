@@ -23,7 +23,7 @@ class Spectrum:
     def scale(self, scale):
         self.y *= scale
     def calibrate(self, slope, intercept):
-        self.energy = self.energy*slope + intercept
+        self.energy = self.bin_centers*slope + intercept
     def calculate_bin_centers(self):
         self.bin_centers = 0.5*(self.bin_edges[1:] + self.bin_edges[:-1])
 
